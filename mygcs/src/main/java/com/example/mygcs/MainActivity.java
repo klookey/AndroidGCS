@@ -5,7 +5,6 @@ import android.graphics.SurfaceTexture;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.naver.maps.map.MapFragment;
-import com.naver.maps.map.MapView;
-import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.OnMapReadyCallback;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
@@ -88,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);   // Activity의 기본 초기화 수행
+        setContentView(R.layout.activity_main);  // 액티비티 안을 "뷰"로 채운다 (아니면 아무것도 보이지 않는다)
 
         final Context context = getApplicationContext();
         this.controlTower = new ControlTower(context);
@@ -149,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
             }
-
         });
 
         startVideoStream = (Button) findViewById(R.id.start_video_stream);
@@ -199,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         mediaCodecManager = new MediaCodecManager(mediaCodecHandler);
 
         mainHandler = new Handler(getApplicationContext().getMainLooper());
+
     }
 
     @Override
@@ -696,40 +691,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         });
     }
 
-    private void stopVideoStreamForObserver() {
-        getApi(drone).stopVideoStream(videoTag);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // =============================================================================
-
-
-
-
-
-
-
-
-
-
-
     private void stopVideoStream() {
         SoloCameraApi.getApi(drone).stopVideoStream(videoTag, new AbstractCommandListener() {
             @Override
@@ -755,6 +716,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onTimeout() {
             }
         });
+    }
+
+    private void stopVideoStreamForObserver() {
+        getApi(drone).stopVideoStream(videoTag);
     }
 
     @Override
