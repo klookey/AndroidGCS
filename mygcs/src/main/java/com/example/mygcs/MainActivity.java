@@ -15,8 +15,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.VehicleApi;
@@ -36,13 +40,16 @@ import com.o3dr.services.android.lib.model.AbstractCommandListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements DroneListener, TowerListener, LinkListener {
+public class MainActivity extends AppCompatActivity implements DroneListener, TowerListener, LinkListener, OnMapReadyCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     MapFragment mNaverMapFragment = null;
-    NaverMap naverMap;
+
     private Drone drone;
+
+    NaverMap naverMap;
+
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
 
@@ -54,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private final Handler handler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { // 맵 실행 되기 전
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -85,10 +92,29 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        mNaverMapFragment.getMapAsync(this);
+    }
+
+    public void SetDronePosition() {
         // 드론 위치 받아오기
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
         LatLong dronePosition = droneGps.getPosition();
 
+        Log.d("Position1","droneGps : " + droneGps);
+        Log.d("Position1","dronePosition : " + dronePosition);
+
+        Marker marker = new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
+        marker.setMap(naverMap);
+
+        // 내 지금 위치를 리스트에 넣고 이전거는 다 marker.setMap(null); 시키고 마지막것만 마커 표시
+
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
+        naverMap.moveCamera(cameraUpdate);
+    }
+
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap) {
+        this.naverMap=naverMap;
     }
 
     @Override
@@ -144,6 +170,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 updateVehicleMode();
                 break;
 
+            case AttributeEvent.GPS_POSITION:
+                SetDronePosition();
+                break;
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
@@ -176,15 +206,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
-
-        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        LatLong dronePosition = droneGps.getPosition();
-
-        Log.d("Position1","2222222222222222             " + dronePosition);
-
-
-        Log.d("myCheck","test");
-        Log.d("Position1","11111111  " + droneGps);
     }
 
     private void updateConnectedButton(boolean isConnected) {
@@ -240,4 +261,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         Log.d(TAG, message);
     }
+
+
 }
