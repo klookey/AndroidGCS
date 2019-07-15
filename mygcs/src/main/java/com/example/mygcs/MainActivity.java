@@ -21,6 +21,7 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.VehicleApi;
@@ -104,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Log.d("Position1","dronePosition : " + dronePosition);
 
         Marker marker = new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
+        marker.setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+        marker.setHeight(80);
+        marker.setWidth(80);
         marker.setMap(naverMap);
 
         // 내 지금 위치를 리스트에 넣고 이전거는 다 marker.setMap(null); 시키고 마지막것만 마커 표시
