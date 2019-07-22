@@ -30,9 +30,21 @@
                 android:text="@string/button_connect" />
 
             <LinearLayout
-                android:layout_width="230dp"
+                android:layout_width="130dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/GPS_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="#FF0000" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
@@ -32,6 +33,7 @@ import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
+import com.o3dr.services.android.lib.drone.property.Attitude;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.Type;
@@ -99,15 +101,25 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public void SetDronePosition() {
         // 드론 위치 받아오기
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        LatLong dronePosition = droneGps.getPosition();
+        LatLong dronePosition = (LatLong)droneGps.getPosition();
 
         Log.d("Position1","droneGps : " + droneGps);
         Log.d("Position1","dronePosition : " + dronePosition);
 
+        // 드론 좌표 찍어주기
         Marker marker = new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
         marker.setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+
+        // yaw 에 따라 네비게이션 마커 회전
+//        Attitude attitude = new Attitude();
+        Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
+        Log.d("Position2", "attitude.toString() : " + attitude.toString());
+        marker.setAngle((float)attitude.getYaw());
+
+        // 마커 크기 지정
         marker.setHeight(80);
         marker.setWidth(80);
+
         marker.setMap(naverMap);
 
         // 내 지금 위치를 리스트에 넣고 이전거는 다 marker.setMap(null); 시키고 마지막것만 마커 표시
@@ -178,10 +190,19 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 SetDronePosition();
                 break;
 
+            case AttributeEvent.WARNING_NO_GPS:
+                NoGps();
+                break;
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    private void NoGps() {
+        TextView textView = (TextView) findViewById(R.id.GPS_state);
+        textView.setText("NO GPS");
     }
 
     public void onFlightModeSelected(View view) {
