@@ -2,6 +2,7 @@ package com.example.mygcs;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
                 onFlightModeSelected(view);
             }
             @Override
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // Do nothing
             }
         });
+
 
         mNaverMapFragment.getMapAsync(this);
     }
