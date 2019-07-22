@@ -65,6 +65,7 @@ public class Attitude implements DroneAttribute {
         this.pitch = pitch;
     }
 
+
     /**
      * Updates the yaw angle
      * @param yaw Yaw angle (deg, -180..+180)

@@ -41,6 +41,7 @@ import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.link.LinkConnectionStatus;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements DroneListener, TowerListener, LinkListener, OnMapReadyCallback {
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     NaverMap naverMap;
 
+    List<Marker> markers = new ArrayList<>();
+
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
 
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private static final int DEFAULT_UDP_PORT = 14550;
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
+    private int Marker_Count = 0;
 
     private final Handler handler = new Handler();
 
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 onFlightModeSelected(view);
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(AdapterView<?> prent) {
                 // Do nothing
             }
         });
@@ -99,37 +103,51 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     public void SetDronePosition() {
+
         // 드론 위치 받아오기
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        LatLong dronePosition = (LatLong)droneGps.getPosition();
+        int Satellite = droneGps.getSatellitesCount();
+        LatLong dronePosition = droneGps.getPosition();
 
         Log.d("Position1","droneGps : " + droneGps);
         Log.d("Position1","dronePosition : " + dronePosition);
 
-        // 드론 좌표 찍어주기
-        Marker marker = new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
-        marker.setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+        // 이동했던 위치 맵에서 지워주기
+        if(Marker_Count-1 >= 0)
+        {
+            markers.get(Marker_Count-1).setMap(null);
+        }
+
+        // 마커 리스트에 추가
+        markers.add(new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude())));
 
         // yaw 에 따라 네비게이션 마커 회전
-//        Attitude attitude = new Attitude();
         Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
-        Log.d("Position2", "attitude.toString() : " + attitude.toString());
-        marker.setAngle((float)attitude.getYaw());
+        markers.get(Marker_Count).setAngle((float)attitude.getYaw());
 
         // 마커 크기 지정
-        marker.setHeight(80);
-        marker.setWidth(80);
+        markers.get(Marker_Count).setHeight(80);
+        markers.get(Marker_Count).setWidth(80);
 
-        marker.setMap(naverMap);
+        // 마커 아이콘 지정
+        markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
 
-        // 내 지금 위치를 리스트에 넣고 이전거는 다 marker.setMap(null); 시키고 마지막것만 마커 표시
+        // 마커 띄우기
+        markers.get(Marker_Count).setMap(naverMap);
+        Marker_Count++;
 
+        // 카메라 위치 설정
         CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
         naverMap.moveCamera(cameraUpdate);
+
+        // 잡히는 GPS 개수
+        TextView textView = (TextView) findViewById(R.id.GPS_state);
+        textView.setText(Satellite + " 개");
     }
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        // onMapReady는 지도가 불러와지면 그때 한번 실행
         this.naverMap=naverMap;
     }
 
