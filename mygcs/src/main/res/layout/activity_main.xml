@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:background="#E6414141"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -30,21 +30,19 @@
                 android:text="@string/button_connect" />
 
             <LinearLayout
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"></LinearLayout>
-
-            <LinearLayout
                 android:layout_width="100dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/GPS_state"
+                    android:id="@+id/Voltage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:text="전압 14.8V"
+                    android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="24sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -53,17 +51,92 @@
                 android:background="#00FFEB3B"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/FlightMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="비행모드"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
                 <Spinner
                     android:id="@+id/modeSelect"
-                    android:layout_width="200dp"
-                    android:layout_height="44dp"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
                     android:layout_column="1"
                     android:layout_below="@+id/connectionTypeLabel"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/btnConnect"
                     android:spinnerMode="dropdown"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/Altitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="고도 25m"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/speed"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/Speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="속도 5m/s"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/yaw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="YAW 150deg"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/GPS_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="위성 15"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>

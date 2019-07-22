@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected void onCreate(Bundle savedInstanceState) { // 맵 실행 되기 전
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
@@ -106,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     public void SetDronePosition() {
-
         // 드론 위치 받아오기
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
         int Satellite = droneGps.getSatellitesCount();
