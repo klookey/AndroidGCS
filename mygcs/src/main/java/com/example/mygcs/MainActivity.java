@@ -109,48 +109,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         mNaverMapFragment.getMapAsync(this);
     }
 
-    public void SetDronePosition() {
-        // 드론 위치 받아오기
-        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        int Satellite = droneGps.getSatellitesCount();
-        LatLong dronePosition = droneGps.getPosition();
-
-        Log.d("Position1","droneGps : " + droneGps);
-        Log.d("Position1","dronePosition : " + dronePosition);
-
-        // 이동했던 위치 맵에서 지워주기
-        if(Marker_Count-1 >= 0)
-        {
-            markers.get(Marker_Count-1).setMap(null);
-        }
-
-        // 마커 리스트에 추가
-        markers.add(new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude())));
-
-        // yaw 에 따라 네비게이션 마커 회전
-        Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
-        markers.get(Marker_Count).setAngle((float)attitude.getYaw());
-
-        // 마커 크기 지정
-        markers.get(Marker_Count).setHeight(80);
-        markers.get(Marker_Count).setWidth(80);
-
-        // 마커 아이콘 지정
-        markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
-
-        // 마커 띄우기
-        markers.get(Marker_Count).setMap(naverMap);
-        Marker_Count++;
-
-        // 카메라 위치 설정
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
-        naverMap.moveCamera(cameraUpdate);
-
-        // 잡히는 GPS 개수
-        TextView textView = (TextView) findViewById(R.id.GPS_state);
-        textView.setText("위성 " + Satellite);
-    }
-
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         // onMapReady는 지도가 불러와지면 그때 한번 실행
@@ -230,6 +188,57 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    public void SetDronePosition() {
+        // 드론 위치 받아오기
+        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
+        int Satellite = droneGps.getSatellitesCount();
+        LatLong dronePosition = droneGps.getPosition();
+
+        Log.d("Position1","droneGps : " + droneGps);
+        Log.d("Position1","dronePosition : " + dronePosition);
+
+        // 이동했던 위치 맵에서 지워주기
+        if(Marker_Count-1 >= 0)
+        {
+            markers.get(Marker_Count-1).setMap(null);
+        }
+
+        // 마커 리스트에 추가
+        markers.add(new Marker(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude())));
+
+        // yaw 에 따라 네비게이션 마커 회전
+        Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
+        double yaw = attitude.getYaw();
+        markers.get(Marker_Count).setAngle((float)attitude.getYaw());
+
+        // 마커 크기 지정
+        markers.get(Marker_Count).setHeight(80);
+        markers.get(Marker_Count).setWidth(80);
+
+        // 마커 아이콘 지정
+        markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+
+        // 마커 띄우기
+        markers.get(Marker_Count).setMap(naverMap);
+        Marker_Count++;
+
+        // 카메라 위치 설정
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
+        naverMap.moveCamera(cameraUpdate);
+
+        // [메뉴 바] yaw 보여주기
+        TextView textView_yaw = (TextView) findViewById(R.id.yaw);
+        if((int)yaw < 0)
+        {
+            yaw+=360;
+        }
+        textView_yaw.setText("YAW " + (int)yaw + "deg");
+
+        // [메뉴 바] 잡히는 GPS 개수
+        TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
+        textView_gps.setText("위성 " + Satellite);
     }
 
     private void AltitudeUpdate() {
