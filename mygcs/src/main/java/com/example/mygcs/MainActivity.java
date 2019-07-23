@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-
         mNaverMapFragment.getMapAsync(this);
     }
 
@@ -153,6 +151,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public void onMapReady(@NonNull NaverMap naverMap) {
         // onMapReady는 지도가 불러와지면 그때 한번 실행
         this.naverMap=naverMap;
+
+        // 켜지자마자 드론 연결
+        ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
+        this.drone.connect(params);
     }
 
     @Override
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         super.onStop();
         if (this.drone.isConnected()) {
             this.drone.disconnect();
-            updateConnectedButton(false);
+            //updateConnectedButton(false);
         }
 
         this.controlTower.unregisterDrone(this.drone);
@@ -186,13 +188,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         switch (event) {
             case AttributeEvent.STATE_CONNECTED:
                 alertUser("Drone Connected");
-                updateConnectedButton(this.drone.isConnected());
+                //updateConnectedButton(this.drone.isConnected());
                 //updateArmButton();
                 break;
 
             case AttributeEvent.STATE_DISCONNECTED:
                 alertUser("Drone Disconnected");
-                updateConnectedButton(this.drone.isConnected());
+                //updateConnectedButton(this.drone.isConnected());
                 //updateArmButton();
                 break;
 
@@ -212,19 +214,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 SetDronePosition();
                 break;
 
-            case AttributeEvent.WARNING_NO_GPS:
-                NoGps();
-                break;
-
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
-    }
-
-    private void NoGps() {
-        TextView textView = (TextView) findViewById(R.id.GPS_state);
-        textView.setText("NO GPS");
     }
 
     public void onFlightModeSelected(View view) {
@@ -255,23 +248,23 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
     }
 
-    private void updateConnectedButton(boolean isConnected) {
-        Button connectButton = (Button) findViewById(R.id.btnConnect);
-        if (isConnected) {
-            connectButton.setText(getText(R.string.button_disconnect));
-        } else {
-            connectButton.setText(getText(R.string.button_connect));
-        }
-    }
+//    private void updateConnectedButton(boolean isConnected) {
+//        Button connectButton = (Button) findViewById(R.id.btnConnect);
+//        if (isConnected) {
+//            connectButton.setText(getText(R.string.button_disconnect));
+//        } else {
+//            connectButton.setText(getText(R.string.button_connect));
+//        }
+//    }
 
-    public void onBtnConnectTap(View view) {
-        if(this.drone.isConnected()) {
-            this.drone.disconnect();
-        } else {
-            ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
-            this.drone.connect(params);
-        }
-    }
+//    public void onBtnConnectTap(View view) {
+//        if(this.drone.isConnected()) {
+//            this.drone.disconnect();
+//        } else {
+//            ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
+//            this.drone.connect(params);
+//        }
+//    }
 
     @Override
     public void onDroneServiceInterrupted(String errorMsg) {
