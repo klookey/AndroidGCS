@@ -36,6 +36,7 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Attitude;
+import com.o3dr.services.android.lib.drone.property.Battery;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.State;
@@ -184,10 +185,22 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 AltitudeUpdate();
                 break;
 
+            case AttributeEvent.BATTERY_UPDATED:
+                BatteryUpdate();
+                break;
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    private void BatteryUpdate() {
+        TextView textView_Vol = (TextView) findViewById(R.id.Voltage);
+        Battery battery = this.drone.getAttribute(AttributeType.BATTERY);
+        double batteryVoltage = Math.round(battery.getBatteryVoltage()*10)/10.0;
+        textView_Vol.setText("전압 " + batteryVoltage + "V");
+        Log.d("Position8", "Battery : " + batteryVoltage);
     }
 
     public void SetDronePosition() {
@@ -246,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         int intAltitude = (int)Math.round(altitude.getTargetAltitude());
         textView.setText("고도 " + intAltitude + "m");
-        Log.d("Position7","Altitude : " + this.drone.getAttribute(AttributeType.ALTITUDE));
+        Log.d("Position7","Altitude : " + altitude);
     }
 
     private void SpeedUpdate() {
