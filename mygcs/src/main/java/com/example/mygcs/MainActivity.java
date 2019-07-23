@@ -34,8 +34,10 @@ import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
+import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Attitude;
 import com.o3dr.services.android.lib.drone.property.Gps;
+import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.Type;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
@@ -102,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+
+
         mNaverMapFragment.getMapAsync(this);
     }
 
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 잡히는 GPS 개수
         TextView textView = (TextView) findViewById(R.id.GPS_state);
-        textView.setText(Satellite + " 개");
+        textView.setText("위성 " + Satellite);
     }
 
     @Override
@@ -214,10 +218,35 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 SetDronePosition();
                 break;
 
+            case AttributeEvent.SPEED_UPDATED:
+                SpeedUpdate();
+                break;
+
+            case AttributeEvent.ALTITUDE_UPDATED:
+                AltitudeUpdate();
+                break;
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    private void AltitudeUpdate() {
+        TextView textView = (TextView) findViewById(R.id.Altitude);
+        Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
+        int intAltitude = (int)Math.round(altitude.getTargetAltitude());
+        textView.setText("고도 " + intAltitude + "m");
+        Log.d("Position7","Altitude : " + this.drone.getAttribute(AttributeType.ALTITUDE));
+    }
+
+    private void SpeedUpdate() {
+        TextView textView = (TextView) findViewById(R.id.Speed);
+        Speed speed = this.drone.getAttribute(AttributeType.SPEED);
+        int doubleSpeed = (int)Math.round(speed.getAirSpeed());
+        // double doubleSpeed = Math.round(speed.getAirSpeed()*10)/10.0; 소수점 첫째자리까지
+        textView.setText("속도 " + doubleSpeed + "m/s");
+        Log.d("Position6", "Speed : " + this.drone.getAttribute(AttributeType.SPEED));
     }
 
     public void onFlightModeSelected(View view) {
@@ -247,24 +276,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
     }
-
-//    private void updateConnectedButton(boolean isConnected) {
-//        Button connectButton = (Button) findViewById(R.id.btnConnect);
-//        if (isConnected) {
-//            connectButton.setText(getText(R.string.button_disconnect));
-//        } else {
-//            connectButton.setText(getText(R.string.button_connect));
-//        }
-//    }
-
-//    public void onBtnConnectTap(View view) {
-//        if(this.drone.isConnected()) {
-//            this.drone.disconnect();
-//        } else {
-//            ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
-//            this.drone.connect(params);
-//        }
-//    }
 
     @Override
     public void onDroneServiceInterrupted(String errorMsg) {
