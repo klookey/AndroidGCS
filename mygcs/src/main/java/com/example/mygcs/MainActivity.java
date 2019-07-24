@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-
-
         final Context context = getApplicationContext();
         this.controlTower = new ControlTower(context);
         this.drone = new Drone(context);
@@ -127,13 +125,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 네이버 로고 위치 변경
         UiSettings uiSettings = naverMap.getUiSettings();
-        int[] doubleValue = {};
-        doubleValue = uiSettings.getLogoMargin();
-        Log.d("Position2","Left : " + doubleValue[0]);
-        Log.d("Position2","top : " + doubleValue[1]);
-        Log.d("Position2","right : " + doubleValue[2]);
-        Log.d("Position2","bottom : " + doubleValue[3]);
-
         uiSettings.setLogoMargin(32,0,0,925);
 
         // 축척 바 제거
