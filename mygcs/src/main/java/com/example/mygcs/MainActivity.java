@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected void onCreate(Bundle savedInstanceState) { // 맵 실행 되기 전
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
-        // 홈 버튼 없애기
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // 소프트바 없애기
+        hideSoftBar();
         // 상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -132,6 +132,21 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 줌 버튼 제거
         uiSettings.setZoomControlEnabled(false);
+    }
+
+    private void hideSoftBar() {
+        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+        int newUiOptions = uiOptions;
+        boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+        if(isImmersiveModeEnabled) {
+            Log.d(TAG, "Turning immersive mode mode off.");
+        } else {
+            Log.d(TAG, "Turning immersive mode mode on.");
+        }
+        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
     }
 
     @Override
