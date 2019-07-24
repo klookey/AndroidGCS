@@ -3,6 +3,7 @@ package com.example.mygcs;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -281,6 +282,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 마커 아이콘 지정
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+
+        // 마커 위치를 중심점으로 지정
+        markers.get(Marker_Count).setAnchor(new PointF(0.5F,0.5F));
 
         // 마커 띄우기
         markers.get(Marker_Count).setMap(naverMap);
