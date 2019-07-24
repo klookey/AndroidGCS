@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private static final int DEFAULT_UDP_PORT = 14550;
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
+
     private int Marker_Count = 0;
 
     private final Handler handler = new Handler();
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected void onCreate(Bundle savedInstanceState) { // 맵 실행 되기 전
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // 상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
@@ -105,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // Do nothing
             }
         });
-
-
 
         mNaverMapFragment.getMapAsync(this);
     }
