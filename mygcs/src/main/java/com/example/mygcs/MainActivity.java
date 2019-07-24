@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -189,9 +190,29 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 BatteryUpdate();
                 break;
 
+            case AttributeEvent.STATE_ARMING:
+                ArmBtnUpdate();
+                break;
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
+        }
+    }
+
+    private void ArmBtnUpdate() {
+        Button ArmBtn = (Button) findViewById(R.id.ArmBtn);
+        if(ArmBtn.getText()=="ARM")
+        {
+            ArmBtn.setText("TAKE-OFF");
+        }
+        else if(ArmBtn.getText()=="TAKE-OFF")
+        {
+            ArmBtn.setText("LAND");
+        }
+        else if(ArmBtn.getText()=="LAND")
+        {
+            ArmBtn.setText("ARM");
         }
     }
 
