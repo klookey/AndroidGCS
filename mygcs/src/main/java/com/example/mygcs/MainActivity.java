@@ -23,6 +23,7 @@ import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.o3dr.android.client.ControlTower;
@@ -77,11 +78,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected void onCreate(Bundle savedInstanceState) { // 맵 실행 되기 전
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
+        // 홈 버튼 없애기
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // 상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+
 
         final Context context = getApplicationContext();
         this.controlTower = new ControlTower(context);
@@ -120,6 +124,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 켜지자마자 드론 연결
         ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
         this.drone.connect(params);
+
+        // 네이버 로고 위치 변경
+        UiSettings uiSettings = naverMap.getUiSettings();
+        int[] doubleValue = {};
+        doubleValue = uiSettings.getLogoMargin();
+        Log.d("Position2","Left : " + doubleValue[0]);
+        Log.d("Position2","top : " + doubleValue[1]);
+        Log.d("Position2","right : " + doubleValue[2]);
+        Log.d("Position2","bottom : " + doubleValue[3]);
+
+        uiSettings.setLogoMargin(32,0,0,925);
+
+        // 축척 바 제거
+        uiSettings.setScaleBarEnabled(false);
     }
 
     @Override
