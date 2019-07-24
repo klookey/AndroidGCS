@@ -148,126 +148,331 @@
             <LinearLayout
                 android:id="@+id/middle"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:orientation="vertical">
+                android:layout_height="170dp"
+                android:orientation="vertical" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="465dp"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="90dp"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"></LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/abcd"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="465dp"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="90dp"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"></LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/bottom"
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
+                android:layout_height="200dp">
 
-                <LinearLayout
-                    android:layout_width="220dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
 
                     <LinearLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_width="400dp"
+                        android:layout_height="50dp"
                         android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="82dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="82dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/MapType_Satellite"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="위성지도"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="82dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/MapMoveUnLock"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="맵 이동"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/MapType_Terrain"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="지형도"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/LandRegistrationOn"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="지적도 On"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/MapMoveLock"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="맵 잠금"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/MapType_Basic"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="일반지도"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/LandRegistrationOff"
+                            android:layout_width="77dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="지적도 OFF"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="500dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/ArmBtn"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton"
+                                android:text="ARM"
+                                android:textColor="#FFFFFF" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/BtnMapMoveLock"
+                            android:layout_width="77dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="맵 이동"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF" />
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/BtnMapType"
+                            android:layout_width="77dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="일반지도"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF" />
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/BtnLandRegistrationMap"
+                            android:layout_width="77dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/mybutton"
+                            android:text="지적도 Off"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF" />
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </LinearLayout>
 
                     <Button
-                        android:id="@+id/ArmBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:id="@+id/BtnClear"
+                        android:layout_width="77dp"
+                        android:layout_height="50dp"
                         android:background="@drawable/mybutton"
-                        android:text="ARM" />
+                        android:text="Clear"
+                        android:textColor="#FFFFFF" />
 
-                </LinearLayout>
+                </TableRow>
+            </TableLayout>
 
-                <LinearLayout
-                    android:layout_width="380dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"></LinearLayout>
-
-            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>

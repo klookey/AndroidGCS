@@ -129,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 축척 바 제거
         uiSettings.setScaleBarEnabled(false);
+
+        // 줌 버튼 제거
+        uiSettings.setZoomControlEnabled(false);
     }
 
     @Override
