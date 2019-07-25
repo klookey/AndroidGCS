@@ -141,10 +141,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     public void ControlButton() {
-        Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
-        Button BtnMapType = (Button) findViewById(R.id.BtnMapType);
-        Button BtnLandRegistrationMap = (Button) findViewById(R.id.BtnLandRegistrationMap);
-        Button BtnClear = (Button) findViewById(R.id.BtnClear);
+        final Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
+        final Button BtnMapType = (Button) findViewById(R.id.BtnMapType);
+        final Button BtnLandRegistrationMap = (Button) findViewById(R.id.BtnLandRegistrationMap);
+        final Button BtnClear = (Button) findViewById(R.id.BtnClear);
         final Button MapMoveLock = (Button) findViewById(R.id.MapMoveLock);
         final Button MapMoveUnLock = (Button) findViewById(R.id.MapMoveUnLock);
         final Button MapType_Basic = (Button) findViewById(R.id.MapType_Basic);
@@ -212,7 +212,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 MapType_Basic.setBackgroundResource(R.drawable.mybutton_dark);
                 MapType_Terrain.setBackgroundResource(R.drawable.mybutton_dark);
 
+                BtnMapType.setText("위성지도");
+
                 naverMap.setMapType(NaverMap.MapType.Satellite);
+
+                // 다시 닫기
+                MapType_Satellite.setVisibility(View.INVISIBLE);
+                MapType_Terrain.setVisibility(View.INVISIBLE);
+                MapType_Basic.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -225,7 +232,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 MapType_Basic.setBackgroundResource(R.drawable.mybutton_dark);
                 MapType_Terrain.setBackgroundResource(R.drawable.mybutton);
 
+                BtnMapType.setText("지형도");
+
                 naverMap.setMapType(NaverMap.MapType.Terrain);
+
+                MapType_Satellite.setVisibility(View.INVISIBLE);
+                MapType_Terrain.setVisibility(View.INVISIBLE);
+                MapType_Basic.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -237,7 +250,45 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 MapType_Basic.setBackgroundResource(R.drawable.mybutton);
                 MapType_Terrain.setBackgroundResource(R.drawable.mybutton_dark);
 
+                BtnMapType.setText("일반지도");
+
                 naverMap.setMapType(NaverMap.MapType.Basic);
+
+                MapType_Satellite.setVisibility(View.INVISIBLE);
+                MapType_Terrain.setVisibility(View.INVISIBLE);
+                MapType_Basic.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // ############### 지적도 On / Off 제어 ###################
+
+        LandRegistrationOn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LandRegistrationOn.setBackgroundResource(R.drawable.mybutton);
+                LandRegistrationOff.setBackgroundResource(R.drawable.mybutton_dark);
+
+                BtnLandRegistrationMap.setText("지적도 ON");
+
+                naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL, true);
+
+                LandRegistrationOn.setVisibility(View.INVISIBLE);
+                LandRegistrationOff.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        LandRegistrationOff.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LandRegistrationOn.setBackgroundResource(R.drawable.mybutton_dark);
+                LandRegistrationOff.setBackgroundResource(R.drawable.mybutton);
+
+                BtnLandRegistrationMap.setText("지적도 OFF");
+
+                naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL,false);
+
+                LandRegistrationOn.setVisibility(View.INVISIBLE);
+                LandRegistrationOff.setVisibility(View.INVISIBLE);
             }
         });
     }
