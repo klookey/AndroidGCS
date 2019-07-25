@@ -160,6 +160,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 열려있으면 닫기
+                if(MapType_Satellite.getVisibility()==view.VISIBLE)
+                {
+                    MapType_Basic.setVisibility(View.INVISIBLE);
+                    MapType_Terrain.setVisibility(View.INVISIBLE);
+                    MapType_Satellite.setVisibility(View.INVISIBLE);
+                }
+                // 열려있으면 닫기
+                if(LandRegistrationOn.getVisibility()==view.VISIBLE)
+                {
+                    LandRegistrationOn.setVisibility(View.INVISIBLE);
+                    LandRegistrationOff.setVisibility(View.INVISIBLE);
+                }
+
                 if(MapMoveLock.getVisibility()==view.INVISIBLE) {
                     MapMoveLock.setVisibility(View.VISIBLE);
                     MapMoveUnLock.setVisibility(View.VISIBLE);
@@ -175,6 +189,18 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnMapType.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 열려있으면 닫기
+                if(MapMoveUnLock.getVisibility()==view.VISIBLE)
+                {
+                    MapMoveUnLock.setVisibility(View.INVISIBLE);
+                    MapMoveLock.setVisibility(View.INVISIBLE);
+                }
+                // 열려있으면 닫기
+                if(LandRegistrationOn.getVisibility()==view.VISIBLE)
+                {
+                    LandRegistrationOn.setVisibility(View.INVISIBLE);
+                    LandRegistrationOff.setVisibility(View.INVISIBLE);
+                }
                 if(MapType_Satellite.getVisibility()==view.INVISIBLE) {
                     MapType_Satellite.setVisibility(View.VISIBLE);
                     MapType_Terrain.setVisibility(View.VISIBLE);
@@ -192,6 +218,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnLandRegistrationMap.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 열려있으면 닫기
+                if(MapType_Satellite.getVisibility()==view.VISIBLE)
+                {
+                    MapType_Basic.setVisibility(View.INVISIBLE);
+                    MapType_Terrain.setVisibility(View.INVISIBLE);
+                    MapType_Satellite.setVisibility(View.INVISIBLE);
+                }
+                // 열려있으면 닫기
+                if(MapMoveUnLock.getVisibility()==view.VISIBLE)
+                {
+                    MapMoveUnLock.setVisibility(View.INVISIBLE);
+                    MapMoveLock.setVisibility(View.INVISIBLE);
+                }
+
                 if(LandRegistrationOff.getVisibility() == view.INVISIBLE) {
                     LandRegistrationOff.setVisibility(View.VISIBLE);
                     LandRegistrationOn.setVisibility(View.VISIBLE);
@@ -324,6 +364,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 LandRegistrationOn.setVisibility(View.INVISIBLE);
                 LandRegistrationOff.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // #################### Clear ###################
+        BtnClear.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO : Click event
             }
         });
     }
