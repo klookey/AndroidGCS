@@ -188,7 +188,7 @@
                             android:background="@drawable/mybutton_dark"
                             android:text="위성지도"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -229,7 +229,7 @@
                             android:background="@drawable/mybutton"
                             android:text="맵 이동"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -252,7 +252,7 @@
                             android:background="@drawable/mybutton_dark"
                             android:text="지형도"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -275,7 +275,7 @@
                             android:background="@drawable/mybutton_dark"
                             android:text="지적도 On"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -309,7 +309,7 @@
                             android:background="@drawable/mybutton_dark"
                             android:text="맵 잠금"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -332,7 +332,7 @@
                             android:background="@drawable/mybutton"
                             android:text="일반지도"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"
@@ -355,7 +355,7 @@
                             android:background="@drawable/mybutton"
                             android:text="지적도 OFF"
                             android:textColor="#FFFFFF"
-                            android:visibility="visible" />
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="10dp"

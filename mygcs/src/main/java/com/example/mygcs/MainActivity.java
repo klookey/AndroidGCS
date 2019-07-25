@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        // UI상 버튼 제어
+        ControlButton();
+
         mNaverMapFragment.getMapAsync(this);
     }
 
@@ -136,6 +139,110 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 줌 버튼 제거
         uiSettings.setZoomControlEnabled(false);
     }
+
+    public void ControlButton() {
+        Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
+        Button BtnMapType = (Button) findViewById(R.id.BtnMapType);
+        Button BtnLandRegistrationMap = (Button) findViewById(R.id.BtnLandRegistrationMap);
+        Button BtnClear = (Button) findViewById(R.id.BtnClear);
+        final Button MapMoveLock = (Button) findViewById(R.id.MapMoveLock);
+        final Button MapMoveUnLock = (Button) findViewById(R.id.MapMoveUnLock);
+        final Button MapType_Basic = (Button) findViewById(R.id.MapType_Basic);
+        final Button MapType_Terrain = (Button) findViewById(R.id.MapType_Terrain);
+        final Button MapType_Satellite = (Button) findViewById(R.id.MapType_Satellite);
+        final Button LandRegistrationOn = (Button) findViewById(R.id.LandRegistrationOn);
+        final Button LandRegistrationOff = (Button) findViewById(R.id.LandRegistrationOff);
+
+        // ###################### 기본 UI 버튼 제어 ##############################
+
+        BtnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(MapMoveLock.getVisibility()==view.INVISIBLE) {
+                    MapMoveLock.setVisibility(View.VISIBLE);
+                    MapMoveUnLock.setVisibility(View.VISIBLE);
+                }
+                else if (MapMoveLock.getVisibility()==view.VISIBLE){
+                    MapMoveLock.setVisibility(View.INVISIBLE);
+                    MapMoveUnLock.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        BtnMapType.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(MapType_Satellite.getVisibility()==view.INVISIBLE) {
+                    MapType_Satellite.setVisibility(View.VISIBLE);
+                    MapType_Terrain.setVisibility(View.VISIBLE);
+                    MapType_Basic.setVisibility(View.VISIBLE);
+                }
+                else {
+                    MapType_Satellite.setVisibility(View.INVISIBLE);
+                    MapType_Terrain.setVisibility(View.INVISIBLE);
+                    MapType_Basic.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        BtnLandRegistrationMap.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(LandRegistrationOff.getVisibility() == view.INVISIBLE) {
+                    LandRegistrationOff.setVisibility(View.VISIBLE);
+                    LandRegistrationOn.setVisibility(View.VISIBLE);
+                }
+                else {
+                    LandRegistrationOff.setVisibility(View.INVISIBLE);
+                    LandRegistrationOn.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        // ################### 맵 이동 관련 제어 ##########################
+
+        // ################### 지도 모드 제어 ###########################
+
+        // 위성 지도
+        MapType_Satellite.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 색 지정
+                MapType_Satellite.setBackgroundResource(R.drawable.mybutton);
+                MapType_Basic.setBackgroundResource(R.drawable.mybutton_dark);
+                MapType_Terrain.setBackgroundResource(R.drawable.mybutton_dark);
+
+                naverMap.setMapType(NaverMap.MapType.Satellite);
+            }
+        });
+
+        // 지형도
+        MapType_Terrain.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 색 지정
+                MapType_Satellite.setBackgroundResource(R.drawable.mybutton_dark);
+                MapType_Basic.setBackgroundResource(R.drawable.mybutton_dark);
+                MapType_Terrain.setBackgroundResource(R.drawable.mybutton);
+
+                naverMap.setMapType(NaverMap.MapType.Terrain);
+            }
+        });
+
+        // 일반지도
+        MapType_Basic.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MapType_Satellite.setBackgroundResource(R.drawable.mybutton_dark);
+                MapType_Basic.setBackgroundResource(R.drawable.mybutton);
+                MapType_Terrain.setBackgroundResource(R.drawable.mybutton_dark);
+
+                naverMap.setMapType(NaverMap.MapType.Basic);
+            }
+        });
+    }
+
+
 
     private void deleteStatusBar(){
         View decorView = getWindow().getDecorView();
