@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final UiSettings uiSettings = naverMap.getUiSettings();
 
         // ###################### 기본 UI 버튼 제어 ##############################
-
+        // 맵 이동 / 맵 잠금
         BtnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        // 지도 모드
         BtnMapType.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        // 지적도
         BtnLandRegistrationMap.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         });
 
         // ################### 맵 이동 관련 제어 ##########################
-
+        // 맵잠금
         MapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -218,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        // 맵 이동
         MapMoveUnLock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,8 +327,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
     }
-
-
 
     private void deleteStatusBar(){
         View decorView = getWindow().getDecorView();
@@ -487,8 +488,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Marker_Count++;
 
         // 카메라 위치 설정
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(),dronePosition.getLongitude()));
-        naverMap.moveCamera(cameraUpdate);
+        Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
+        String text = (String)BtnMapMoveLock.getText();
+
+        if(text.equals("맵 잠금")) {
+            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(), dronePosition.getLongitude()));
+            naverMap.moveCamera(cameraUpdate);
+        }
 
         // [메뉴 바] yaw 보여주기
         TextView textView_yaw = (TextView) findViewById(R.id.yaw);
