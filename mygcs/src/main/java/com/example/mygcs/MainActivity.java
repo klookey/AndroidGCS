@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Log.i(TAG, "Start mainActivity");
         super.onCreate(savedInstanceState);
         // 소프트바 없애기
-        hideSoftBar();
+        deleteStatusBar();
         // 상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -135,19 +137,22 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         uiSettings.setZoomControlEnabled(false);
     }
 
-    private void hideSoftBar() {
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if(isImmersiveModeEnabled) {
-            Log.d(TAG, "Turning immersive mode mode off.");
-        } else {
-            Log.d(TAG, "Turning immersive mode mode on.");
-        }
-        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    private void deleteStatusBar(){
+        View decorView = getWindow().getDecorView();
+        int uiOption = decorView.getSystemUiVisibility();
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH )
+            uiOption |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+            uiOption |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+            uiOption |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility( uiOption );
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        deleteStatusBar();
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -310,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void AltitudeUpdate() {
         TextView textView = (TextView) findViewById(R.id.Altitude);
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
-        int intAltitude = (int)Math.round(altitude.getTargetAltitude());
+        int intAltitude = (int)Math.round(altitude.getAltitude());
         textView.setText("고도 " + intAltitude + "m");
         Log.d("Position7","Altitude : " + altitude);
     }
@@ -318,8 +323,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void SpeedUpdate() {
         TextView textView = (TextView) findViewById(R.id.Speed);
         Speed speed = this.drone.getAttribute(AttributeType.SPEED);
-        int doubleSpeed = (int)Math.round(speed.getAirSpeed());
-        // double doubleSpeed = Math.round(speed.getAirSpeed()*10)/10.0; 소수점 첫째자리까지
+        int doubleSpeed = (int)Math.round(speed.getGroundSpeed());
+        // double doubleSpeed = Math.round(speed.getGroundSpeed()*10)/10.0; 소수점 첫째자리까지
         textView.setText("속도 " + doubleSpeed + "m/s");
         Log.d("Position6", "Speed : " + this.drone.getAttribute(AttributeType.SPEED));
     }
