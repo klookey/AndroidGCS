@@ -114,9 +114,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // UI상 버튼 제어
-        ControlButton();
-
         mNaverMapFragment.getMapAsync(this);
     }
 
@@ -138,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 줌 버튼 제거
         uiSettings.setZoomControlEnabled(false);
+
+        // UI상 버튼 제어
+        ControlButton();
     }
 
     public void ControlButton() {
@@ -152,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Button MapType_Satellite = (Button) findViewById(R.id.MapType_Satellite);
         final Button LandRegistrationOn = (Button) findViewById(R.id.LandRegistrationOn);
         final Button LandRegistrationOff = (Button) findViewById(R.id.LandRegistrationOff);
+
+        final UiSettings uiSettings = naverMap.getUiSettings();
 
         // ###################### 기본 UI 버튼 제어 ##############################
 
@@ -200,6 +202,36 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         });
 
         // ################### 맵 이동 관련 제어 ##########################
+
+        MapMoveLock.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MapMoveUnLock.setBackgroundResource(R.drawable.mybutton_dark);
+                MapMoveLock.setBackgroundResource(R.drawable.mybutton);
+
+                BtnMapMoveLock.setText("맵 잠금");
+
+                uiSettings.setScrollGesturesEnabled(false);
+
+                MapMoveLock.setVisibility(View.INVISIBLE);
+                MapMoveUnLock.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        MapMoveUnLock.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MapMoveUnLock.setBackgroundResource(R.drawable.mybutton);
+                MapMoveLock.setBackgroundResource(R.drawable.mybutton_dark);
+
+                BtnMapMoveLock.setText("맵 이동");
+
+                uiSettings.setScrollGesturesEnabled(true);
+
+                MapMoveLock.setVisibility(View.INVISIBLE);
+                MapMoveUnLock.setVisibility(View.INVISIBLE);
+            }
+        });
 
         // ################### 지도 모드 제어 ###########################
 
