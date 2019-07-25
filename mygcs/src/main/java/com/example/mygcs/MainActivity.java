@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 BatteryUpdate();
                 break;
 
+            case AttributeEvent.STATE_UPDATED:
             case AttributeEvent.STATE_ARMING:
                 ArmBtnUpdate();
                 break;
@@ -235,17 +236,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void ArmBtnUpdate() {
+        State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         Button ArmBtn = (Button) findViewById(R.id.ArmBtn);
-        if(ArmBtn.getText()=="ARM")
-        {
-            ArmBtn.setText("TAKE-OFF");
-        }
-        else if(ArmBtn.getText()=="TAKE-OFF")
-        {
+
+        if (vehicleState.isFlying()) {
+            // Land
             ArmBtn.setText("LAND");
-        }
-        else if(ArmBtn.getText()=="LAND")
-        {
+        } else if (vehicleState.isArmed()) {
+            // Take off
+            ArmBtn.setText("TAKE OFF");
+        } else if (vehicleState.isConnected()) {
+            // Connected but not Armed
             ArmBtn.setText("ARM");
         }
     }
