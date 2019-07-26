@@ -11,7 +11,7 @@
     <!-- 클릭했을 때 -->
     <item android:state_focused="false" android:state_pressed="true">
         <shape>
-            <solid android:color="#FF9800" />
+            <solid android:color="#352000" />
             <corners android:radius="10dp" />
             <stroke android:width="2dp" android:color="#000000" />
         </shape>

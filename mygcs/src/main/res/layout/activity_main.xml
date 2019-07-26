@@ -226,7 +226,7 @@
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
-                            android:background="@drawable/mybutton"
+                            android:background="@drawable/mybutton_dark"
                             android:text="맵 이동"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
@@ -306,7 +306,7 @@
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
-                            android:background="@drawable/mybutton_dark"
+                            android:background="@drawable/mybutton"
                             android:text="맵 잠금"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
@@ -394,6 +394,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton"
                                 android:text="ARM"
+                                android:onClick="onArmButtonTap"
                                 android:textColor="#FFFFFF" />
 
                         </LinearLayout>
@@ -410,7 +411,7 @@
                             android:layout_height="50dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
-                            android:text="맵 이동"
+                            android:text="맵 잠금"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF" />
 
