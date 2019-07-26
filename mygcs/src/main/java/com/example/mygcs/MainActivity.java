@@ -29,6 +29,7 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PolylineOverlay;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
@@ -53,6 +54,7 @@ import com.o3dr.services.android.lib.model.AbstractCommandListener;
 import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements DroneListener, TowerListener, LinkListener, OnMapReadyCallback {
@@ -163,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // ###################### 기본 UI 버튼 제어 ##############################
         // 맵 이동 / 맵 잠금
         BtnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                @Override
+                public void onClick(View view) {
                 // 열려있으면 닫기
                 if(MapType_Satellite.getVisibility()==view.VISIBLE)
                 {
@@ -376,7 +378,27 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnClear.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO : Click event
+                // 열려있으면 닫기
+                if(MapMoveUnLock.getVisibility()==view.VISIBLE)
+                {
+                    MapMoveUnLock.setVisibility(View.INVISIBLE);
+                    MapMoveLock.setVisibility(View.INVISIBLE);
+                }
+                // 열려있으면 닫기
+                if(MapType_Satellite.getVisibility()==view.VISIBLE)
+                {
+                    MapType_Basic.setVisibility(View.INVISIBLE);
+                    MapType_Terrain.setVisibility(View.INVISIBLE);
+                    MapType_Satellite.setVisibility(View.INVISIBLE);
+                }
+                // 열려있으면 닫기
+                if(LandRegistrationOn.getVisibility()==view.VISIBLE)
+                {
+                    LandRegistrationOn.setVisibility(View.INVISIBLE);
+                    LandRegistrationOff.setVisibility(View.INVISIBLE);
+                }
+
+                // TODO : Click event about clear polyline.
             }
         });
     }
@@ -581,14 +603,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         markers.get(Marker_Count).setAngle((float)attitude.getYaw());
 
         // 마커 크기 지정
-        markers.get(Marker_Count).setHeight(80);
+        markers.get(Marker_Count).setHeight(450);
         markers.get(Marker_Count).setWidth(80);
 
         // 마커 아이콘 지정
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
 
         // 마커 위치를 중심점으로 지정
-        markers.get(Marker_Count).setAnchor(new PointF(0.5F,0.5F));
+        markers.get(Marker_Count).setAnchor(new PointF(0.5F,0.9F));
 
         // 마커 띄우기
         markers.get(Marker_Count).setMap(naverMap);
@@ -603,7 +625,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             naverMap.moveCamera(cameraUpdate);
         }
 
-        // [메뉴 바] yaw 보여주기
+        // [UI] yaw 보여주기
         TextView textView_yaw = (TextView) findViewById(R.id.yaw);
         if((int)yaw < 0)
         {
@@ -611,9 +633,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
         textView_yaw.setText("YAW " + (int)yaw + "deg");
 
-        // [메뉴 바] 잡히는 GPS 개수
+        // [UI] 잡히는 GPS 개수
         TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
         textView_gps.setText("위성 " + Satellite);
+
+        // 지나간 길 Polyline
+        PolylineOverlay polyline = new PolylineOverlay();
+        polyline.setCoords(Arrays.asList(markers.get(Marker_Count).getPosition()));
+        polyline.setMap(naverMap);
     }
 
     private void AltitudeUpdate() {
