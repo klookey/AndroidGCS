@@ -535,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             });
         } else if (vehicleState.isArmed()) {
             // Take off
-            ControlApi.getApi(this.drone).takeoff(10, new AbstractCommandListener() {
+            ControlApi.getApi(this.drone).takeoff(5, new AbstractCommandListener() {
 
                 @Override
                 public void onSuccess() {
@@ -603,14 +603,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         markers.get(Marker_Count).setAngle((float)attitude.getYaw());
 
         // 마커 크기 지정
-        markers.get(Marker_Count).setHeight(450);
-        markers.get(Marker_Count).setWidth(80);
+        markers.get(Marker_Count).setHeight(600);
+        markers.get(Marker_Count).setWidth(64);
 
         // 마커 아이콘 지정
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
 
         // 마커 위치를 중심점으로 지정
-        markers.get(Marker_Count).setAnchor(new PointF(0.5F,0.9F));
+        markers.get(Marker_Count).setAnchor(new PointF(0.5F,0.95F));
 
         // 마커 띄우기
         markers.get(Marker_Count).setMap(naverMap);
