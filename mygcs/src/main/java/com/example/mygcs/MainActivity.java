@@ -600,7 +600,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // yaw 에 따라 네비게이션 마커 회전
         Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
         double yaw = attitude.getYaw();
-        markers.get(Marker_Count).setAngle((float)attitude.getYaw());
+        Log.d("Position4", "yaw : " + yaw);
+        if((int)yaw < 0)
+        {
+            yaw+=360;
+        }
+        markers.get(Marker_Count).setAngle((float)yaw);
 
         // 마커 크기 지정
         markers.get(Marker_Count).setHeight(600);
@@ -627,10 +632,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // [UI] yaw 보여주기
         TextView textView_yaw = (TextView) findViewById(R.id.yaw);
-        if((int)yaw < 0)
-        {
-            yaw+=360;
-        }
         textView_yaw.setText("YAW " + (int)yaw + "deg");
 
         // [UI] 잡히는 GPS 개수
