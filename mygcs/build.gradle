@@ -37,4 +37,7 @@ dependencies {
 
     // Drone API
     implementation project(':ClientLib')
+
+    // 네이버 지도 내 위치
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
 }
