@@ -389,7 +389,7 @@
                             </LinearLayout>
 
                             <Button
-                                android:id="@+id/ArmBtn"
+                                android:id="@+id/BtnArm"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"

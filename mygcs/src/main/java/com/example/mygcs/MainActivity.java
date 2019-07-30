@@ -522,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void ArmBtnUpdate() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
-        Button ArmBtn = (Button) findViewById(R.id.ArmBtn);
+        Button ArmBtn = (Button) findViewById(R.id.BtnArm);
 
         if (vehicleState.isFlying()) {
             // Land
