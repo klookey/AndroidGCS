@@ -1,6 +1,7 @@
 package com.example.mygcs;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -576,18 +578,37 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             alertUser("Connect to a drone first");
         } else {
             // Connected but not Armed
-            VehicleApi.getApi(this.drone).arm(true, false, new SimpleCommandListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("State Change");
+            builder.setMessage("시동을 걸면 프로펠러가 고속으로 회전합니다.");
+            builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                 @Override
-                public void onError(int executionError) {
-                    alertUser("Unable to arm vehicle.");
-                }
-
-                @Override
-                public void onTimeout() {
-                    alertUser("Arming operation timed out.");
+                public void onClick(DialogInterface dialog, int which) {
+                    Arming();
                 }
             });
+            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
         }
+    }
+
+    public void Arming() {
+        VehicleApi.getApi(this.drone).arm(true, false, new SimpleCommandListener() {
+            @Override
+            public void onError(int executionError) {
+                alertUser("Unable to arm vehicle.");
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser("Arming operation timed out.");
+            }
+        });
     }
 
     private void BatteryUpdate() {
