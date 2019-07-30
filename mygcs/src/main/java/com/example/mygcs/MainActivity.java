@@ -414,11 +414,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 }
 
                 // 폴리라인 지우기
-
-
-                Log.d("Position3", "success1");
-                Log.d("Position3", "coords.size() : " + coords.size());
-
                 polyline.setMap(null);
 
                 // 리스트 값 지우기
@@ -662,9 +657,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 지나간 길 Polyline
         Collections.addAll(coords, markers.get(Marker_Count).getPosition());
         polyline.setCoords(coords);
+
+        // 선 예쁘게 설정
+        polyline.setWidth(15);
+        polyline.setCapType(PolylineOverlay.LineCap.Round);
+        polyline.setJoinType(PolylineOverlay.LineJoin.Round);
         polyline.setColor(Color.GREEN);
+
         polyline.setMap(naverMap);
+
         Log.d("Position3", "coords.size() : " + coords.size());
+        Log.d("Position3","markers.size() : " + markers.size());
 
         Marker_Count++;
     }
