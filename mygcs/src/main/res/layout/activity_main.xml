@@ -155,7 +155,8 @@
                 android:id="@+id/middle"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+            </LinearLayout>
 
             <TableLayout
                 android:layout_width="match_parent"
