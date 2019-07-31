@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Long-Clicked");
+        builder.setTitle("가이드 모드");
         builder.setMessage("클릭한 지점으로 이동하게 됩니다. 이동하시겠습니까?");
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             @Override
@@ -234,8 +234,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // TODO : LongClickedCoords 리스트와 연결해서 좌표 알려주기
     }
-
-
 
     public void ControlButton() {
         final Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
@@ -577,10 +575,30 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 ArmBtnUpdate();
                 break;
 
+            case AttributeEvent.ATTITUDE_UPDATED:
+                UpdateYaw();
+                break;
+
+
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    private void UpdateYaw() {
+        // Attitude 받아오기
+        Attitude attitude = this.drone.getAttribute(AttributeType.ATTITUDE);
+        double yaw = attitude.getYaw();
+
+        // yaw 값을 양수로
+        if ((int) yaw < 0) {
+            yaw += 360;
+        }
+
+        // [UI] yaw 보여주기
+        TextView textView_yaw = (TextView) findViewById(R.id.yaw);
+        textView_yaw.setText("YAW " + (int) yaw + "deg");
     }
 
     private void ArmBtnUpdate() {
@@ -727,10 +745,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(), dronePosition.getLongitude()));
             naverMap.moveCamera(cameraUpdate);
         }
-
-        // [UI] yaw 보여주기
-        TextView textView_yaw = (TextView) findViewById(R.id.yaw);
-        textView_yaw.setText("YAW " + (int) yaw + "deg");
 
         // [UI] 잡히는 GPS 개수
         TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
