@@ -220,30 +220,19 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void ChangeToGuidedMode() {
-        VehicleMode vehicleMode = (VehicleMode) VehicleMode.ROVER_GUIDED;
-//                                                  this.modeSelector.getSelectedItem();
-        Log.d("Position10", "VehicleMode Mode : " + vehicleMode.getMode());
-        Log.d("Position10", "VehicleMode Type : " + vehicleMode.getDroneType());
-        Log.d("Position10", "VehicleMode Lable : " + vehicleMode.getLabel());
-
-        // TODO : 바꾸면 바뀌지 않고 에러 뜸. 확인 필요
-
-        VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
-            @Override
-            public void onSuccess() {
-                alertUser("Vehicle mode change successful.");
-            }
-
+        VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_GUIDED, new SimpleCommandListener() {
             @Override
             public void onError(int executionError) {
-                alertUser("Vehicle mode change failed: " + executionError);
+                alertUser("Unable to change VehicleMode to ROVER_GUIDED : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Vehicle mode change timed out.");
+                alertUser("Unable to change VehicleMode to ROVER_GUIDED.");
             }
         });
+
+        // TODO : LongClickedCoords 리스트와 연결해서 좌표 알려주기
     }
 
 
