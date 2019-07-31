@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     List<Marker> markers = new ArrayList<>();
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
-    List<Marker> LongClickedCoords = new ArrayList<>();
+    List<LatLong> LongClickedCoords = new ArrayList<>();
 
     PolylineOverlay polyline = new PolylineOverlay();
 
@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 marker_goal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
                 marker_goal.setWidth(70);
                 marker_goal.setHeight(70);
-                LongClickedCoords.add(marker_goal);
+                LongClickedCoords.add(new LatLong(coord.latitude, coord.longitude));
+                Log.d("Position2", "LongClickedCoords : " + LongClickedCoords.get(Guided_Count));
                 marker_goal.setMap(naverMap);
 
                 // Guided 모드로 변환
@@ -232,7 +233,31 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // TODO : LongClickedCoords 리스트와 연결해서 좌표 알려주기
+        // 지정된 위치로 이동
+        GotoTartget();
+
+        // TODO : 도착하는것 제한
+    }
+
+    private void GotoTartget() {
+        ControlApi.getApi(this.drone).goTo(
+                new LatLong(LongClickedCoords.get(Guided_Count).getLatitude(), LongClickedCoords.get(Guided_Count).getLongitude()),
+                true, new AbstractCommandListener() {
+                    @Override
+                    public void onSuccess() {
+                        alertUser("Going to Goal ... ");
+                    }
+
+                    @Override
+                    public void onError(int executionError) {
+                        alertUser("Unable to go : " + executionError);
+                    }
+
+                    @Override
+                    public void onTimeout() {
+                        alertUser("Unable to go");
+                    }
+                });
     }
 
     public void ControlButton() {
