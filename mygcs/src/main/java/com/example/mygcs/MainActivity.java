@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     NaverMap naverMap;
 
     List<Marker> markers = new ArrayList<>();
-    List<LatLng> coords = new ArrayList<>();
+    List<LatLng> coords = new ArrayList<>(); // 폴리라인
+    List<Marker> LongClickedCoords = new ArrayList<>();
 
     PolylineOverlay polyline = new PolylineOverlay();
 
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
+    private int Guided_Count = 0;
 
     private final Handler handler = new Handler();
 
@@ -174,7 +176,77 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 내 위치
         naverMap.setLocationSource(locationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
+
+        // 롱 클릭 시 경고창
+        naverMap.setOnMapLongClickListener(new NaverMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull PointF pointF, @NonNull LatLng coord) {
+                LongClickWarning(pointF, coord);
+            }
+        });
     }
+
+    private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Long-Clicked");
+        builder.setMessage("클릭한 지점으로 이동하게 됩니다. 이동하시겠습니까?");
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 도착지 마커 생성
+                Marker marker_goal = new Marker();
+                marker_goal.setPosition(new LatLng(coord.latitude, coord.longitude));
+                marker_goal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
+                marker_goal.setWidth(70);
+                marker_goal.setHeight(70);
+                LongClickedCoords.add(marker_goal);
+                marker_goal.setMap(naverMap);
+
+                // Guided 모드로 변환
+                ChangeToGuidedMode();
+
+                // 나중에 지울때
+                // Guided_Count 가 지금 가는 곳을 가리킴
+                // 도착했다고 인지하면 Marker_Count 없애고 ++; 그곳으로 이동하도록.
+            }
+        });
+        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void ChangeToGuidedMode() {
+        VehicleMode vehicleMode = (VehicleMode) VehicleMode.ROVER_GUIDED;
+//                                                  this.modeSelector.getSelectedItem();
+        Log.d("Position10", "VehicleMode Mode : " + vehicleMode.getMode());
+        Log.d("Position10", "VehicleMode Type : " + vehicleMode.getDroneType());
+        Log.d("Position10", "VehicleMode Lable : " + vehicleMode.getLabel());
+
+        // TODO : 바꾸면 바뀌지 않고 에러 뜸. 확인 필요
+
+        VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser("Vehicle mode change successful.");
+            }
+
+            @Override
+            public void onError(int executionError) {
+                alertUser("Vehicle mode change failed: " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser("Vehicle mode change timed out.");
+            }
+        });
+    }
+
+
 
     public void ControlButton() {
         final Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
