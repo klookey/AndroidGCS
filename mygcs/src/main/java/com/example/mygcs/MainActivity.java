@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -223,17 +222,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_GUIDED, new SimpleCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("Changed to Guided Mode successful");
+                alertUser("가이드 모드로 변경합니다.");
             }
 
             @Override
             public void onError(int executionError) {
-                alertUser("Unable to change VehicleMode to COPTER_GUIDED : " + executionError);
+                alertUser("가이드 모드로 변경하는데 실패하였습니다. : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Unable to change VehicleMode to COPTER_GUIDED.");
+                alertUser("가이드 모드로 변경하는데 실패하였습니다. [시간 초과]");
             }
         });
 
@@ -752,8 +751,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         markers.get(Marker_Count).setAngle((float) yaw);
 
         // 마커 크기 지정
-        markers.get(Marker_Count).setHeight(600);
-        markers.get(Marker_Count).setWidth(64);
+        markers.get(Marker_Count).setHeight(500);
+        markers.get(Marker_Count).setWidth(100);
 
         // 마커 아이콘 지정
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
@@ -797,17 +796,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         if(vehicleMode == VehicleMode.COPTER_GUIDED)
         {
-            Location droneLocation = new Location("pointA");
+            LatLng droneLatLng = new LatLng(markers.get(Marker_Count).getPosition().latitude, markers.get(Marker_Count).getPosition().longitude);
+            LatLng goalLatLng = new LatLng(marker_goal.getPosition().latitude, marker_goal.getPosition().longitude);
 
-            droneLocation.setLatitude(markers.get(Marker_Count).getPosition().latitude);
-            droneLocation.setLongitude(markers.get(Marker_Count).getPosition().longitude);
-
-            Location goalLocation = new Location("pointB");
-
-            goalLocation.setLatitude(marker_goal.getPosition().latitude);
-            goalLocation.setLongitude(marker_goal.getPosition().longitude);
-
-            float distance = droneLocation.distanceTo(goalLocation);
+            double distance = droneLatLng.distanceTo(goalLatLng);
 
             Log.d("Position9","distance : " + distance);
 
@@ -818,19 +810,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
         Marker_Count++;
     }
-
-//    protected double distanceBetweenPoints(LatLong pointA, LatLong pointB) {
-//        if (pointA == null || pointB == null) {
-//            return 0;
-//        }
-//        double dx = pointA.getLatitude() - pointB.getLatitude();
-//        //dx=Math.round(dx*10)/10.0;
-//        Log.d("Position2", "dx : " + dx);
-//        double dy = pointA.getLongitude() - pointB.getLongitude();
-//        //dy=Math.round(dy*10)/10.0;
-//        Log.d("Position2", "dy : " + dy);
-//        return Math.sqrt(dx * dx + dy * dy);
-//    }
 
     private void AltitudeUpdate() {
         TextView textView = (TextView) findViewById(R.id.Altitude);
