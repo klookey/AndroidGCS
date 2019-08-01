@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     List<Marker> markers = new ArrayList<>();
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
-    List<LatLong> LongClickedCoords = new ArrayList<>();
+
+    Marker marker_goal = new Marker(); // Guided 모드 마커
 
     PolylineOverlay polyline = new PolylineOverlay();
 
@@ -89,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
-    private int Guided_Count = 0;
 
     private final Handler handler = new Handler();
 
@@ -194,13 +195,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 도착지 마커 생성
-                Marker marker_goal = new Marker();
+                marker_goal.setMap(null);
                 marker_goal.setPosition(new LatLng(coord.latitude, coord.longitude));
                 marker_goal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
                 marker_goal.setWidth(70);
                 marker_goal.setHeight(70);
-                LongClickedCoords.add(new LatLong(coord.latitude, coord.longitude));
-                Log.d("Position2", "LongClickedCoords : " + LongClickedCoords.get(Guided_Count));
                 marker_goal.setMap(naverMap);
 
                 // Guided 모드로 변환
@@ -223,25 +222,28 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void ChangeToGuidedMode() {
         VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_GUIDED, new SimpleCommandListener() {
             @Override
+            public void onSuccess() {
+                alertUser("Changed to Guided Mode successful");
+            }
+
+            @Override
             public void onError(int executionError) {
-                alertUser("Unable to change VehicleMode to ROVER_GUIDED : " + executionError);
+                alertUser("Unable to change VehicleMode to COPTER_GUIDED : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Unable to change VehicleMode to ROVER_GUIDED.");
+                alertUser("Unable to change VehicleMode to COPTER_GUIDED.");
             }
         });
 
         // 지정된 위치로 이동
         GotoTartget();
-
-        // TODO : 도착하는것 제한
     }
 
     private void GotoTartget() {
         ControlApi.getApi(this.drone).goTo(
-                new LatLong(LongClickedCoords.get(Guided_Count).getLatitude(), LongClickedCoords.get(Guided_Count).getLongitude()),
+                new LatLong(marker_goal.getPosition().latitude,marker_goal.getPosition().longitude),
                 true, new AbstractCommandListener() {
                     @Override
                     public void onSuccess() {
@@ -790,8 +792,45 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Log.d("Position3", "coords.size() : " + coords.size());
         Log.d("Position3","markers.size() : " + markers.size());
 
+        // 가이드 모드일 때 지정된 좌표와 드론 사이의 거리 측정
+        State vehicleState = this.drone.getAttribute(AttributeType.STATE);
+        VehicleMode vehicleMode = vehicleState.getVehicleMode();
+        if(vehicleMode == VehicleMode.COPTER_GUIDED)
+        {
+            Location droneLocation = new Location("pointA");
+
+            droneLocation.setLatitude(markers.get(Marker_Count).getPosition().latitude);
+            droneLocation.setLongitude(markers.get(Marker_Count).getPosition().longitude);
+
+            Location goalLocation = new Location("pointB");
+
+            goalLocation.setLatitude(marker_goal.getPosition().latitude);
+            goalLocation.setLongitude(marker_goal.getPosition().longitude);
+
+            float distance = droneLocation.distanceTo(goalLocation);
+
+            Log.d("Position9","distance : " + distance);
+
+            if(distance < 1.0)
+            {
+                alertUser("목적지에 도착하였습니다.");
+            }
+        }
         Marker_Count++;
     }
+
+//    protected double distanceBetweenPoints(LatLong pointA, LatLong pointB) {
+//        if (pointA == null || pointB == null) {
+//            return 0;
+//        }
+//        double dx = pointA.getLatitude() - pointB.getLatitude();
+//        //dx=Math.round(dx*10)/10.0;
+//        Log.d("Position2", "dx : " + dx);
+//        double dy = pointA.getLongitude() - pointB.getLongitude();
+//        //dy=Math.round(dy*10)/10.0;
+//        Log.d("Position2", "dy : " + dy);
+//        return Math.sqrt(dx * dx + dy * dy);
+//    }
 
     private void AltitudeUpdate() {
         TextView textView = (TextView) findViewById(R.id.Altitude);
