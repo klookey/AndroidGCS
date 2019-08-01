@@ -751,8 +751,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         markers.get(Marker_Count).setAngle((float) yaw);
 
         // 마커 크기 지정
-        markers.get(Marker_Count).setHeight(500);
-        markers.get(Marker_Count).setWidth(100);
+        markers.get(Marker_Count).setHeight(400);
+        markers.get(Marker_Count).setWidth(80);
 
         // 마커 아이콘 지정
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
@@ -808,6 +808,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 alertUser("목적지에 도착하였습니다.");
             }
         }
+
         Marker_Count++;
     }
 
