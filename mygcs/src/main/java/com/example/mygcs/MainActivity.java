@@ -634,15 +634,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         switch (event) {
             case AttributeEvent.STATE_CONNECTED:
                 alertUser("Drone Connected");
-
-                //updateConnectedButton(this.drone.isConnected());
-                //updateArmButton();
                 break;
 
             case AttributeEvent.STATE_DISCONNECTED:
                 alertUser("Drone Disconnected");
-                //updateConnectedButton(this.drone.isConnected());
-                //updateArmButton();
                 break;
 
             case AttributeEvent.TYPE_UPDATED:
@@ -682,8 +677,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 UpdateYaw();
                 break;
 
-            default:
+            case AttributeEvent.GPS_COUNT:
                 ShowSatelliteCount();
+                break;
+
+            default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
@@ -760,7 +758,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         } else {
             // Connected but not Armed
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("State Change");
+            builder.setTitle("Arming...");
             builder.setMessage("시동을 걸면 프로펠러가 고속으로 회전합니다.");
             builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                 @Override
