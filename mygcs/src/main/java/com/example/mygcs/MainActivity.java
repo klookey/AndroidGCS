@@ -89,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
-
-    // 이륙고도 설정
     private int takeOffAltitude = 3;
 
     private final Handler handler = new Handler();
@@ -189,6 +187,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 이륙고도 버튼에 표시
         ShowTakeOffAltitude();
+    }
+
+    private void ShowSatelliteCount() {
+        // [UI] 잡히는 GPS 개수
+        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
+        int Satellite = droneGps.getSatellitesCount();
+        TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
+        textView_gps.setText("위성 " + Satellite);
     }
 
     private void ShowTakeOffAltitude() {
@@ -628,6 +634,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         switch (event) {
             case AttributeEvent.STATE_CONNECTED:
                 alertUser("Drone Connected");
+
                 //updateConnectedButton(this.drone.isConnected());
                 //updateArmButton();
                 break;
@@ -676,6 +683,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             default:
+                ShowSatelliteCount();
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
@@ -826,7 +834,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         markers.get(Marker_Count).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
 
         // 마커 위치를 중심점으로 지정
-        markers.get(Marker_Count).setAnchor(new PointF(0.5F, 0.95F));
+        markers.get(Marker_Count).setAnchor(new PointF(0.5F, 0.9F));
 
         // 마커 띄우기
         markers.get(Marker_Count).setMap(naverMap);
@@ -839,10 +847,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(), dronePosition.getLongitude()));
             naverMap.moveCamera(cameraUpdate);
         }
-
-        // [UI] 잡히는 GPS 개수
-        TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
-        textView_gps.setText("위성 " + Satellite);
 
         // 지나간 길 Polyline
         Collections.addAll(coords, markers.get(Marker_Count).getPosition());
@@ -876,6 +880,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 alertUser("목적지에 도착하였습니다.");
             }
         }
+
+        // [UI] 잡히는 GPS 개수
+        ShowSatelliteCount();
 
         Marker_Count++;
     }
@@ -960,6 +967,4 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         Log.d(TAG, message);
     }
-
-
 }
