@@ -156,6 +156,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:orientation="vertical" >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="350dp"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical" />
+
             </LinearLayout>
 
             <TableLayout
@@ -215,7 +222,69 @@
                     <LinearLayout
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"></LinearLayout>
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/BtnTakeOffAltitude"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="이륙고도"
+                                android:background="@drawable/mybutton_takeoff_altitude"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="65dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/TakeOffUp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:drawableLeft="@drawable/arrow_up"
+                                android:paddingLeft="10dp"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="65dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/TakeOffDown"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:drawableLeft="@drawable/arrow_down"
+                                android:paddingLeft="10dp"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="80dp"

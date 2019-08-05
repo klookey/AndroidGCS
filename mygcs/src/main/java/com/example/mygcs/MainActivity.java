@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -90,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
+
+    // 이륙고도 설정
+    private int takeOffAltitude = 3;
 
     private final Handler handler = new Handler();
 
@@ -184,8 +186,28 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 LongClickWarning(pointF, coord);
             }
         });
+
+        // 이륙고도 버튼에 표시
+        ShowTakeOffAltitude();
     }
 
+    private void ShowTakeOffAltitude() {
+        final Button BtnTakeOffAltitude = (Button) findViewById(R.id.BtnTakeOffAltitude);
+        BtnTakeOffAltitude.setText(getTakeOffAltitude() + " m\n이륙고도");
+    }
+
+    // 이륙고도 get, set 함수
+    public int getTakeOffAltitude()
+    {
+        return this.takeOffAltitude;
+    }
+
+    public void setTakeOffAltitude(int Altitude)
+    {
+        this.takeOffAltitude = Altitude;
+    }
+
+    // ############################ 롱클릭 시 Guided 모드로 변경 ###################################
     private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("가이드 모드");
@@ -261,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 });
     }
 
+    // #############################################################################################
     public void ControlButton() {
         final Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
         final Button BtnMapType = (Button) findViewById(R.id.BtnMapType);
@@ -273,6 +296,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Button MapType_Satellite = (Button) findViewById(R.id.MapType_Satellite);
         final Button LandRegistrationOn = (Button) findViewById(R.id.LandRegistrationOn);
         final Button LandRegistrationOff = (Button) findViewById(R.id.LandRegistrationOff);
+        final Button BtnTakeOffAltitude = (Button) findViewById(R.id.BtnTakeOffAltitude);
+        final Button TakeOffUp = (Button) findViewById(R.id.TakeOffUp);
+        final Button TakeOffDown = (Button) findViewById(R.id.TakeOffDown);
 
         final UiSettings uiSettings = naverMap.getUiSettings();
 
@@ -507,18 +533,62 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 coords.clear();
             }
         });
+
+        // ########################## 이륙 고도 설정 ###########################
+        // 이륙고도 버튼
+        BtnTakeOffAltitude.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 열려있으면 닫기
+                if(TakeOffUp.getVisibility() == view.VISIBLE) {
+                    TakeOffUp.setVisibility(View.INVISIBLE);
+                    TakeOffDown.setVisibility(View.INVISIBLE);
+                }
+                else if (TakeOffUp.getVisibility() == view.INVISIBLE) {
+                    TakeOffUp.setVisibility(View.VISIBLE);
+                    TakeOffDown.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        // 이륙고도 Up 버튼
+        TakeOffUp.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SetTakeOffAltitudeUp();
+                ShowTakeOffAltitude();
+            }
+        });
+
+        // 이륙고도 Down 버튼
+        TakeOffDown.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetTakeOffAltitudeDown();
+                ShowTakeOffAltitude();
+            }
+        });
+    }
+
+    private void SetTakeOffAltitudeUp() {
+        int Altitude = getTakeOffAltitude();
+        setTakeOffAltitude(++Altitude);
+    }
+
+    private void SetTakeOffAltitudeDown() {
+        int Altitude = getTakeOffAltitude();
+        setTakeOffAltitude(--Altitude);
     }
 
     private void deleteStatusBar() {
-        View decorView = getWindow().getDecorView();
-        int uiOption = decorView.getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            uiOption |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            uiOption |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            uiOption |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOption);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE
+        );
     }
 
     @Override
@@ -605,7 +675,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 UpdateYaw();
                 break;
 
-
             default:
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
@@ -661,8 +730,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             });
         } else if (vehicleState.isArmed()) {
             // Take off
-            ControlApi.getApi(this.drone).takeoff(3, new AbstractCommandListener() {
-
+            ControlApi.getApi(this.drone).takeoff(takeOffAltitude, new AbstractCommandListener() {
                 @Override
                 public void onSuccess() {
                     alertUser("Taking off...");
