@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
@@ -56,6 +57,7 @@ import com.o3dr.services.android.lib.gcs.link.LinkConnectionStatus;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
 import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     List<Marker> markers = new ArrayList<>();
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
+    ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
+    List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
+    private int Recycler_Count = 0;
     private int takeOffAltitude = 3;
 
     private final Handler handler = new Handler();
@@ -159,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 네이버 로고 위치 변경
         UiSettings uiSettings = naverMap.getUiSettings();
-        uiSettings.setLogoMargin(32, 0, 0, 925);
+        uiSettings.setLogoMargin(2080, 0, 0, 925);
 
         // 축척 바 제거
         uiSettings.setScaleBarEnabled(false);
@@ -231,10 +236,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // Guided 모드로 변환
                 ChangeToGuidedMode();
-
-                // 나중에 지울때
-                // Guided_Count 가 지금 가는 곳을 가리킴
-                // 도착했다고 인지하면 Marker_Count 없애고 ++; 그곳으로 이동하도록.
             }
         });
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
             @Override
             public void onTimeout() {
-                alertUser("가이드 모드로 변경하는데 실패하였습니다. [시간 초과]");
+                alertUser("가이드 모드로 변경하는데 실패하였습니다.");
             }
         });
 
@@ -274,17 +275,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 true, new AbstractCommandListener() {
                     @Override
                     public void onSuccess() {
-                        alertUser("Going to Goal ... ");
+                        alertUser("목적지로 향합니다.");
                     }
 
                     @Override
                     public void onError(int executionError) {
-                        alertUser("Unable to go : " + executionError);
+                        alertUser("이동 할 수 없습니다 : " + executionError);
                     }
 
                     @Override
                     public void onTimeout() {
-                        alertUser("Unable to go");
+                        alertUser("이동 할 수 없습니다.");
                     }
                 });
     }
@@ -633,11 +634,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public void onDroneEvent(String event, Bundle extras) {
         switch (event) {
             case AttributeEvent.STATE_CONNECTED:
-                alertUser("Drone Connected");
+                alertUser("드론이 연결되었습니다.");
                 break;
 
             case AttributeEvent.STATE_DISCONNECTED:
-                alertUser("Drone Disconnected");
+                alertUser("드론이 연결 해제되었습니다.");
                 break;
 
             case AttributeEvent.TYPE_UPDATED:
@@ -682,6 +683,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             default:
+                MakeRecyclerView();
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
@@ -726,12 +728,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_LAND, new SimpleCommandListener() {
                 @Override
                 public void onError(int executionError) {
-                    alertUser("Unable to land the vehicle.");
+                    alertUser("착륙할 수 없습니다 : " + executionError);
                 }
 
                 @Override
                 public void onTimeout() {
-                    alertUser("Unable to land the vehicle.");
+                    alertUser("착륙할 수 없습니다.");
                 }
             });
         } else if (vehicleState.isArmed()) {
@@ -739,22 +741,22 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             ControlApi.getApi(this.drone).takeoff(takeOffAltitude, new AbstractCommandListener() {
                 @Override
                 public void onSuccess() {
-                    alertUser("Taking off...");
+                    alertUser("이륙에 성공하였습니다.");
                 }
 
                 @Override
-                public void onError(int i) {
-                    alertUser("Unable to take off.");
+                public void onError(int executionError) {
+                    alertUser("이륙 할 수 없습니다 : " + executionError);
                 }
 
                 @Override
                 public void onTimeout() {
-                    alertUser("Unable to take off.");
+                    alertUser("이륙 할 수 없습니다.");
                 }
             });
         } else if (!vehicleState.isConnected()) {
             // Connect
-            alertUser("Connect to a drone first");
+            alertUser("드론 연결을 하십시오.");
         } else {
             // Connected but not Armed
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -780,12 +782,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).arm(true, false, new SimpleCommandListener() {
             @Override
             public void onError(int executionError) {
-                alertUser("Unable to arm vehicle.");
+                alertUser("아밍 할 수 없습니다 " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Arming operation timed out.");
+                alertUser("아밍 할 수 없습니다.");
             }
         });
     }
@@ -903,22 +905,22 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     public void onFlightModeSelected(View view) {
-        VehicleMode vehicleMode = (VehicleMode) this.modeSelector.getSelectedItem();
+        final VehicleMode vehicleMode = (VehicleMode) this.modeSelector.getSelectedItem();
 
         VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("Vehicle mode change successful.");
+                alertUser("비행 모드 " + vehicleMode.toString() + "로 변경.");
             }
 
             @Override
             public void onError(int executionError) {
-                alertUser("Vehicle mode change failed: " + executionError);
+                alertUser("비행 모드 변경 실패 : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Vehicle mode change timed out.");
+                alertUser("비행 모드 변경 시간 초과.");
             }
         });
     }
@@ -944,25 +946,87 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 if (extras != null) {
                     msg = extras.getString(LinkConnectionStatus.EXTRA_ERROR_MSG);
                 }
-                alertUser("Connection Failed:" + msg);
+                alertUser("연결 실패 :" + msg);
                 break;
         }
     }
 
     @Override
     public void onTowerConnected() {
-        alertUser("DroneKit-Android Connected");
+        alertUser("드론-핸드폰 연결 성공.");
         this.controlTower.registerDrone(this.drone, this.handler);
         this.drone.registerDroneListener(this);
     }
 
     @Override
     public void onTowerDisconnected() {
-        alertUser("DroneKit-Android Interrupted");
+        alertUser("드론-핸드폰 연결 해제.");
+    }
+
+    private void MakeRecyclerView() {
+        LocalTime localTime = LocalTime.now();
+
+        // recycler view 시간 지나면 제거
+        if (recycler_list.size() > 0) {
+            Log.d("Position2","---------------------------------------------------");
+            Log.d("Position2","[Minute] recycler time : " + recycler_time.get(Recycler_Count).getMinute());
+            Log.d("Position2","[Minute] Local time : " + localTime.getMinute());
+            if (recycler_time.get(Recycler_Count).getMinute() == localTime.getMinute()) {
+                Log.d("Position2", "recycler time : " + recycler_time.get(Recycler_Count).getSecond());
+                Log.d("Position2", "Local time : " + localTime.getSecond());
+                Log.d("Position2", "[★] recycler size() : " + recycler_list.size());
+                Log.d("Position2", "[★] Recycler_Count : " + Recycler_Count);
+                if (localTime.getSecond() >= recycler_time.get(Recycler_Count).getSecond() + 3) {
+                    RemoveRecyclerView();
+                }
+            } else {
+                // 3초가 지났을 때 1분이 지나감
+                Log.d("Position2", "recycler time : " + recycler_time.get(Recycler_Count).getSecond());
+                Log.d("Position2", "Local time : " + localTime.getSecond());
+                Log.d("Position2", "[★] recycler size() : " + recycler_list.size());
+                Log.d("Position2", "[★] Recycler_Count : " + Recycler_Count);
+                if (localTime.getSecond() + 60 >= recycler_time.get(Recycler_Count).getSecond() + 3) {
+                    RemoveRecyclerView();
+                }
+            }
+            Log.d("Position2","---------------------------------------------------");
+        }
+    }
+
+    private void RemoveRecyclerView() {
+        recycler_list.remove(Recycler_Count);
+        recycler_time.remove(Recycler_Count);
+        if(recycler_list.size() > Recycler_Count) {
+            LocalTime localTime = LocalTime.now();
+            recycler_time.set(Recycler_Count,localTime);
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
+        recyclerView.setAdapter(adapter);
     }
 
     private void alertUser(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, message);
+//        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+//        Log.d(TAG, message);
+
+        // 5개 이상 삭제
+        if(recycler_list.size() > 3) {
+            recycler_list.remove(Recycler_Count);
+        }
+
+        LocalTime localTime = LocalTime.now();
+        recycler_list.add(String.format("  ★  " + message));
+        recycler_time.add(localTime);
+
+        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // 리사이클러뷰에 SimpleAdapter 객체 지정.
+        SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
+        recyclerView.setAdapter(adapter);
     }
 }

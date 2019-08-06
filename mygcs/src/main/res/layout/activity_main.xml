@@ -154,8 +154,13 @@
             <LinearLayout
                 android:id="@+id/middle"
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="vertical" >
+                android:layout_height="180dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler"
@@ -438,7 +443,7 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="10dp">
 
                     <LinearLayout
                         android:layout_width="500dp"
@@ -460,11 +465,11 @@
                             <Button
                                 android:id="@+id/BtnArm"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton"
-                                android:text="ARM"
                                 android:onClick="onArmButtonTap"
+                                android:text="ARM"
                                 android:textColor="#FFFFFF" />
 
                         </LinearLayout>
@@ -478,7 +483,7 @@
                         <Button
                             android:id="@+id/BtnMapMoveLock"
                             android:layout_width="77dp"
-                            android:layout_height="50dp"
+                            android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
                             android:text="맵 잠금"
@@ -501,7 +506,7 @@
                         <Button
                             android:id="@+id/BtnMapType"
                             android:layout_width="77dp"
-                            android:layout_height="50dp"
+                            android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
                             android:text="일반지도"
@@ -524,7 +529,7 @@
                         <Button
                             android:id="@+id/BtnLandRegistrationMap"
                             android:layout_width="77dp"
-                            android:layout_height="50dp"
+                            android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
                             android:text="지적도 Off"
@@ -542,7 +547,7 @@
                     <Button
                         android:id="@+id/BtnClear"
                         android:layout_width="77dp"
-                        android:layout_height="50dp"
+                        android:layout_height="45dp"
                         android:background="@drawable/mybutton"
                         android:text="Clear"
                         android:textColor="#FFFFFF" />
