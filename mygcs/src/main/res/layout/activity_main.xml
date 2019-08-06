@@ -164,7 +164,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler"
-                    android:layout_width="350dp"
+                    android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical" />
 

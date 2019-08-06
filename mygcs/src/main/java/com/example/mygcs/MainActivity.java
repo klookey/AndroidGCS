@@ -1013,7 +1013,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 //        Log.d(TAG, message);
 
         // 5개 이상 삭제
-        if(recycler_list.size() > 3) {
+        if (recycler_list.size() > 3) {
             recycler_list.remove(Recycler_Count);
         }
 
@@ -1028,5 +1028,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 리사이클러뷰에 SimpleAdapter 객체 지정.
         SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
         recyclerView.setAdapter(adapter);
+
+        
     }
 }
