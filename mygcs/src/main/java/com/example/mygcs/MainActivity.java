@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -1006,6 +1008,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
         recyclerView.setAdapter(adapter);
+
+        // 리사이클러뷰에 애니메이션 추가.
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.item_animation_down_to_up);
+        recyclerView.startAnimation(animation);
     }
 
     private void alertUser(String message) {
@@ -1028,7 +1034,5 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 리사이클러뷰에 SimpleAdapter 객체 지정.
         SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
         recyclerView.setAdapter(adapter);
-
-        
     }
 }
