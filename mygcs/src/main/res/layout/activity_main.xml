@@ -181,7 +181,108 @@
                     <LinearLayout
                         android:layout_width="400dp"
                         android:layout_height="50dp"
-                        android:orientation="horizontal"></LinearLayout>
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"></LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="75dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/BtnFlightMode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="일반\n모드" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="65dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="10dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/FlightMode_Basic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="일반\n모드"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="5dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/FlightMode_Path"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="경로\n비행"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="5dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/FlightMode_Gap"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="간격\n감시"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="5dp"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"></LinearLayout>
+
+                            <Button
+                                android:id="@+id/FlightMode_Area"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="면적\n감시"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="82dp"
@@ -230,38 +331,38 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="100dp"
+                            android:layout_width="85dp"
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="15dp"
+                                android:layout_width="10dp"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
                                 android:id="@+id/BtnTakeOffAltitude"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="45dp"
                                 android:layout_weight="1"
-                                android:text="이륙고도"
-                                android:background="@drawable/mybutton_takeoff_altitude"/>
+                                android:background="@drawable/mybutton_takeoff_altitude"
+                                android:text="이륙\n고도" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="15dp"
+                                android:layout_width="10dp"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
                                 android:id="@+id/TakeOffUp"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
                                 android:drawableLeft="@drawable/arrow_up"
@@ -270,19 +371,19 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="15dp"
+                                android:layout_width="10dp"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
                                 android:id="@+id/TakeOffDown"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
                                 android:drawableLeft="@drawable/arrow_down"

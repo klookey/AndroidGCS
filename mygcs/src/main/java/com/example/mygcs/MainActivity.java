@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
     ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
+    LatLng[] Gap_LatLng = new LatLng[4]; // 간격 감시
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int Marker_Count = 0;
     private int Recycler_Count = 0;
     private int takeOffAltitude = 3;
+    private int Gap_Count = 0;
 
     private final Handler handler = new Handler();
 
@@ -191,9 +193,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 LongClickWarning(pointF, coord);
             }
         });
-
-        // 이륙고도 버튼에 표시
-        ShowTakeOffAltitude();
     }
 
     private void ShowSatelliteCount() {
@@ -238,6 +237,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // Guided 모드로 변환
                 ChangeToGuidedMode();
+
+                // 지정된 위치로 이동
+                GotoTartget();
             }
         });
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -266,9 +268,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 alertUser("가이드 모드로 변경하는데 실패하였습니다.");
             }
         });
-
-        // 지정된 위치로 이동
-        GotoTartget();
     }
 
     private void GotoTartget() {
@@ -294,24 +293,37 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     // #############################################################################################
     public void ControlButton() {
+        // 기본 UI 4개 버튼
         final Button BtnMapMoveLock = (Button) findViewById(R.id.BtnMapMoveLock);
         final Button BtnMapType = (Button) findViewById(R.id.BtnMapType);
         final Button BtnLandRegistrationMap = (Button) findViewById(R.id.BtnLandRegistrationMap);
         final Button BtnClear = (Button) findViewById(R.id.BtnClear);
+        // Map 잠금 버튼
         final Button MapMoveLock = (Button) findViewById(R.id.MapMoveLock);
         final Button MapMoveUnLock = (Button) findViewById(R.id.MapMoveUnLock);
+        // Map Type 버튼
         final Button MapType_Basic = (Button) findViewById(R.id.MapType_Basic);
         final Button MapType_Terrain = (Button) findViewById(R.id.MapType_Terrain);
         final Button MapType_Satellite = (Button) findViewById(R.id.MapType_Satellite);
+        // 지적도 버튼
         final Button LandRegistrationOn = (Button) findViewById(R.id.LandRegistrationOn);
         final Button LandRegistrationOff = (Button) findViewById(R.id.LandRegistrationOff);
+        // 이륙고도 버튼
         final Button BtnTakeOffAltitude = (Button) findViewById(R.id.BtnTakeOffAltitude);
+        // 이륙고도 Up / Down 버튼
         final Button TakeOffUp = (Button) findViewById(R.id.TakeOffUp);
         final Button TakeOffDown = (Button) findViewById(R.id.TakeOffDown);
+        // 비행 모드 버튼
+        final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
+        // 비행 모드 설정 버튼
+        final Button FlightMode_Basic = (Button) findViewById(R.id.FlightMode_Basic);
+        final Button FlightMode_Path = (Button) findViewById(R.id.FlightMode_Path);
+        final Button FlightMode_Gap = (Button) findViewById(R.id.FlightMode_Gap);
+        final Button FlightMode_Area = (Button) findViewById(R.id.FlightMode_Area);
 
         final UiSettings uiSettings = naverMap.getUiSettings();
 
-        // ###################### 기본 UI 버튼 제어 ##############################
+        // ############################## 기본 UI 버튼 제어 #######################################
         // 맵 이동 / 맵 잠금
         BtnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -390,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // ################### 맵 이동 관련 제어 ##########################
+        // ############################### 맵 이동 관련 제어 ######################################
         // 맵잠금
         MapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -423,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // ################### 지도 모드 제어 ###########################
+        // ################################## 지도 모드 제어 ######################################
 
         // 위성 지도
         MapType_Satellite.setOnClickListener(new Button.OnClickListener() {
@@ -482,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // ############### 지적도 On / Off 제어 ###################
+        // ################################ 지적도 On / Off 제어 ##################################
 
         LandRegistrationOn.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -514,7 +526,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // #################### Clear ###################
+        // ###################################### Clear ###########################################
         BtnClear.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -543,7 +555,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
-        // ########################## 이륙 고도 설정 ###########################
+        // ###################################### 이륙 고도 설정 #################################
         // 이륙고도 버튼
         BtnTakeOffAltitude.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -577,6 +589,127 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 ShowTakeOffAltitude();
             }
         });
+
+        // #################################### 비행 모드 설정 ####################################
+        // 비행 모드 버튼
+        BtnFlightMode.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(FlightMode_Basic.getVisibility() == view.VISIBLE) {
+                    FlightMode_Basic.setVisibility(view.INVISIBLE);
+                    FlightMode_Path.setVisibility(view.INVISIBLE);
+                    FlightMode_Gap.setVisibility(view.INVISIBLE);
+                    FlightMode_Area.setVisibility(view.INVISIBLE);
+                }
+                else if(FlightMode_Basic.getVisibility() == view.INVISIBLE) {
+                    FlightMode_Basic.setVisibility(view.VISIBLE);
+                    FlightMode_Path.setVisibility(view.VISIBLE);
+                    FlightMode_Gap.setVisibility(view.VISIBLE);
+                    FlightMode_Area.setVisibility(view.VISIBLE);
+                }
+            }
+        });
+
+        // 일반 모드
+        FlightMode_Basic.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO : Basic FlightMode event
+
+                FlightMode_Basic.setVisibility(view.INVISIBLE);
+                FlightMode_Path.setVisibility(view.INVISIBLE);
+                FlightMode_Gap.setVisibility(view.INVISIBLE);
+                FlightMode_Area.setVisibility(view.INVISIBLE);
+            }
+        });
+
+        // 경로 비행 모드
+        FlightMode_Path.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO : Path FlgithMode event
+
+                FlightMode_Basic.setVisibility(view.INVISIBLE);
+                FlightMode_Path.setVisibility(view.INVISIBLE);
+                FlightMode_Gap.setVisibility(view.INVISIBLE);
+                FlightMode_Area.setVisibility(view.INVISIBLE);
+            }
+        });
+
+        // 간격 감시 모드
+        FlightMode_Gap.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO : Gap FlightMode event
+
+                // Auto 모드로 전환
+                ChangeToAutoMode();
+
+                ConductAutoMode();
+
+                FlightMode_Basic.setVisibility(view.INVISIBLE);
+                FlightMode_Path.setVisibility(view.INVISIBLE);
+                FlightMode_Gap.setVisibility(view.INVISIBLE);
+                FlightMode_Area.setVisibility(view.INVISIBLE);
+            }
+        });
+
+        // 면적 감시 모드
+        FlightMode_Area.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO : Area FlightMode event
+
+                FlightMode_Basic.setVisibility(view.INVISIBLE);
+                FlightMode_Path.setVisibility(view.INVISIBLE);
+                FlightMode_Gap.setVisibility(view.INVISIBLE);
+                FlightMode_Area.setVisibility(view.INVISIBLE);
+            }
+        });
+    }
+
+    private void ChangeToAutoMode() {
+        VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_AUTO, new SimpleCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser("Auto 모드로 변경합니다.");
+            }
+
+            @Override
+            public void onError(int executionError) {
+                alertUser("Auto 모드로 변경하는데 실패하였습니다. : " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser("Auto 모드로 변경하는데 실패하였습니다.");
+            }
+        });
+    }
+
+    private void ConductAutoMode() {
+        alertUser("A좌표를 클릭하세요");
+        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                if(Gap_Count <= 2) {
+                    Gap_LatLng[Gap_Count] = latLng;
+                    Gap_Count++;
+                    if (Gap_Count == 1) {
+                        BPoint();
+                    }
+                    Log.d("Position5", "success");
+                }
+            }
+        });
+        Log.d("Position5", "Gap_LatLng[" + Gap_Count + "] : " + Gap_LatLng[Gap_Count]);
+        if(Gap_Count == 1) {
+
+        }
+    }
+
+    private void BPoint() {
+
     }
 
     private void SetTakeOffAltitudeUp() {
