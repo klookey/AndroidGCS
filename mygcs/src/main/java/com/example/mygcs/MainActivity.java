@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int Recycler_Count = 0;
     private int takeOffAltitude = 3;
     private int Auto_Marker_Count = 0;
-    public int Auto_Distance = 10;
+    public int Auto_Distance = 50;
 
     private final Handler handler = new Handler();
 
@@ -702,26 +702,49 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     Log.d("Position5", "success");
                     Log.d("Position5", "Gap_LatLng[" + Auto_Marker_Count + "] : " + Auto_Marker.get(Auto_Marker_Count).getPosition());
 
+                    // 드론과의 거리 체크
+                    if(Auto_Marker_Count == 1) {
+                        Log.d("Position10","success in here - 1");
+                        DistanceFromDrone();
+                    }
                     Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
 
                     Auto_Marker_Count++;
                 }
                 if(Auto_Marker_Count == 2) {
-//                    LatLong from = new LatLong(Auto_Marker.get(0).getPosition().latitude, Auto_Marker.get(0).getPosition().longitude);
-//                    LatLong to = new LatLong(Auto_Marker.get(1).getPosition().latitude, Auto_Marker.get(1).getPosition().longitude);
+                    double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
+                    LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading-90);
+                    LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(1).getPosition(), Auto_Distance, heading-90);
 
-                    double DegreeBetweenAandB = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
-                    Log.d("Position10","DegreeBetweenAandB : " + DegreeBetweenAandB);
+                    Marker marker = new Marker(latLng1);
+                    Auto_Marker.add(marker);
+                    marker.setPosition(latLng2);
+                    Auto_Marker.add(marker);
 
-
-
-                    //SphericalUtil.computeOffset(Auto_Marker.get(0), Auto_Distance, )
+                    Auto_Marker.get(2).setMap(naverMap);
+                    Auto_Marker.get(3).setMap(naverMap);
                 }
             }
         });
     }
 
+    private void DistanceFromDrone() {
+        Log.d("Position10","success in here - 2");
+        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
+        Log.d("Position10","success in here - 3");
+        LatLng dronePosition = new LatLng(droneGps.getPosition().getLatitude(), droneGps.getPosition().getLongitude());
+        Log.d("Position10","success in here - 4");
+        // 드론을 밖에 내놓지 않아서 현재 드론 위치를 받아오지 못함 -> 그래서 꺼지는듯
+        double FirstDistance = dronePosition.distanceTo(Auto_Marker.get(0).getPosition());
+        double SecondDistance = dronePosition.distanceTo(Auto_Marker.get(1).getPosition());
 
+        if(FirstDistance < SecondDistance) {
+            Marker tempMarker;
+            tempMarker = Auto_Marker.get(0);
+            Auto_Marker.set(0,Auto_Marker.get(1));
+            Auto_Marker.set(1,tempMarker);
+        }
+    }
 
     private void SetTakeOffAltitudeUp() {
         int Altitude = getTakeOffAltitude();
