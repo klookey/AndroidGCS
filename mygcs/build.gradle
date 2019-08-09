@@ -40,4 +40,7 @@ dependencies {
 
     // 네이버 지도 내 위치
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+    // 구글 지도
+    implementation 'com.google.maps.android:android-maps-utils:0.3.4'
 }

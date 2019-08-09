@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
     ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
-    LatLng[] Gap_LatLng = new LatLng[4]; // 간격 감시
+    List<Marker> Auto_Marker = new ArrayList<>();       // 마커
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -98,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int Marker_Count = 0;
     private int Recycler_Count = 0;
     private int takeOffAltitude = 3;
-    private int Gap_Count = 0;
+    private int Auto_Marker_Count = 0;
+    public int Auto_Distance = 10;
 
     private final Handler handler = new Handler();
 
@@ -209,13 +210,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     // 이륙고도 get, set 함수
-    public int getTakeOffAltitude()
-    {
+    public int getTakeOffAltitude() {
         return this.takeOffAltitude;
     }
 
-    public void setTakeOffAltitude(int Altitude)
-    {
+    public void setTakeOffAltitude(int Altitude) {
         this.takeOffAltitude = Altitude;
     }
 
@@ -272,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void GotoTartget() {
         ControlApi.getApi(this.drone).goTo(
-                new LatLong(marker_goal.getPosition().latitude,marker_goal.getPosition().longitude),
+                new LatLong(marker_goal.getPosition().latitude, marker_goal.getPosition().longitude),
                 true, new AbstractCommandListener() {
                     @Override
                     public void onSuccess() {
@@ -561,11 +560,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // 열려있으면 닫기
-                if(TakeOffUp.getVisibility() == view.VISIBLE) {
+                if (TakeOffUp.getVisibility() == view.VISIBLE) {
                     TakeOffUp.setVisibility(View.INVISIBLE);
                     TakeOffDown.setVisibility(View.INVISIBLE);
-                }
-                else if (TakeOffUp.getVisibility() == view.INVISIBLE) {
+                } else if (TakeOffUp.getVisibility() == view.INVISIBLE) {
                     TakeOffUp.setVisibility(View.VISIBLE);
                     TakeOffDown.setVisibility(View.VISIBLE);
                 }
@@ -595,13 +593,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnFlightMode.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(FlightMode_Basic.getVisibility() == view.VISIBLE) {
+                if (FlightMode_Basic.getVisibility() == view.VISIBLE) {
                     FlightMode_Basic.setVisibility(view.INVISIBLE);
                     FlightMode_Path.setVisibility(view.INVISIBLE);
                     FlightMode_Gap.setVisibility(view.INVISIBLE);
                     FlightMode_Area.setVisibility(view.INVISIBLE);
-                }
-                else if(FlightMode_Basic.getVisibility() == view.INVISIBLE) {
+                } else if (FlightMode_Basic.getVisibility() == view.INVISIBLE) {
                     FlightMode_Basic.setVisibility(view.VISIBLE);
                     FlightMode_Path.setVisibility(view.VISIBLE);
                     FlightMode_Gap.setVisibility(view.VISIBLE);
@@ -615,6 +612,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // TODO : Basic FlightMode event
+                BtnFlightMode.setText("일반\n모드");
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
@@ -628,6 +626,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // TODO : Path FlgithMode event
+                BtnFlightMode.setText("경로\n비행");
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
@@ -641,10 +640,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // TODO : Gap FlightMode event
+                BtnFlightMode.setText("간격\n감시");
 
                 // Auto 모드로 전환
                 ChangeToAutoMode();
 
+                // Auto 모드 수행
                 ConductAutoMode();
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
@@ -659,6 +660,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // TODO : Area FlightMode event
+                BtnFlightMode.setText("면적\n감시");
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
@@ -688,29 +690,38 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void ConductAutoMode() {
-        alertUser("A좌표를 클릭하세요");
+        alertUser("A와 B좌표를 클릭하세요.");
         naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-                if(Gap_Count <= 2) {
-                    Gap_LatLng[Gap_Count] = latLng;
-                    Gap_Count++;
-                    if (Gap_Count == 1) {
-                        BPoint();
-                    }
+                if (Auto_Marker_Count < 2) {
+                    Marker marker = new Marker();
+                    marker.setPosition(latLng);
+                    Auto_Marker.add(marker);
+
                     Log.d("Position5", "success");
+                    Log.d("Position5", "Gap_LatLng[" + Auto_Marker_Count + "] : " + Auto_Marker.get(Auto_Marker_Count).getPosition());
+
+                    Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
+
+                    Auto_Marker_Count++;
+                }
+                if(Auto_Marker_Count == 2) {
+//                    LatLong from = new LatLong(Auto_Marker.get(0).getPosition().latitude, Auto_Marker.get(0).getPosition().longitude);
+//                    LatLong to = new LatLong(Auto_Marker.get(1).getPosition().latitude, Auto_Marker.get(1).getPosition().longitude);
+
+                    double DegreeBetweenAandB = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
+                    Log.d("Position10","DegreeBetweenAandB : " + DegreeBetweenAandB);
+
+
+
+                    //SphericalUtil.computeOffset(Auto_Marker.get(0), Auto_Distance, )
                 }
             }
         });
-        Log.d("Position5", "Gap_LatLng[" + Gap_Count + "] : " + Gap_LatLng[Gap_Count]);
-        if(Gap_Count == 1) {
-
-        }
     }
 
-    private void BPoint() {
 
-    }
 
     private void SetTakeOffAltitudeUp() {
         int Altitude = getTakeOffAltitude();
@@ -996,22 +1007,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         polyline.setMap(naverMap);
 
         Log.d("Position3", "coords.size() : " + coords.size());
-        Log.d("Position3","markers.size() : " + markers.size());
+        Log.d("Position3", "markers.size() : " + markers.size());
 
         // 가이드 모드일 때 지정된 좌표와 드론 사이의 거리 측정
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
-        if(vehicleMode == VehicleMode.COPTER_GUIDED)
-        {
+        if (vehicleMode == VehicleMode.COPTER_GUIDED) {
             LatLng droneLatLng = new LatLng(markers.get(Marker_Count).getPosition().latitude, markers.get(Marker_Count).getPosition().longitude);
             LatLng goalLatLng = new LatLng(marker_goal.getPosition().latitude, marker_goal.getPosition().longitude);
 
             double distance = droneLatLng.distanceTo(goalLatLng);
 
-            Log.d("Position9","distance : " + distance);
+            Log.d("Position9", "distance : " + distance);
 
-            if(distance < 1.0)
-            {
+            if (distance < 1.0) {
                 alertUser("목적지에 도착하였습니다.");
             }
         }
@@ -1103,9 +1112,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // recycler view 시간 지나면 제거
         if (recycler_list.size() > 0) {
-            Log.d("Position2","---------------------------------------------------");
-            Log.d("Position2","[Minute] recycler time : " + recycler_time.get(Recycler_Count).getMinute());
-            Log.d("Position2","[Minute] Local time : " + localTime.getMinute());
+            Log.d("Position2", "---------------------------------------------------");
+            Log.d("Position2", "[Minute] recycler time : " + recycler_time.get(Recycler_Count).getMinute());
+            Log.d("Position2", "[Minute] Local time : " + localTime.getMinute());
             if (recycler_time.get(Recycler_Count).getMinute() == localTime.getMinute()) {
                 Log.d("Position2", "recycler time : " + recycler_time.get(Recycler_Count).getSecond());
                 Log.d("Position2", "Local time : " + localTime.getSecond());
@@ -1124,16 +1133,16 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     RemoveRecyclerView();
                 }
             }
-            Log.d("Position2","---------------------------------------------------");
+            Log.d("Position2", "---------------------------------------------------");
         }
     }
 
     private void RemoveRecyclerView() {
         recycler_list.remove(Recycler_Count);
         recycler_time.remove(Recycler_Count);
-        if(recycler_list.size() > Recycler_Count) {
+        if (recycler_list.size() > Recycler_Count) {
             LocalTime localTime = LocalTime.now();
-            recycler_time.set(Recycler_Count,localTime);
+            recycler_time.set(Recycler_Count, localTime);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
@@ -1143,7 +1152,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         recyclerView.setAdapter(adapter);
 
         // 리사이클러뷰에 애니메이션 추가.
-        Animation animation = AnimationUtils.loadAnimation(this,R.anim.item_animation_down_to_up);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.item_animation_down_to_up);
         recyclerView.startAnimation(animation);
     }
 
