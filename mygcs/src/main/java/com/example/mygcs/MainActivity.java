@@ -702,11 +702,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     Log.d("Position5", "success");
                     Log.d("Position5", "Gap_LatLng[" + Auto_Marker_Count + "] : " + Auto_Marker.get(Auto_Marker_Count).getPosition());
 
-                    // 드론과의 거리 체크
-                    if(Auto_Marker_Count == 1) {
-                        Log.d("Position10","success in here - 1");
-                        DistanceFromDrone();
-                    }
                     Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
 
                     Auto_Marker_Count++;
@@ -726,24 +721,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 }
             }
         });
-    }
-
-    private void DistanceFromDrone() {
-        Log.d("Position10","success in here - 2");
-        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        Log.d("Position10","success in here - 3");
-        LatLng dronePosition = new LatLng(droneGps.getPosition().getLatitude(), droneGps.getPosition().getLongitude());
-        Log.d("Position10","success in here - 4");
-        // 드론을 밖에 내놓지 않아서 현재 드론 위치를 받아오지 못함 -> 그래서 꺼지는듯
-        double FirstDistance = dronePosition.distanceTo(Auto_Marker.get(0).getPosition());
-        double SecondDistance = dronePosition.distanceTo(Auto_Marker.get(1).getPosition());
-
-        if(FirstDistance < SecondDistance) {
-            Marker tempMarker;
-            tempMarker = Auto_Marker.get(0);
-            Auto_Marker.set(0,Auto_Marker.get(1));
-            Auto_Marker.set(1,tempMarker);
-        }
     }
 
     private void SetTakeOffAltitudeUp() {
