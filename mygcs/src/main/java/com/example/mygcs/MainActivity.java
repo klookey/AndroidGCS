@@ -34,6 +34,7 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.overlay.PolylineOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.o3dr.android.client.ControlTower;
@@ -61,6 +62,7 @@ import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -81,11 +83,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<LatLng> coords = new ArrayList<>(); // 폴리라인
     ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
-    List<Marker> Auto_Marker = new ArrayList<>();       // 마커
+    List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
+    LatLng[] Gap_LatLng = new LatLng[4];                // 간격감시 폴리곤
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
     PolylineOverlay polyline = new PolylineOverlay();
+    PolygonOverlay polygon = new PolygonOverlay();
 
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int takeOffAltitude = 3;
     private int Auto_Marker_Count = 0;
     public int Auto_Distance = 50;
+    private int Gap_Top = 0;
 
     private final Handler handler = new Handler();
 
@@ -694,30 +699,52 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-                if (Auto_Marker_Count < 2) {
+                if (Gap_Top < 2) {
                     Marker marker = new Marker();
                     marker.setPosition(latLng);
+                    Gap_LatLng[Gap_Top] = latLng;
+
+                    // Auto_Marker에 넣기 위해 marker 생성..
                     Auto_Marker.add(marker);
 
-                    Log.d("Position5", "success");
-                    Log.d("Position5", "Gap_LatLng[" + Auto_Marker_Count + "] : " + Auto_Marker.get(Auto_Marker_Count).getPosition());
-
-                    Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
-
+                    Gap_Top++;
                     Auto_Marker_Count++;
                 }
                 if(Auto_Marker_Count == 2) {
                     double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
-                    LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading-90);
-                    LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(1).getPosition(), Auto_Distance, heading-90);
 
-                    Marker marker = new Marker(latLng1);
-                    Auto_Marker.add(marker);
-                    marker.setPosition(latLng2);
-                    Auto_Marker.add(marker);
+                    LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(1).getPosition(), Auto_Distance, heading+90);
+                    LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading+90);
 
-                    Auto_Marker.get(2).setMap(naverMap);
-                    Auto_Marker.get(3).setMap(naverMap);
+                    // ############################################################################
+                    Gap_LatLng[2]=latLng1;
+                    Gap_LatLng[3]=latLng2;
+                    polygon.setCoords(Arrays.asList(
+                            new LatLng(Gap_LatLng[0].latitude, Gap_LatLng[0].longitude),
+                            new LatLng(Gap_LatLng[1].latitude, Gap_LatLng[1].longitude),
+                            new LatLng(Gap_LatLng[2].latitude, Gap_LatLng[2].longitude),
+                            new LatLng(Gap_LatLng[3].latitude, Gap_LatLng[3].longitude)));
+
+                    Log.d("Position5","LatLngp[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
+                    Log.d("Position5","LatLngp[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
+                    Log.d("Position5", "LatLng[2] : " + Gap_LatLng[2].latitude + " / " + Gap_LatLng[2].longitude);
+                    Log.d("Position5", "LatLng[3] : " + Gap_LatLng[3].latitude + " / " + Gap_LatLng[3].longitude);
+
+                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+
+                    polygon.setColor(colorLightBlue);
+                    polygon.setMap(naverMap);
+
+//                    Marker marker = new Marker(latLng1);
+//                    Auto_Marker.add(marker);
+//                    Marker marker2 = new Marker(latLng2);
+//                    Auto_Marker.add(marker2);
+//
+//                    Auto_Marker.get(2).setMap(naverMap);
+//                    Auto_Marker.get(3).setMap(naverMap);
+
+                    // ############################################################################
+
                 }
             }
         });
