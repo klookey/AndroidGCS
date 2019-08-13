@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     PolylineOverlay polyline = new PolylineOverlay();
     PolygonOverlay polygon = new PolygonOverlay();
+    PolylineOverlay polylinePath = new PolylineOverlay();
 
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int takeOffAltitude = 3;
     private int Auto_Marker_Count = 0;
     public int Auto_Distance = 50;
+    public int Gap_Distance = 5;
     private int Gap_Top = 0;
 
     private final Handler handler = new Handler();
@@ -650,8 +652,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // Auto 모드로 전환
                 ChangeToAutoMode();
 
-                // Auto 모드 수행
-                ConductAutoMode();
+                // 두 지점 + 폴리곤 생성
+                MakePolygon();
+
+                // 내부 길 생성
+                MakePath();
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
@@ -694,7 +699,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         });
     }
 
-    private void ConductAutoMode() {
+    private void MakePolygon() {
         alertUser("A와 B좌표를 클릭하세요.");
         naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
             @Override
@@ -725,8 +730,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                             new LatLng(Gap_LatLng[2].latitude, Gap_LatLng[2].longitude),
                             new LatLng(Gap_LatLng[3].latitude, Gap_LatLng[3].longitude)));
 
-                    Log.d("Position5","LatLngp[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
-                    Log.d("Position5","LatLngp[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
+                    Log.d("Position5", "LatLng[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
+                    Log.d("Position5", "LatLng[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
                     Log.d("Position5", "LatLng[2] : " + Gap_LatLng[2].latitude + " / " + Gap_LatLng[2].longitude);
                     Log.d("Position5", "LatLng[3] : " + Gap_LatLng[3].latitude + " / " + Gap_LatLng[3].longitude);
 
@@ -734,20 +739,29 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                     polygon.setColor(colorLightBlue);
                     polygon.setMap(naverMap);
-
-//                    Marker marker = new Marker(latLng1);
-//                    Auto_Marker.add(marker);
-//                    Marker marker2 = new Marker(latLng2);
-//                    Auto_Marker.add(marker2);
-//
-//                    Auto_Marker.get(2).setMap(naverMap);
-//                    Auto_Marker.get(3).setMap(naverMap);
-
-                    // ############################################################################
-
                 }
             }
         });
+    }
+
+    private void MakePath() {
+        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
+
+        Auto_Marker.get(0).setMap(naverMap);
+        Auto_Marker.get(1).setMap(naverMap);
+
+        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance; sum = sum + Gap_Distance)
+        {
+            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), sum,heading+90);
+            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), sum, heading+90);
+
+            Auto_Marker.add(new Marker(latLng1));
+            Auto_Marker.add(new Marker(latLng2));
+            Auto_Marker_Count += 2;
+
+            Auto_Marker.get(Auto_Marker_Count-2).setMap(naverMap);
+            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
+        }
     }
 
     private void SetTakeOffAltitudeUp() {
