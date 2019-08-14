@@ -656,7 +656,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 MakePolygon();
 
                 // 내부 길 생성
-                MakePath();
+                //MakePath();
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
@@ -711,6 +711,19 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                     // Auto_Marker에 넣기 위해 marker 생성..
                     Auto_Marker.add(marker);
+                    Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
+
+                    if(Gap_Top == 0) {
+                        Auto_Marker.get(0).setIcon(OverlayImage.fromResource(R.drawable.number1));
+                        Auto_Marker.get(0).setWidth(80);
+                        Auto_Marker.get(0).setHeight(80);
+                        Auto_Marker.get(0).setAnchor(new PointF(0.5F, 0.5F));
+                    } else if(Gap_Top == 1) {
+                        Auto_Marker.get(1).setIcon(OverlayImage.fromResource(R.drawable.number2));
+                        Auto_Marker.get(1).setWidth(80);
+                        Auto_Marker.get(1).setHeight(80);
+                        Auto_Marker.get(1).setAnchor(new PointF(0.5F, 0.5F));
+                    }
 
                     Gap_Top++;
                     Auto_Marker_Count++;
@@ -745,23 +758,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void MakePath() {
-        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
+//        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
 
-        Auto_Marker.get(0).setMap(naverMap);
-        Auto_Marker.get(1).setMap(naverMap);
-
-        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance; sum = sum + Gap_Distance)
-        {
-            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), sum,heading+90);
-            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), sum, heading+90);
-
-            Auto_Marker.add(new Marker(latLng1));
-            Auto_Marker.add(new Marker(latLng2));
-            Auto_Marker_Count += 2;
-
-            Auto_Marker.get(Auto_Marker_Count-2).setMap(naverMap);
-            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
-        }
+//        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance; sum = sum + Gap_Distance)
+//        {
+//            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), sum,heading+90);
+//            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), sum, heading+90);
+//
+//            Auto_Marker.add(new Marker(latLng1));
+//            Auto_Marker.add(new Marker(latLng2));
+//            Auto_Marker_Count += 2;
+//
+//            Auto_Marker.get(Auto_Marker_Count-2).setMap(naverMap);
+//            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
+//        }
     }
 
     private void SetTakeOffAltitudeUp() {
