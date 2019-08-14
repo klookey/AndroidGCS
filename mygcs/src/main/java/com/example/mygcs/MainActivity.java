@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
     List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
     LatLng[] Gap_LatLng = new LatLng[4];                // 간격감시 폴리곤
+    List<LatLng> Auto_Polyline = new ArrayList<>();     // 간격감시 폴리라인
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -555,9 +556,28 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // 폴리라인 지우기
                 polyline.setMap(null);
+                polygon.setMap(null);
+                polylinePath.setMap(null);
+
+                // Auto_Marker 지우기
+                Auto_Marker.get(0).setMap(null);
+                Auto_Marker.get(1).setMap(null);
 
                 // 리스트 값 지우기
                 coords.clear();
+                Auto_Marker.clear();
+                Auto_Polyline.clear();
+
+                // ArrayList 값 지우기
+                for(int i=0;i<Gap_LatLng.length;i++)
+                {
+                    Gap_LatLng[i]=null;
+                }
+
+                // Top 변수 초기화
+                Marker_Count=0;
+                Auto_Marker_Count=0;
+                Gap_Top=0;
             }
         });
 
@@ -655,9 +675,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // 두 지점 + 폴리곤 생성
                 MakePolygon();
 
-                // 내부 길 생성
-                //MakePath();
-
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
                 FlightMode_Gap.setVisibility(view.INVISIBLE);
@@ -752,26 +769,38 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                     polygon.setColor(colorLightBlue);
                     polygon.setMap(naverMap);
+
+                    // 내부 길 생성
+                    MakePath();
                 }
             }
         });
     }
 
     private void MakePath() {
-//        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
+        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
 
-//        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance; sum = sum + Gap_Distance)
-//        {
-//            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), sum,heading+90);
-//            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), sum, heading+90);
-//
-//            Auto_Marker.add(new Marker(latLng1));
-//            Auto_Marker.add(new Marker(latLng2));
-//            Auto_Marker_Count += 2;
-//
-//            Auto_Marker.get(Auto_Marker_Count-2).setMap(naverMap);
-//            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
-//        }
+        Auto_Polyline.add(new LatLng(Auto_Marker.get(0).getPosition().latitude,Auto_Marker.get(0).getPosition().longitude));
+        Auto_Polyline.add(new LatLng(Auto_Marker.get(1).getPosition().latitude,Auto_Marker.get(1).getPosition().longitude));
+
+        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance + Gap_Distance; sum = sum + Gap_Distance)
+        {
+            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), Gap_Distance,heading+90);
+            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), Gap_Distance,heading+90);
+
+            Auto_Marker.add(new Marker(latLng1));
+            Auto_Marker.add(new Marker(latLng2));
+            Auto_Marker_Count += 2;
+
+            Auto_Marker.get(Auto_Marker_Count-2).getPosition();
+
+            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-2).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-2).getPosition().longitude));
+            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-1).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-1).getPosition().longitude));
+        }
+
+        polylinePath.setColor(Color.WHITE);
+        polylinePath.setCoords(Auto_Polyline);
+        polylinePath.setMap(naverMap);
     }
 
     private void SetTakeOffAltitudeUp() {
