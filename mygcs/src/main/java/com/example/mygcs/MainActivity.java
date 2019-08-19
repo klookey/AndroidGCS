@@ -335,6 +335,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Button FlightMode_Gap = (Button) findViewById(R.id.FlightMode_Gap);
         final Button FlightMode_Area = (Button) findViewById(R.id.FlightMode_Area);
 
+        // 임무 전송 / 임무 시작/ 임무 중지
+        final Button BtnSendMission = (Button) findViewById(R.id.BtnSendMission);
+
         final UiSettings uiSettings = naverMap.getUiSettings();
 
         // ############################## 기본 UI 버튼 제어 #######################################
@@ -585,6 +588,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 Marker_Count=0;
                 Auto_Marker_Count=0;
                 Gap_Top=0;
+
+                Reached_Count=0;
             }
         });
 
@@ -648,6 +653,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // TODO : Basic FlightMode event
                 BtnFlightMode.setText("일반\n모드");
 
+                BtnSendMission.setVisibility(view.INVISIBLE);
+
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
                 FlightMode_Gap.setVisibility(view.INVISIBLE);
@@ -676,8 +683,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // TODO : Gap FlightMode event
                 BtnFlightMode.setText("간격\n감시");
 
-                // Auto 모드로 전환
-                // ChangeToAutoMode();
+                BtnSendMission.setVisibility(View.VISIBLE);
 
                 // 두 지점 + 폴리곤 생성
                 MakePolygon();
@@ -705,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void MakeWayPoint() {
-        Mission mMission = new Mission();
+        final Mission mMission = new Mission();
 
         for(int i=0;i<Auto_Polyline.size();i++) {
             Waypoint waypoint = new Waypoint();
@@ -718,7 +724,52 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mMission.addMissionItem(waypoint);
         }
 
+        final Button BtnSendMission = (Button) findViewById(R.id.BtnSendMission);
+        BtnSendMission.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BtnSendMission.getText().equals("임무 전송")) {
+                    setMission(mMission);
+                }
+                else if(BtnSendMission.getText().equals("임무 시작")) {
+                    // Auto모드로 전환
+                    ChangeToAutoMode();
+                    BtnSendMission.setText("임무 중지");
+                }
+                else if(BtnSendMission.getText().equals("임무 중지")) {
+                    pauseMission();
+                    ChangeToLoiterMode();
+                    BtnSendMission.setText("임무 전송");
+                }
+            }
+        });
+    }
+
+    private void setMission(Mission mMission) {
         MissionApi.getApi(this.drone).setMission(mMission,true);
+    }
+
+    private void pauseMission() {
+        MissionApi.getApi(this.drone).pauseMission(null);
+    }
+
+    private void ChangeToLoiterMode() {
+        VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_LOITER, new SimpleCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser("Loiter 모드로 변경합니다.");
+            }
+
+            @Override
+            public void onError(int executionError) {
+                alertUser("Loiter 모드 변경 실패 : " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser("Loiter 모드 변경 실패");
+            }
+        });
     }
 
     private void ChangeToAutoMode() {
@@ -936,7 +987,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             case AttributeEvent.MISSION_SENT:
-                alertUser("미션 업로드 완료");
+                Mission_Sent();
                 break;
 
             case AttributeEvent.MISSION_ITEM_REACHED:
@@ -949,6 +1000,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
+    }
+
+    private void Mission_Sent() {
+        alertUser("미션 업로드 완료");
+        Button BtnSendMission = (Button) findViewById(R.id.BtnSendMission);
+        BtnSendMission.setText("임무 시작");
     }
 
     private void UpdateYaw() {
