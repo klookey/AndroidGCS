@@ -58,7 +58,6 @@ public abstract class MissionItem implements Cloneable, Parcelable {
         MissionItem that = (MissionItem) o;
 
         return type == that.type;
-
     }
 
     @Override

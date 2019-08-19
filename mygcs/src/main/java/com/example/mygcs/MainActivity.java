@@ -40,14 +40,18 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
+import com.o3dr.android.client.apis.MissionApi;
 import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.android.client.interfaces.DroneListener;
 import com.o3dr.android.client.interfaces.LinkListener;
 import com.o3dr.android.client.interfaces.TowerListener;
 import com.o3dr.services.android.lib.coordinate.LatLong;
+import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
+import com.o3dr.services.android.lib.drone.mission.Mission;
+import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Attitude;
 import com.o3dr.services.android.lib.drone.property.Battery;
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
     LatLng[] Gap_LatLng = new LatLng[4];                // 간격감시 폴리곤
     List<LatLng> Auto_Polyline = new ArrayList<>();     // 간격감시 폴리라인
+    List<Waypoint> WaypointList = new ArrayList<>();    // Waypoint 리스트
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -108,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public int Auto_Distance = 50;
     public int Gap_Distance = 5;
     private int Gap_Top = 0;
+
+    public int Reached_Count = 0;
 
     private final Handler handler = new Handler();
 
@@ -670,7 +677,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 BtnFlightMode.setText("간격\n감시");
 
                 // Auto 모드로 전환
-                ChangeToAutoMode();
+                // ChangeToAutoMode();
 
                 // 두 지점 + 폴리곤 생성
                 MakePolygon();
@@ -695,6 +702,23 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 FlightMode_Area.setVisibility(view.INVISIBLE);
             }
         });
+    }
+
+    private void MakeWayPoint() {
+        Mission mMission = new Mission();
+
+        for(int i=0;i<Auto_Polyline.size();i++) {
+            Waypoint waypoint = new Waypoint();
+            waypoint.setDelay(500);
+
+            Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
+            LatLongAlt latLongAlt = new LatLongAlt(Auto_Polyline.get(i).latitude, Auto_Polyline.get(i).longitude, altitude.getAltitude());
+            waypoint.setCoordinate(latLongAlt);
+
+            mMission.addMissionItem(waypoint);
+        }
+
+        MissionApi.getApi(this.drone).setMission(mMission,true);
     }
 
     private void ChangeToAutoMode() {
@@ -801,6 +825,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         polylinePath.setColor(Color.WHITE);
         polylinePath.setCoords(Auto_Polyline);
         polylinePath.setMap(naverMap);
+
+        // WayPoint
+        MakeWayPoint();
     }
 
     private void SetTakeOffAltitudeUp() {
@@ -906,6 +933,15 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
             case AttributeEvent.GPS_COUNT:
                 ShowSatelliteCount();
+                break;
+
+            case AttributeEvent.MISSION_SENT:
+                alertUser("미션 업로드 완료");
+                break;
+
+            case AttributeEvent.MISSION_ITEM_REACHED:
+                alertUser(Reached_Count + "번 waypoint 도착");
+                Reached_Count++;
                 break;
 
             default:
