@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
     LatLng[] Gap_LatLng = new LatLng[4];                // 간격감시 폴리곤
     List<LatLng> Auto_Polyline = new ArrayList<>();     // 간격감시 폴리라인
-    List<Waypoint> WaypointList = new ArrayList<>();    // Waypoint 리스트
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
@@ -715,7 +714,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         for(int i=0;i<Auto_Polyline.size();i++) {
             Waypoint waypoint = new Waypoint();
-            waypoint.setDelay(500);
+            waypoint.setDelay(1);
 
             Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
             LatLongAlt latLongAlt = new LatLongAlt(Auto_Polyline.get(i).latitude, Auto_Polyline.get(i).longitude, altitude.getAltitude());
@@ -729,7 +728,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View v) {
                 if(BtnSendMission.getText().equals("임무 전송")) {
-                    setMission(mMission);
+                    if(Gap_LatLng[1] != null) {
+                        setMission(mMission);
+                    } else {
+                        alertUser("A,B좌표 필요");
+                    }
                 }
                 else if(BtnSendMission.getText().equals("임무 시작")) {
                     // Auto모드로 전환
@@ -867,7 +870,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Auto_Marker.add(new Marker(latLng2));
             Auto_Marker_Count += 2;
 
-            Auto_Marker.get(Auto_Marker_Count-2).getPosition();
+//            Auto_Marker.get(Auto_Marker_Count-2).getPosition();
 
             Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-2).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-2).getPosition().longitude));
             Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-1).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-1).getPosition().longitude));
