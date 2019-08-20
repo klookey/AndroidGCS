@@ -563,6 +563,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     LandRegistrationOff.setVisibility(View.INVISIBLE);
                 }
 
+                // 이전 마커 지우기
+                if (Marker_Count - 1 >= 0) {
+                    markers.get(Marker_Count - 1).setMap(null);
+                }
+
                 // 폴리라인 지우기
                 polyline.setMap(null);
                 polygon.setMap(null);
