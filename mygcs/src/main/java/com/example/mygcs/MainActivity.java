@@ -725,8 +725,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Waypoint waypoint = new Waypoint();
             waypoint.setDelay(1);
 
-            Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
-            LatLongAlt latLongAlt = new LatLongAlt(Auto_Polyline.get(i).latitude, Auto_Polyline.get(i).longitude, altitude.getAltitude());
+            LatLongAlt latLongAlt = new LatLongAlt(Auto_Polyline.get(i).latitude, Auto_Polyline.get(i).longitude, mRecentAltitude);
             waypoint.setCoordinate(latLongAlt);
 
             mMission.addMissionItem(waypoint);
