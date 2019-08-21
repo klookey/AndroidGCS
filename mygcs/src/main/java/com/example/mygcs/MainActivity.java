@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public int Gap_Distance = 5;
     private int Gap_Top = 0;
 
+    protected double mRecentAltitude = 0;
+
     public int Reached_Count = 0;
 
     private final Handler handler = new Handler();
@@ -574,8 +576,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 polylinePath.setMap(null);
 
                 // Auto_Marker 지우기
-                Auto_Marker.get(0).setMap(null);
-                Auto_Marker.get(1).setMap(null);
+                if(Auto_Marker.size() != 0) {
+                    Auto_Marker.get(0).setMap(null);
+                    Auto_Marker.get(1).setMap(null);
+                }
 
                 // 리스트 값 지우기
                 coords.clear();
@@ -1213,10 +1217,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void AltitudeUpdate() {
+        Altitude currentAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
+        mRecentAltitude = currentAltitude.getRelativeAltitude();
+        int newIntAltitude = (int) Math.round(mRecentAltitude);
+
         TextView textView = (TextView) findViewById(R.id.Altitude);
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         int intAltitude = (int) Math.round(altitude.getAltitude());
-        textView.setText("고도 " + intAltitude + "m");
+        textView.setText("고도 " + newIntAltitude + "m");
         Log.d("Position7", "Altitude : " + altitude);
     }
 
