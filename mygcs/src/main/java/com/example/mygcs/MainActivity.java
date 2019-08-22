@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
     List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
-    LatLng[] Gap_LatLng = new LatLng[4];                // 간격감시 폴리곤
+    List<LatLng> Gap_LatLng = new ArrayList<>();                // 간격감시 폴리곤
     List<LatLng> Auto_Polyline = new ArrayList<>();     // 간격감시 폴리라인
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
@@ -218,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
                 if(BtnFlightMode.getText().equals("간격\n감시")) {
                     MakePolygon(latLng);
+                } else if(BtnFlightMode.getText().equals("경로\n비행")) {
+
                 }
             }
         });
@@ -588,20 +590,19 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // Auto_Marker 지우기
                 if(Auto_Marker.size() != 0) {
-                    Auto_Marker.get(0).setMap(null);
-                    Auto_Marker.get(1).setMap(null);
+                    if (Auto_Marker.size() == 1) {
+                        Auto_Marker.get(0).setMap(null);
+                    } else if (Auto_Marker.size() >= 2) {
+                        Auto_Marker.get(0).setMap(null);
+                        Auto_Marker.get(1).setMap(null);
+                    }
                 }
 
                 // 리스트 값 지우기
                 coords.clear();
                 Auto_Marker.clear();
                 Auto_Polyline.clear();
-
-                // ArrayList 값 지우기
-                for(int i=0;i<Gap_LatLng.length;i++)
-                {
-                    Gap_LatLng[i]=null;
-                }
+                Gap_LatLng.clear();
 
                 // Top 변수 초기화
                 Marker_Count=0;
@@ -746,7 +747,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View v) {
                 if(BtnSendMission.getText().equals("임무 전송")) {
-                    if(Gap_LatLng[1] != null) {
+                    if(Gap_LatLng.size() == 4) {
                         setMission(mMission);
                     } else {
                         alertUser("A,B좌표 필요");
@@ -813,11 +814,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void MakePolygon(LatLng latLng) {
-
         if (Gap_Top < 2) {
             Marker marker = new Marker();
             marker.setPosition(latLng);
-            Gap_LatLng[Gap_Top] = latLng;
+            Gap_LatLng.add(latLng);
 
             // Auto_Marker에 넣기 위해 marker 생성..
             Auto_Marker.add(marker);
@@ -845,18 +845,18 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading + 90);
 
             // ############################################################################
-            Gap_LatLng[2] = latLng1;
-            Gap_LatLng[3] = latLng2;
+            Gap_LatLng.add(latLng1);
+            Gap_LatLng.add(latLng2);
             polygon.setCoords(Arrays.asList(
-                    new LatLng(Gap_LatLng[0].latitude, Gap_LatLng[0].longitude),
-                    new LatLng(Gap_LatLng[1].latitude, Gap_LatLng[1].longitude),
-                    new LatLng(Gap_LatLng[2].latitude, Gap_LatLng[2].longitude),
-                    new LatLng(Gap_LatLng[3].latitude, Gap_LatLng[3].longitude)));
+                    new LatLng(Gap_LatLng.get(0).latitude, Gap_LatLng.get(0).longitude),
+                    new LatLng(Gap_LatLng.get(1).latitude, Gap_LatLng.get(1).longitude),
+                    new LatLng(Gap_LatLng.get(2).latitude, Gap_LatLng.get(2).longitude),
+                    new LatLng(Gap_LatLng.get(3).latitude, Gap_LatLng.get(3).longitude)));
 
-            Log.d("Position5", "LatLng[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
-            Log.d("Position5", "LatLng[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
-            Log.d("Position5", "LatLng[2] : " + Gap_LatLng[2].latitude + " / " + Gap_LatLng[2].longitude);
-            Log.d("Position5", "LatLng[3] : " + Gap_LatLng[3].latitude + " / " + Gap_LatLng[3].longitude);
+            Log.d("Position5", "LatLng[0] : " + Gap_LatLng.get(0).latitude + " / " + Gap_LatLng.get(0).longitude);
+            Log.d("Position5", "LatLng[1] : " + Gap_LatLng.get(1).latitude + " / " + Gap_LatLng.get(1).longitude);
+            Log.d("Position5", "LatLng[2] : " + Gap_LatLng.get(2).latitude + " / " + Gap_LatLng.get(2).longitude);
+            Log.d("Position5", "LatLng[3] : " + Gap_LatLng.get(3).latitude + " / " + Gap_LatLng.get(3).longitude);
 
             int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
 
