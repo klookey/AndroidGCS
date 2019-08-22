@@ -1218,13 +1218,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void AltitudeUpdate() {
         Altitude currentAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         mRecentAltitude = currentAltitude.getRelativeAltitude();
-        int newIntAltitude = (int) Math.round(mRecentAltitude);
+        double DoubleAltitude = (double) Math.round(mRecentAltitude*10)/10.0;
 
         TextView textView = (TextView) findViewById(R.id.Altitude);
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         int intAltitude = (int) Math.round(altitude.getAltitude());
-        textView.setText("고도 " + newIntAltitude + "m");
-        Log.d("Position7", "Altitude : " + altitude);
+
+        textView.setText("고도 " + DoubleAltitude + "m");
+        Log.d("Position7", "Altitude : " + DoubleAltitude);
     }
 
     private void SpeedUpdate() {
