@@ -807,57 +807,60 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-                if (Gap_Top < 2) {
-                    Marker marker = new Marker();
-                    marker.setPosition(latLng);
-                    Gap_LatLng[Gap_Top] = latLng;
+                final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
+                if(BtnFlightMode.getText().equals("간격\n감시")) {
+                    if (Gap_Top < 2) {
+                        Marker marker = new Marker();
+                        marker.setPosition(latLng);
+                        Gap_LatLng[Gap_Top] = latLng;
 
-                    // Auto_Marker에 넣기 위해 marker 생성..
-                    Auto_Marker.add(marker);
-                    Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
+                        // Auto_Marker에 넣기 위해 marker 생성..
+                        Auto_Marker.add(marker);
+                        Auto_Marker.get(Auto_Marker_Count).setMap(naverMap);
 
-                    if(Gap_Top == 0) {
-                        Auto_Marker.get(0).setIcon(OverlayImage.fromResource(R.drawable.number1));
-                        Auto_Marker.get(0).setWidth(80);
-                        Auto_Marker.get(0).setHeight(80);
-                        Auto_Marker.get(0).setAnchor(new PointF(0.5F, 0.5F));
-                    } else if(Gap_Top == 1) {
-                        Auto_Marker.get(1).setIcon(OverlayImage.fromResource(R.drawable.number2));
-                        Auto_Marker.get(1).setWidth(80);
-                        Auto_Marker.get(1).setHeight(80);
-                        Auto_Marker.get(1).setAnchor(new PointF(0.5F, 0.5F));
+                        if (Gap_Top == 0) {
+                            Auto_Marker.get(0).setIcon(OverlayImage.fromResource(R.drawable.number1));
+                            Auto_Marker.get(0).setWidth(80);
+                            Auto_Marker.get(0).setHeight(80);
+                            Auto_Marker.get(0).setAnchor(new PointF(0.5F, 0.5F));
+                        } else if (Gap_Top == 1) {
+                            Auto_Marker.get(1).setIcon(OverlayImage.fromResource(R.drawable.number2));
+                            Auto_Marker.get(1).setWidth(80);
+                            Auto_Marker.get(1).setHeight(80);
+                            Auto_Marker.get(1).setAnchor(new PointF(0.5F, 0.5F));
+                        }
+
+                        Gap_Top++;
+                        Auto_Marker_Count++;
                     }
+                    if (Auto_Marker_Count == 2) {
+                        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
 
-                    Gap_Top++;
-                    Auto_Marker_Count++;
-                }
-                if(Auto_Marker_Count == 2) {
-                    double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
+                        LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(1).getPosition(), Auto_Distance, heading + 90);
+                        LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading + 90);
 
-                    LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(1).getPosition(), Auto_Distance, heading+90);
-                    LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading+90);
+                        // ############################################################################
+                        Gap_LatLng[2] = latLng1;
+                        Gap_LatLng[3] = latLng2;
+                        polygon.setCoords(Arrays.asList(
+                                new LatLng(Gap_LatLng[0].latitude, Gap_LatLng[0].longitude),
+                                new LatLng(Gap_LatLng[1].latitude, Gap_LatLng[1].longitude),
+                                new LatLng(Gap_LatLng[2].latitude, Gap_LatLng[2].longitude),
+                                new LatLng(Gap_LatLng[3].latitude, Gap_LatLng[3].longitude)));
 
-                    // ############################################################################
-                    Gap_LatLng[2]=latLng1;
-                    Gap_LatLng[3]=latLng2;
-                    polygon.setCoords(Arrays.asList(
-                            new LatLng(Gap_LatLng[0].latitude, Gap_LatLng[0].longitude),
-                            new LatLng(Gap_LatLng[1].latitude, Gap_LatLng[1].longitude),
-                            new LatLng(Gap_LatLng[2].latitude, Gap_LatLng[2].longitude),
-                            new LatLng(Gap_LatLng[3].latitude, Gap_LatLng[3].longitude)));
+                        Log.d("Position5", "LatLng[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
+                        Log.d("Position5", "LatLng[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
+                        Log.d("Position5", "LatLng[2] : " + Gap_LatLng[2].latitude + " / " + Gap_LatLng[2].longitude);
+                        Log.d("Position5", "LatLng[3] : " + Gap_LatLng[3].latitude + " / " + Gap_LatLng[3].longitude);
 
-                    Log.d("Position5", "LatLng[0] : " + Gap_LatLng[0].latitude + " / " + Gap_LatLng[0].longitude);
-                    Log.d("Position5", "LatLng[1] : " + Gap_LatLng[1].latitude + " / " + Gap_LatLng[1].longitude);
-                    Log.d("Position5", "LatLng[2] : " + Gap_LatLng[2].latitude + " / " + Gap_LatLng[2].longitude);
-                    Log.d("Position5", "LatLng[3] : " + Gap_LatLng[3].latitude + " / " + Gap_LatLng[3].longitude);
+                        int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
 
-                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+                        polygon.setColor(colorLightBlue);
+                        polygon.setMap(naverMap);
 
-                    polygon.setColor(colorLightBlue);
-                    polygon.setMap(naverMap);
-
-                    // 내부 길 생성
-                    MakePath();
+                        // 내부 길 생성
+                        MakePath();
+                    }
                 }
             }
         });
