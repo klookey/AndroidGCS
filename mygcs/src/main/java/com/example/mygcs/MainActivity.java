@@ -217,10 +217,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
                 final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
-                if (BtnFlightMode.getText().equals("간격\n감시")) {
-                    MakePolygon(latLng);
+                if (BtnFlightMode.getText().equals("일반\n모드")) {
+                    // TODO : 일반모드 클릭
+                } else if(BtnFlightMode.getText().equals("경로\n비행")) {
+                    // TODO : 경로비행 클릭
+                } else if (BtnFlightMode.getText().equals("간격\n감시")) {
+                    MakeGapPolygon(latLng);
                 } else if (BtnFlightMode.getText().equals("경로\n비행")) {
-
+                    MakeAreaPolygon(latLng);
                 }
             }
         });
@@ -413,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("비행 모드 " + vehicleMode.toString() + "로 변경.");
+                alertUser("비행 모드 " + vehicleMode.toString() + "로 변경 완료.");
             }
 
             @Override
@@ -438,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.takeOffAltitude = Altitude;
     }
 
-    // ############################ 롱클릭 시 Guided 모드로 변경 ###################################
+    // ############################ 롱클릭 시 Guided 모드로 변경 ##################################
 
     private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -784,6 +788,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 Gap_Top = 0;
 
                 Reached_Count = 0;
+
+                // BtnFlightMode 버튼 초기화
+                BtnSendMission.setText("임무 전송");
             }
         });
 
@@ -937,7 +944,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 } else if (BtnSendMission.getText().equals("임무 중지")) {
                     pauseMission();
                     ChangeToLoiterMode();
-                    BtnSendMission.setText("임무 전송");
+                    BtnSendMission.setText("임무 재시작");
+                } else if(BtnSendMission.getText().equals("임무 재시작")) {
+                    ChangeToAutoMode();
+                    BtnSendMission.setText("임무 중지");
                 }
             }
         });
@@ -963,7 +973,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_LOITER, new SimpleCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("Loiter 모드로 변경합니다.");
+                alertUser("Loiter 모드로 변경 중...");
             }
 
             @Override
@@ -982,17 +992,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_AUTO, new SimpleCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("Auto 모드로 변경합니다.");
+                alertUser("Auto 모드로 변경 중...");
             }
 
             @Override
             public void onError(int executionError) {
-                alertUser("Auto 모드로 변경하는데 실패하였습니다. : " + executionError);
+                alertUser("Auto 모드 변경 실패 : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("Auto 모드로 변경하는데 실패하였습니다.");
+                alertUser("Auto 모드 변경 실패.");
             }
         });
     }
@@ -1001,17 +1011,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleApi.getApi(this.drone).setVehicleMode(VehicleMode.COPTER_GUIDED, new SimpleCommandListener() {
             @Override
             public void onSuccess() {
-                alertUser("가이드 모드로 변경합니다.");
+                alertUser("가이드 모드로 변경 중...");
             }
 
             @Override
             public void onError(int executionError) {
-                alertUser("가이드 모드로 변경하는데 실패하였습니다. : " + executionError);
+                alertUser("가이드 모드 변경 실패 : " + executionError);
             }
 
             @Override
             public void onTimeout() {
-                alertUser("가이드 모드로 변경하는데 실패하였습니다.");
+                alertUser("가이드 모드 변경 실패.");
             }
         });
     }
@@ -1032,7 +1042,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     // ################################# 간격 감시 ################################################
 
-    private void MakePolygon(LatLng latLng) {
+    private void MakeGapPolygon(LatLng latLng) {
         if (Gap_Top < 2) {
             Marker marker = new Marker();
             marker.setPosition(latLng);
@@ -1083,11 +1093,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             polygon.setMap(naverMap);
 
             // 내부 길 생성
-            MakePath();
+            MakeGapPath();
         }
     }
 
-    private void MakePath() {
+    private void MakeGapPath() {
         double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
 
         Auto_Polyline.add(new LatLng(Auto_Marker.get(0).getPosition().latitude, Auto_Marker.get(0).getPosition().longitude));
@@ -1163,6 +1173,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     }
                 });
         builder.show();
+    }
+
+    // ###################################### 면적 감시 ###########################################
+
+    private void MakeAreaPolygon(LatLng latLng) {
+
     }
 
     // ##################################### 이룍 고도 ############################################
