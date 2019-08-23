@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -216,13 +217,61 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
                 final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
-                if(BtnFlightMode.getText().equals("간격\n감시")) {
+                if (BtnFlightMode.getText().equals("간격\n감시")) {
                     MakePolygon(latLng);
-                } else if(BtnFlightMode.getText().equals("경로\n비행")) {
+                } else if (BtnFlightMode.getText().equals("경로\n비행")) {
 
                 }
             }
         });
+    }
+
+    private void DialogGap() {
+        final EditText edittext1 = new EditText(this);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("1. 전체 길이 설정");
+        builder.setMessage("전체 길이를 입력하십시오.");
+        builder.setView(edittext1);
+        builder.setPositiveButton("입력",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String editTextValue = edittext1.getText().toString();
+                        Auto_Distance = Integer.parseInt(editTextValue);
+                        DialogGap2();
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
+    }
+
+    private void DialogGap2() {
+        final EditText edittext2 = new EditText(this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("2. 간격 길이 설정");
+        builder.setMessage("간격 길이를 입력하십시오");
+        builder.setView(edittext2);
+        builder.setPositiveButton("입력",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String editTextValue = edittext2.getText().toString();
+                        Gap_Distance = Integer.parseInt(editTextValue);
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
     }
 
     private void ShowSatelliteCount() {
@@ -589,7 +638,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 polylinePath.setMap(null);
 
                 // Auto_Marker 지우기
-                if(Auto_Marker.size() != 0) {
+                if (Auto_Marker.size() != 0) {
                     if (Auto_Marker.size() == 1) {
                         Auto_Marker.get(0).setMap(null);
                     } else if (Auto_Marker.size() >= 2) {
@@ -605,11 +654,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 Gap_LatLng.clear();
 
                 // Top 변수 초기화
-                Marker_Count=0;
-                Auto_Marker_Count=0;
-                Gap_Top=0;
+                Marker_Count = 0;
+                Auto_Marker_Count = 0;
+                Gap_Top = 0;
 
-                Reached_Count=0;
+                Reached_Count = 0;
             }
         });
 
@@ -707,6 +756,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 alertUser("A와 B좌표를 클릭하세요.");
 
+                DialogGap();
+
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
                 FlightMode_Gap.setVisibility(view.INVISIBLE);
@@ -732,7 +783,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void MakeWayPoint() {
         final Mission mMission = new Mission();
 
-        for(int i=0;i<Auto_Polyline.size();i++) {
+        for (int i = 0; i < Auto_Polyline.size(); i++) {
             Waypoint waypoint = new Waypoint();
             waypoint.setDelay(1);
 
@@ -746,19 +797,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnSendMission.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BtnSendMission.getText().equals("임무 전송")) {
-                    if(Gap_LatLng.size() == 4) {
+                if (BtnSendMission.getText().equals("임무 전송")) {
+                    if (Gap_LatLng.size() == 4) {
                         setMission(mMission);
                     } else {
                         alertUser("A,B좌표 필요");
                     }
-                }
-                else if(BtnSendMission.getText().equals("임무 시작")) {
+                } else if (BtnSendMission.getText().equals("임무 시작")) {
                     // Auto모드로 전환
                     ChangeToAutoMode();
                     BtnSendMission.setText("임무 중지");
-                }
-                else if(BtnSendMission.getText().equals("임무 중지")) {
+                } else if (BtnSendMission.getText().equals("임무 중지")) {
                     pauseMission();
                     ChangeToLoiterMode();
                     BtnSendMission.setText("임무 전송");
@@ -768,7 +817,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void setMission(Mission mMission) {
-        MissionApi.getApi(this.drone).setMission(mMission,true);
+        MissionApi.getApi(this.drone).setMission(mMission, true);
     }
 
     private void pauseMission() {
@@ -869,15 +918,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void MakePath() {
-        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(),Auto_Marker.get(1).getPosition());
+        double heading = MyUtil.computeHeading(Auto_Marker.get(0).getPosition(), Auto_Marker.get(1).getPosition());
 
-        Auto_Polyline.add(new LatLng(Auto_Marker.get(0).getPosition().latitude,Auto_Marker.get(0).getPosition().longitude));
-        Auto_Polyline.add(new LatLng(Auto_Marker.get(1).getPosition().latitude,Auto_Marker.get(1).getPosition().longitude));
+        Auto_Polyline.add(new LatLng(Auto_Marker.get(0).getPosition().latitude, Auto_Marker.get(0).getPosition().longitude));
+        Auto_Polyline.add(new LatLng(Auto_Marker.get(1).getPosition().latitude, Auto_Marker.get(1).getPosition().longitude));
 
-        for(int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance + Gap_Distance; sum = sum + Gap_Distance)
-        {
-            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-1).getPosition(), Gap_Distance,heading+90);
-            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count-2).getPosition(), Gap_Distance,heading+90);
+        for (int sum = Gap_Distance; sum + Gap_Distance <= Auto_Distance + Gap_Distance; sum = sum + Gap_Distance) {
+            LatLng latLng1 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count - 1).getPosition(), Gap_Distance, heading + 90);
+            LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(Auto_Marker_Count - 2).getPosition(), Gap_Distance, heading + 90);
 
             Auto_Marker.add(new Marker(latLng1));
             Auto_Marker.add(new Marker(latLng2));
@@ -885,8 +933,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
 //            Auto_Marker.get(Auto_Marker_Count-2).getPosition();
 
-            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-2).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-2).getPosition().longitude));
-            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count-1).getPosition().latitude,Auto_Marker.get(Auto_Marker_Count-1).getPosition().longitude));
+            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count - 2).getPosition().latitude, Auto_Marker.get(Auto_Marker_Count - 2).getPosition().longitude));
+            Auto_Polyline.add(new LatLng(Auto_Marker.get(Auto_Marker_Count - 1).getPosition().latitude, Auto_Marker.get(Auto_Marker_Count - 1).getPosition().longitude));
         }
 
         polylinePath.setColor(Color.WHITE);
@@ -1223,7 +1271,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void AltitudeUpdate() {
         Altitude currentAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         mRecentAltitude = currentAltitude.getRelativeAltitude();
-        double DoubleAltitude = (double) Math.round(mRecentAltitude*10)/10.0;
+        double DoubleAltitude = (double) Math.round(mRecentAltitude * 10) / 10.0;
 
         TextView textView = (TextView) findViewById(R.id.Altitude);
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
