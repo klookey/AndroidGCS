@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     ArrayList<String> recycler_list = new ArrayList<>(); // 리사이클러뷰
     List<LocalTime> recycler_time = new ArrayList<>(); // 리사이클러뷰 시간
     List<Marker> Auto_Marker = new ArrayList<>();       // 간격감시 마커
-    List<LatLng> Gap_LatLng = new ArrayList<>();                // 간격감시 폴리곤
+    List<LatLng> PolygonLatLng = new ArrayList<>();                // 간격감시 폴리곤
     List<LatLng> Auto_Polyline = new ArrayList<>();     // 간격감시 폴리라인
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
@@ -527,8 +527,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Button FlightMode_Gap = (Button) findViewById(R.id.FlightMode_Gap);
         final Button FlightMode_Area = (Button) findViewById(R.id.FlightMode_Area);
 
-        // 임무 전송 / 임무 시작/ 임무 중지
+        // 임무 전송 / 임무 시작/ 임무 중지 버튼
         final Button BtnSendMission = (Button) findViewById(R.id.BtnSendMission);
+
+        // 그리기 버튼
+        final Button BtnDraw = (Button) findViewById(R.id.BtnDraw);
 
         final UiSettings uiSettings = naverMap.getUiSettings();
 
@@ -780,7 +783,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 coords.clear();
                 Auto_Marker.clear();
                 Auto_Polyline.clear();
-                Gap_LatLng.clear();
+                PolygonLatLng.clear();
 
                 // Top 변수 초기화
                 Marker_Count = 0;
@@ -881,7 +884,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         FlightMode_Gap.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO : Gap FlightMode event
                 BtnFlightMode.setText("간격\n감시");
 
                 BtnSendMission.setVisibility(View.VISIBLE);
@@ -904,10 +906,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // TODO : Area FlightMode event
                 BtnFlightMode.setText("면적\n감시");
 
+                BtnDraw.setVisibility(view.VISIBLE);
+
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
                 FlightMode_Gap.setVisibility(view.INVISIBLE);
                 FlightMode_Area.setVisibility(view.INVISIBLE);
+            }
+        });
+
+        // #################################### 그리기 설정 #######################################
+        BtnDraw.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -932,7 +944,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View v) {
                 if (BtnSendMission.getText().equals("임무 전송")) {
-                    if (Gap_LatLng.size() == 4) {
+                    if (PolygonLatLng.size() == 4) {
                         setMission(mMission);
                     } else {
                         alertUser("A,B좌표 필요");
@@ -1046,7 +1058,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         if (Gap_Top < 2) {
             Marker marker = new Marker();
             marker.setPosition(latLng);
-            Gap_LatLng.add(latLng);
+            PolygonLatLng.add(latLng);
 
             // Auto_Marker에 넣기 위해 marker 생성..
             Auto_Marker.add(marker);
@@ -1074,18 +1086,18 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             LatLng latLng2 = MyUtil.computeOffset(Auto_Marker.get(0).getPosition(), Auto_Distance, heading + 90);
 
             // ############################################################################
-            Gap_LatLng.add(latLng1);
-            Gap_LatLng.add(latLng2);
+            PolygonLatLng.add(latLng1);
+            PolygonLatLng.add(latLng2);
             polygon.setCoords(Arrays.asList(
-                    new LatLng(Gap_LatLng.get(0).latitude, Gap_LatLng.get(0).longitude),
-                    new LatLng(Gap_LatLng.get(1).latitude, Gap_LatLng.get(1).longitude),
-                    new LatLng(Gap_LatLng.get(2).latitude, Gap_LatLng.get(2).longitude),
-                    new LatLng(Gap_LatLng.get(3).latitude, Gap_LatLng.get(3).longitude)));
+                    new LatLng(PolygonLatLng.get(0).latitude, PolygonLatLng.get(0).longitude),
+                    new LatLng(PolygonLatLng.get(1).latitude, PolygonLatLng.get(1).longitude),
+                    new LatLng(PolygonLatLng.get(2).latitude, PolygonLatLng.get(2).longitude),
+                    new LatLng(PolygonLatLng.get(3).latitude, PolygonLatLng.get(3).longitude)));
 
-            Log.d("Position5", "LatLng[0] : " + Gap_LatLng.get(0).latitude + " / " + Gap_LatLng.get(0).longitude);
-            Log.d("Position5", "LatLng[1] : " + Gap_LatLng.get(1).latitude + " / " + Gap_LatLng.get(1).longitude);
-            Log.d("Position5", "LatLng[2] : " + Gap_LatLng.get(2).latitude + " / " + Gap_LatLng.get(2).longitude);
-            Log.d("Position5", "LatLng[3] : " + Gap_LatLng.get(3).latitude + " / " + Gap_LatLng.get(3).longitude);
+            Log.d("Position5", "LatLng[0] : " + PolygonLatLng.get(0).latitude + " / " + PolygonLatLng.get(0).longitude);
+            Log.d("Position5", "LatLng[1] : " + PolygonLatLng.get(1).latitude + " / " + PolygonLatLng.get(1).longitude);
+            Log.d("Position5", "LatLng[2] : " + PolygonLatLng.get(2).latitude + " / " + PolygonLatLng.get(2).longitude);
+            Log.d("Position5", "LatLng[3] : " + PolygonLatLng.get(3).latitude + " / " + PolygonLatLng.get(3).longitude);
 
             int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
 
@@ -1130,10 +1142,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void DialogGap() {
         final EditText edittext1 = new EditText(this);
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("1. 전체 길이 설정");
-        builder.setMessage("전체 길이를 입력하십시오.");
+        builder.setTitle("[간격 감시]");
+        builder.setMessage("1. 전체 길이를 입력하십시오.");
         builder.setView(edittext1);
         builder.setPositiveButton("입력",
                 new DialogInterface.OnClickListener() {
@@ -1156,8 +1167,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final EditText edittext2 = new EditText(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("2. 간격 길이 설정");
-        builder.setMessage("간격 길이를 입력하십시오");
+        builder.setTitle("[간격 감시]");
+        builder.setMessage("2. 간격 길이를 입력하십시오");
         builder.setView(edittext2);
         builder.setPositiveButton("입력",
                 new DialogInterface.OnClickListener() {
@@ -1178,7 +1189,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ###################################### 면적 감시 ###########################################
 
     private void MakeAreaPolygon(LatLng latLng) {
-
+        Button BtnDraw = (Button) findViewById(R.id.BtnDraw);
+        if (BtnDraw.getVisibility() == View.VISIBLE) {
+            PolygonLatLng.add(latLng);
+        }
     }
 
     // ##################################### 이룍 고도 ############################################
