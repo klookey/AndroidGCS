@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     protected double mRecentAltitude = 0;
 
-    public int Reached_Count = 0;
+    public int Reached_Count = 1;
 
     private final Handler handler = new Handler();
 
@@ -793,7 +793,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 Auto_Marker_Count = 0;
                 Gap_Top = 0;
 
-                Reached_Count = 0;
+                Reached_Count = 1;
 
                 // BtnFlightMode 버튼 초기화
                 BtnSendMission.setText("임무 전송");
@@ -1269,7 +1269,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             case AttributeEvent.MISSION_ITEM_REACHED:
-                alertUser(Reached_Count + "번 waypoint 도착");
+                alertUser(Reached_Count + "번 waypoint 도착 : " + Reached_Count + " / " + (Auto_Polyline.size()+1));
                 Reached_Count++;
                 break;
 
