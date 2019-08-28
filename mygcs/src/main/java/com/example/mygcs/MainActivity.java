@@ -192,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // 줌 버튼 제거
         uiSettings.setZoomControlEnabled(false);
 
+        // 이륙고도 표시
+        ShowTakeOffAltitude();
+
         // 초기 상태를 맵 잠금으로 설정
         uiSettings.setScrollGesturesEnabled(false);
 
