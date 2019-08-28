@@ -94,17 +94,15 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     Marker marker_goal = new Marker(); // Guided 모드 마커
 
-    PolylineOverlay polyline = new PolylineOverlay();
-    PolygonOverlay polygon = new PolygonOverlay();
-    PolylineOverlay polylinePath = new PolylineOverlay();
+    PolylineOverlay polyline = new PolylineOverlay();           // 마커 지나간 길
+    PolygonOverlay polygon = new PolygonOverlay();              // 간격 감시 시 뒤 사각형 (하늘)
+    PolylineOverlay polylinePath = new PolylineOverlay();       // 간격 감시 시 Path (하양)
+    PolygonOverlay Area_polygon = new PolygonOverlay();         // 면적 감시 시 뒤 다각형 (하늘)
 
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
 
     private Spinner modeSelector;
-
-    private static final int DEFAULT_UDP_PORT = 14550;
-    private static final int DEFAULT_USB_BAUD_RATE = 57600;
 
     private int Marker_Count = 0;
     private int Recycler_Count = 0;
@@ -223,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     // TODO : 경로비행 클릭
                 } else if (BtnFlightMode.getText().equals("간격\n감시")) {
                     MakeGapPolygon(latLng);
-                } else if (BtnFlightMode.getText().equals("경로\n비행")) {
+                } else if (BtnFlightMode.getText().equals("면적\n감시")) {
                     MakeAreaPolygon(latLng);
                 }
             }
@@ -764,10 +762,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     markers.get(Marker_Count - 1).setMap(null);
                 }
 
-                // 폴리라인 지우기
+                // 폴리라인 / 폴리곤 지우기
                 polyline.setMap(null);
                 polygon.setMap(null);
                 polylinePath.setMap(null);
+                Area_polygon.setMap(null);
 
                 // Auto_Marker 지우기
                 if (Auto_Marker.size() != 0) {
@@ -903,7 +902,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         FlightMode_Area.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO : Area FlightMode event
                 BtnFlightMode.setText("면적\n감시");
 
                 BtnDraw.setVisibility(view.VISIBLE);
@@ -918,8 +916,15 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // #################################### 그리기 설정 #######################################
         BtnDraw.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View view) {
+                if(PolygonLatLng.size() >= 3) {
+                    BtnDraw.setVisibility(view.INVISIBLE);
+                    Area_polygon.setCoords(PolygonLatLng);
+                    Area_polygon.setMap(naverMap);
+                } else {
+                    alertUser("3군데 이상 클릭하시오.");
+                    PolygonLatLng.clear();
+                }
             }
         });
     }
@@ -1192,6 +1197,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Button BtnDraw = (Button) findViewById(R.id.BtnDraw);
         if (BtnDraw.getVisibility() == View.VISIBLE) {
             PolygonLatLng.add(latLng);
+
+            Marker marker = new Marker();
+            marker.setPosition(latLng);
+            Auto_Marker.add(marker);
+            Auto_Marker_Count++;
+
+            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
         }
     }
 
