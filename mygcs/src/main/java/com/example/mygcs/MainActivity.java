@@ -776,8 +776,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     if (Auto_Marker.size() == 1) {
                         Auto_Marker.get(0).setMap(null);
                     } else if (Auto_Marker.size() >= 2) {
-                        Auto_Marker.get(0).setMap(null);
-                        Auto_Marker.get(1).setMap(null);
+                        for(int i=0;i<Auto_Marker.size();i++) {
+                            Auto_Marker.get(i).setMap(null);
+                        }
                     }
                 }
 
@@ -923,6 +924,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 if(PolygonLatLng.size() >= 3) {
                     BtnDraw.setVisibility(view.INVISIBLE);
                     Area_polygon.setCoords(PolygonLatLng);
+
+                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+
+                    Area_polygon.setColor(colorLightBlue);
                     Area_polygon.setMap(naverMap);
                 } else {
                     alertUser("3군데 이상 클릭하시오.");
@@ -1205,7 +1210,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             marker.setPosition(latLng);
             Auto_Marker.add(marker);
             Auto_Marker_Count++;
-
 
             Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
         }
