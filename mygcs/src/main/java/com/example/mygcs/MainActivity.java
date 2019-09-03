@@ -773,13 +773,21 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // Auto_Marker 지우기
                 if (Auto_Marker.size() != 0) {
-                    if (Auto_Marker.size() == 1) {
-                        Auto_Marker.get(0).setMap(null);
-                    } else if (Auto_Marker.size() >= 2) {
-                        for(int i=0;i<Auto_Marker.size();i++) {
-                            Auto_Marker.get(i).setMap(null);
-                        }
+//                    if (Auto_Marker.size() == 1) {
+//                        Auto_Marker.get(0).setMap(null);
+//                    } else if (Auto_Marker.size() >= 2) {
+//                        for(int i=0;i<Auto_Marker.size();i++) {
+//                            Auto_Marker.get(i).setMap(null);
+//                        }
+//                    }
+                    for(int i=0;i<Auto_Marker.size();i++) {
+                        Auto_Marker.get(i).setMap(null);
                     }
+                }
+
+                // 면적 감시 시
+                if(BtnFlightMode.getText().equals("면적\n감시")) {
+                    BtnDraw.setVisibility(View.VISIBLE);
                 }
 
                 // 리스트 값 지우기
@@ -860,6 +868,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // TODO : Basic FlightMode event
                 BtnFlightMode.setText("일반\n모드");
 
+                // 그리기 버튼 제어
+                ControlBtnDraw();
+
                 BtnSendMission.setVisibility(view.INVISIBLE);
 
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
@@ -876,6 +887,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // TODO : Path FlgithMode event
                 BtnFlightMode.setText("경로\n비행");
 
+                // 그리기 버튼 제어
+                ControlBtnDraw();
+
                 FlightMode_Basic.setVisibility(view.INVISIBLE);
                 FlightMode_Path.setVisibility(view.INVISIBLE);
                 FlightMode_Gap.setVisibility(view.INVISIBLE);
@@ -890,6 +904,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 BtnFlightMode.setText("간격\n감시");
 
                 BtnSendMission.setVisibility(View.VISIBLE);
+
+                // 그리기 버튼 제어
+                ControlBtnDraw();
 
                 alertUser("A와 B좌표를 클릭하세요.");
 
@@ -907,6 +924,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 BtnFlightMode.setText("면적\n감시");
+
+                // 그리기 버튼 제어
+                ControlBtnDraw();
 
                 BtnDraw.setVisibility(view.VISIBLE);
 
@@ -935,6 +955,16 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 }
             }
         });
+    }
+
+    private void ControlBtnDraw() {
+        Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
+        Button BtnDraw = (Button) findViewById(R.id.BtnDraw);
+        if(BtnFlightMode.getText().equals("면적\n감시")) {
+
+        } else {
+            BtnDraw.setVisibility(View.INVISIBLE);
+        }
     }
 
     // ################################### 미션 수행 Mission ######################################
