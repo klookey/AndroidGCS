@@ -1206,6 +1206,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Auto_Marker.add(marker);
             Auto_Marker_Count++;
 
+
             Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
         }
     }
@@ -1487,4 +1488,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
         recyclerView.setAdapter(adapter);
     }
+
+
 }
