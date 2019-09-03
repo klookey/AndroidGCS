@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public int Auto_Distance = 50;
     public int Gap_Distance = 5;
     private int Gap_Top = 0;
+    private int Guided_Count = 0;
 
     protected double mRecentAltitude = 0;
 
@@ -186,6 +187,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLogoMargin(2080, 0, 0, 925);
 
+        // 나침반 제거
+        uiSettings.setCompassEnabled(false);
+
         // 축척 바 제거
         uiSettings.setScaleBarEnabled(false);
 
@@ -220,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
                 if (BtnFlightMode.getText().equals("일반\n모드")) {
                     // TODO : 일반모드 클릭
-                } else if(BtnFlightMode.getText().equals("경로\n비행")) {
+                } else if (BtnFlightMode.getText().equals("경로\n비행")) {
                     // TODO : 경로비행 클릭
                 } else if (BtnFlightMode.getText().equals("간격\n감시")) {
                     MakeGapPolygon(latLng);
@@ -308,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public void SetDronePosition() {
         // 드론 위치 받아오기
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
-        int Satellite = droneGps.getSatellitesCount();
         LatLong dronePosition = droneGps.getPosition();
 
         Log.d("Position1", "droneGps : " + droneGps);
@@ -380,7 +383,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Log.d("Position9", "distance : " + distance);
 
             if (distance < 1.0) {
-                alertUser("목적지에 도착하였습니다.");
+                if(Guided_Count == 0) {
+                    alertUser("목적지에 도착하였습니다.");
+                    marker_goal.setMap(naverMap);
+                    Guided_Count = 1;
+                }
             }
         }
 
@@ -446,34 +453,40 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ############################ 롱클릭 시 Guided 모드로 변경 ##################################
 
     private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("가이드 모드");
-        builder.setMessage("클릭한 지점으로 이동하게 됩니다. 이동하시겠습니까?");
-        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // 도착지 마커 생성
-                marker_goal.setMap(null);
-                marker_goal.setPosition(new LatLng(coord.latitude, coord.longitude));
-                marker_goal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
-                marker_goal.setWidth(70);
-                marker_goal.setHeight(70);
-                marker_goal.setMap(naverMap);
+        Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
+        if (BtnFlightMode.getText().equals("일반\n모드")) {
 
-                // Guided 모드로 변환
-                ChangeToGuidedMode();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("가이드 모드");
+            builder.setMessage("클릭한 지점으로 이동하게 됩니다. 이동하시겠습니까?");
+            builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // 도착지 마커 생성
+                    marker_goal.setMap(null);
+                    marker_goal.setPosition(new LatLng(coord.latitude, coord.longitude));
+                    marker_goal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
+                    marker_goal.setWidth(70);
+                    marker_goal.setHeight(70);
+                    marker_goal.setMap(naverMap);
 
-                // 지정된 위치로 이동
-                GotoTartget();
-            }
-        });
-        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
+                    Guided_Count = 0;
+
+                    // Guided 모드로 변환
+                    ChangeToGuidedMode();
+
+                    // 지정된 위치로 이동
+                    GotoTartget();
+                }
+            });
+            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
     }
 
     private void GotoTartget() {
@@ -773,20 +786,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 // Auto_Marker 지우기
                 if (Auto_Marker.size() != 0) {
-//                    if (Auto_Marker.size() == 1) {
-//                        Auto_Marker.get(0).setMap(null);
-//                    } else if (Auto_Marker.size() >= 2) {
-//                        for(int i=0;i<Auto_Marker.size();i++) {
-//                            Auto_Marker.get(i).setMap(null);
-//                        }
-//                    }
-                    for(int i=0;i<Auto_Marker.size();i++) {
+                    for (int i = 0; i < Auto_Marker.size(); i++) {
                         Auto_Marker.get(i).setMap(null);
                     }
                 }
 
                 // 면적 감시 시
-                if(BtnFlightMode.getText().equals("면적\n감시")) {
+                if (BtnFlightMode.getText().equals("면적\n감시")) {
                     BtnDraw.setVisibility(View.VISIBLE);
                 }
 
@@ -941,7 +947,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         BtnDraw.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(PolygonLatLng.size() >= 3) {
+                if (PolygonLatLng.size() >= 3) {
                     BtnDraw.setVisibility(view.INVISIBLE);
                     Area_polygon.setCoords(PolygonLatLng);
 
@@ -960,7 +966,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void ControlBtnDraw() {
         Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
         Button BtnDraw = (Button) findViewById(R.id.BtnDraw);
-        if(BtnFlightMode.getText().equals("면적\n감시")) {
+        if (BtnFlightMode.getText().equals("면적\n감시")) {
 
         } else {
             BtnDraw.setVisibility(View.INVISIBLE);
@@ -1000,7 +1006,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     pauseMission();
                     ChangeToLoiterMode();
                     BtnSendMission.setText("임무 재시작");
-                } else if(BtnSendMission.getText().equals("임무 재시작")) {
+                } else if (BtnSendMission.getText().equals("임무 재시작")) {
                     ChangeToAutoMode();
                     BtnSendMission.setText("임무 중지");
                 }
@@ -1241,8 +1247,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Auto_Marker.add(marker);
             Auto_Marker_Count++;
 
-            Auto_Marker.get(Auto_Marker_Count-1).setMap(naverMap);
+            Auto_Marker.get(Auto_Marker_Count - 1).setHeight(100);
+            Auto_Marker.get(Auto_Marker_Count - 1).setWidth(100);
+            Auto_Marker.get(Auto_Marker_Count - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+
+            Auto_Marker.get(Auto_Marker_Count - 1).setMap(naverMap);
         }
+
+
     }
 
     // ##################################### 이룍 고도 ############################################
@@ -1522,6 +1534,4 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         SimpleTextAdapter adapter = new SimpleTextAdapter(recycler_list);
         recyclerView.setAdapter(adapter);
     }
-
-
 }
