@@ -166,6 +166,7 @@
                     android:id="@+id/recycler"
                     android:layout_width="300dp"
                     android:layout_height="match_parent"
+                    android:background="@drawable/recycler_background"
                     android:scrollbars="vertical" />
 
             </LinearLayout>
@@ -613,9 +614,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/mybutton"
+                                android:background="@drawable/mybutton_draw"
                                 android:text="그리기"
-                                android:textColor="#FFFFFF"
                                 android:visibility="invisible" />
 
                             <LinearLayout
