@@ -1465,9 +1465,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         if (ApManager.isApOn(this) == true) {
             State vehicleState = this.drone.getAttribute(AttributeType.STATE);
             if (!vehicleState.isConnected()) {
-                // Connect
-                alertUser("드론과 연결해주세요");
-            } else {
                 ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
                 this.drone.connect(params);
             }
