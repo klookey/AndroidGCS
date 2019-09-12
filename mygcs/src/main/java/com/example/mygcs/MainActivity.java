@@ -180,8 +180,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.naverMap = naverMap;
 
         // 켜지자마자 드론 연결
-        ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
-        this.drone.connect(params);
+        DroneHotSpotConnected();
 
         // 네이버 로고 위치 변경
         UiSettings uiSettings = naverMap.getUiSettings();
@@ -450,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.takeOffAltitude = Altitude;
     }
 
-    // ############################ 롱클릭 시 Guided 모드로 변경 ##################################
+    // ############################ [일반 모드] 롱클릭 Guided Mode ################################
 
     private void LongClickWarning(@NonNull PointF pointF, @NonNull final LatLng coord) {
         Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
@@ -1460,6 +1459,21 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     @Override
     public void onTowerDisconnected() {
         alertUser("드론-핸드폰 연결 해제.");
+    }
+
+    public void DroneHotSpotConnected() {
+        if (ApManager.isApOn(this) == true) {
+            State vehicleState = this.drone.getAttribute(AttributeType.STATE);
+            if (!vehicleState.isConnected()) {
+                // Connect
+                alertUser("드론과 연결해주세요");
+            } else {
+                ConnectionParameter params = ConnectionParameter.newUdpConnection(null);
+                this.drone.connect(params);
+            }
+        } else {
+            alertUser("핫스팟을 켜주세요");
+        }
     }
 
     // ############################# 리사이클러뷰 RecyclerView ####################################
