@@ -943,12 +943,44 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                     polygon.setColor(colorLightBlue);
                     polygon.setMap(naverMap);
+
+                    ComputeLargeLength();
+
                 } else {
                     alertUser("3군데 이상 클릭하시오.");
                     PolygonLatLng.clear();
                 }
             }
         });
+    }
+
+    private void ComputeLargeLength() {
+        // 가장 긴 변 계산
+        double max = 0.0;
+        double computeValue = 0.0;
+        int firstIndex = 0;
+        int secondIndex = 0;
+        for(int i=0; i<PolygonLatLng.size(); i++) {
+            if(i == PolygonLatLng.size() - 1) {
+                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(0));
+                Log.d("Position12", "computeValue : [" + i + " , 0 ] : " + computeValue);
+                if(max < computeValue) {
+                    max = computeValue;
+                    firstIndex = i;
+                    secondIndex = 0;
+                }
+            } else {
+                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(i+1));
+                Log.d("Position12", "computeValue : [" + i + " , " + (i+1) + "] : " + computeValue);
+                if(max < computeValue) {
+                    max = computeValue;
+                    firstIndex = i;
+                    secondIndex = i+1;
+                }
+            }
+            Log.d("Position12", "max : " + max);
+            Log.d("Position12", "firstIndex : " + firstIndex + " / secondIndex : " + secondIndex);
+        }
     }
 
     private void ControlBtnDraw() {
