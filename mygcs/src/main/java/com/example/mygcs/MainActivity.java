@@ -108,14 +108,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int Recycler_Count = 0;
     private int takeOffAltitude = 3;
     private int Auto_Marker_Count = 0;
-    public int Auto_Distance = 50;
-    public int Gap_Distance = 5;
+    private int Auto_Distance = 50;
+    private int Gap_Distance = 5;
     private int Gap_Top = 0;
     private int Guided_Count = 0;
 
     protected double mRecentAltitude = 0;
 
-    public int Reached_Count = 1;
+    private int Reached_Count = 1;
 
     private final Handler handler = new Handler();
 
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void ShowTakeOffAltitude() {
         final Button BtnTakeOffAltitude = (Button) findViewById(R.id.BtnTakeOffAltitude);
-        BtnTakeOffAltitude.setText(getTakeOffAltitude() + " m\n이륙고도");
+        BtnTakeOffAltitude.setText(takeOffAltitude + " m\n이륙고도");
     }
 
     private void UpdateYaw() {
@@ -437,16 +437,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 alertUser("비행 모드 변경 시간 초과.");
             }
         });
-    }
-
-    // ################################## 이륙고도 클릭 ###########################################
-
-    public int getTakeOffAltitude() {
-        return this.takeOffAltitude;
-    }
-
-    public void setTakeOffAltitude(int Altitude) {
-        this.takeOffAltitude = Altitude;
     }
 
     // ############################ [일반 모드] 롱클릭 Guided Mode ################################
@@ -1261,13 +1251,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ##################################### 이룍 고도 ############################################
 
     private void SetTakeOffAltitudeUp() {
-        int Altitude = getTakeOffAltitude();
-        setTakeOffAltitude(++Altitude);
+        takeOffAltitude++;
     }
 
     private void SetTakeOffAltitudeDown() {
-        int Altitude = getTakeOffAltitude();
-        setTakeOffAltitude(--Altitude);
+        takeOffAltitude--;
     }
 
     // ################################### Drone event ############################################
