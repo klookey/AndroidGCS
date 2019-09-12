@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 if (BtnFlightMode.getText().equals("일반\n모드")) {
                     // nothing
                 } else if (BtnFlightMode.getText().equals("경로\n비행")) {
-                    // TODO : 경로비행 클릭
+                    MakePathFlight(latLng);
                 } else if (BtnFlightMode.getText().equals("간격\n감시")) {
                     MakeGapPolygon(latLng);
                 } else if (BtnFlightMode.getText().equals("면적\n감시")) {
@@ -878,8 +878,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         FlightMode_Path.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO : Path FlgithMode event
                 BtnFlightMode.setText("경로\n비행");
+
+                BtnSendMission.setVisibility(View.VISIBLE);
 
                 // 그리기 버튼 제어
                 ControlBtnDraw();
@@ -979,26 +980,48 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
 
         final Button BtnSendMission = (Button) findViewById(R.id.BtnSendMission);
+        final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
+
         BtnSendMission.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BtnSendMission.getText().equals("임무 전송")) {
-                    if (PolygonLatLng.size() == 4) {
-                        setMission(mMission);
-                    } else {
-                        alertUser("A,B좌표 필요");
+                if(BtnFlightMode.getText().equals("간격\n감시")) {
+                    if (BtnSendMission.getText().equals("임무 전송")) {
+                        if (PolygonLatLng.size() == 4) {
+                            setMission(mMission);
+                        } else {
+                            alertUser("A,B좌표 필요");
+                        }
+                    } else if (BtnSendMission.getText().equals("임무 시작")) {
+                        // Auto모드로 전환
+                        ChangeToAutoMode();
+                        BtnSendMission.setText("임무 중지");
+                    } else if (BtnSendMission.getText().equals("임무 중지")) {
+                        pauseMission();
+                        ChangeToLoiterMode();
+                        BtnSendMission.setText("임무 재시작");
+                    } else if (BtnSendMission.getText().equals("임무 재시작")) {
+                        ChangeToAutoMode();
+                        BtnSendMission.setText("임무 중지");
                     }
-                } else if (BtnSendMission.getText().equals("임무 시작")) {
-                    // Auto모드로 전환
-                    ChangeToAutoMode();
-                    BtnSendMission.setText("임무 중지");
-                } else if (BtnSendMission.getText().equals("임무 중지")) {
-                    pauseMission();
-                    ChangeToLoiterMode();
-                    BtnSendMission.setText("임무 재시작");
-                } else if (BtnSendMission.getText().equals("임무 재시작")) {
-                    ChangeToAutoMode();
-                    BtnSendMission.setText("임무 중지");
+                } else if(BtnFlightMode.getText().equals("경로\n비행")) {
+                    if(BtnSendMission.getText().equals("임무 전송")) {
+                        if (Auto_Polyline.size() > 0) {
+                            setMission(mMission);
+                        } else {
+                            alertUser("한 점 이상 클릭하세요.");
+                        }
+                    } else if(BtnSendMission.getText().equals("임무 시작")) {
+                        // Auto모드로 전환
+                        ChangeToAutoMode();
+                        BtnSendMission.setText("임무 중지");
+                    } else if(BtnSendMission.getText().equals("임무 중지")) {
+                        ChangeToLoiterMode();
+                        BtnSendMission.setText("임무 재시작");
+                    } else if(BtnSendMission.getText().equals("임무 재시작")) {
+                        ChangeToAutoMode();
+                        BtnSendMission.setText("임무 중지");
+                    }
                 }
             }
         });
@@ -1089,6 +1112,25 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
+    }
+
+    // ###################################### 경로 비행 ###########################################
+
+    private void MakePathFlight(LatLng latLng)  {
+        Auto_Polyline.add(latLng);
+
+        Marker marker = new Marker();
+        marker.setPosition(latLng);
+        Auto_Marker.add(marker);
+        Auto_Marker_Count++;
+
+        Auto_Marker.get(Auto_Marker_Count - 1).setHeight(100);
+        Auto_Marker.get(Auto_Marker_Count - 1).setWidth(100);
+
+        Auto_Marker.get(Auto_Marker_Count - 1).setAnchor(new PointF(0.5F, 0.9F));
+        Auto_Marker.get(Auto_Marker_Count - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+
+        Auto_Marker.get(Auto_Marker_Count - 1).setMap(naverMap);
     }
 
     // ################################# 간격 감시 ################################################
