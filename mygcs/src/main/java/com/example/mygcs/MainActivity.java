@@ -790,6 +790,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     }
                 }
 
+                // marker_goal 지우기
+                marker_goal.setMap(null);
+
                 // 면적 감시 시
                 if (BtnFlightMode.getText().equals("면적\n감시")) {
                     BtnDraw.setVisibility(View.VISIBLE);
@@ -802,7 +805,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 PolygonLatLng.clear();
 
                 // Top 변수 초기화
-                Marker_Count = 0;
                 Auto_Marker_Count = 0;
                 Gap_Top = 0;
 
