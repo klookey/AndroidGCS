@@ -947,40 +947,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     ComputeLargeLength();
 
                 } else {
-                    alertUser("3군데 이상 클릭하시오.");
-                    PolygonLatLng.clear();
+                    alertUser("3군데 이상 클릭하세요.");
                 }
             }
         });
-    }
-
-    private void ComputeLargeLength() {
-        // 가장 긴 변 계산
-        double max = 0.0;
-        double computeValue = 0.0;
-        int firstIndex = 0;
-        int secondIndex = 0;
-        for(int i=0; i<PolygonLatLng.size(); i++) {
-            if(i == PolygonLatLng.size() - 1) {
-                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(0));
-                Log.d("Position12", "computeValue : [" + i + " , 0 ] : " + computeValue);
-                if(max < computeValue) {
-                    max = computeValue;
-                    firstIndex = i;
-                    secondIndex = 0;
-                }
-            } else {
-                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(i+1));
-                Log.d("Position12", "computeValue : [" + i + " , " + (i+1) + "] : " + computeValue);
-                if(max < computeValue) {
-                    max = computeValue;
-                    firstIndex = i;
-                    secondIndex = i+1;
-                }
-            }
-            Log.d("Position12", "max : " + max);
-            Log.d("Position12", "firstIndex : " + firstIndex + " / secondIndex : " + secondIndex);
-        }
     }
 
     private void ControlBtnDraw() {
@@ -1275,6 +1245,49 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
             Auto_Marker.get(Auto_Marker_Count - 1).setMap(naverMap);
         }
+    }
+
+    private void ComputeLargeLength() {
+        // 가장 긴 변 계산
+        double max = 0.0;
+        double computeValue = 0.0;
+        int firstIndex = 0;
+        int secondIndex = 0;
+        for(int i=0; i<PolygonLatLng.size(); i++) {
+            if(i == PolygonLatLng.size() - 1) {
+                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(0));
+                Log.d("Position12", "computeValue : [" + i + " , 0 ] : " + computeValue);
+                if(max < computeValue) {
+                    max = computeValue;
+                    firstIndex = i;
+                    secondIndex = 0;
+                }
+            } else {
+                computeValue = PolygonLatLng.get(i).distanceTo(PolygonLatLng.get(i+1));
+                Log.d("Position12", "computeValue : [" + i + " , " + (i+1) + "] : " + computeValue);
+                if(max < computeValue) {
+                    max = computeValue;
+                    firstIndex = i;
+                    secondIndex = i+1;
+                }
+            }
+            Log.d("Position12", "max : " + max);
+            Log.d("Position12", "firstIndex : " + firstIndex + " / secondIndex : " + secondIndex);
+        }
+
+        MakeAreaPath(firstIndex, secondIndex);
+    }
+
+    private void MakeAreaPath(int firstIndex, int secondIndex) {
+        double heading = MyUtil.computeHeading(PolygonLatLng.get(firstIndex), PolygonLatLng.get(secondIndex));
+
+        Log.d("Position11", "heading : " + heading);
+
+        Auto_Polyline.add(PolygonLatLng.get(firstIndex));
+        Auto_Polyline.add(PolygonLatLng.get(secondIndex));
+
+        LatLng latLng1 = MyUtil.computeOffset(PolygonLatLng.get(firstIndex), Auto_Distance, heading + 90);
+        LatLng latLng2 = MyUtil.computeOffset(PolygonLatLng.get(secondIndex), Auto_Distance, heading + 90);
     }
 
     // ################################### Drone event ############################################
