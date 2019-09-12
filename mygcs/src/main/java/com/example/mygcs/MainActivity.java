@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     PolylineOverlay polyline = new PolylineOverlay();           // 마커 지나간 길
     PolygonOverlay polygon = new PolygonOverlay();              // 간격 감시 시 뒤 사각형 (하늘)
     PolylineOverlay polylinePath = new PolylineOverlay();       // 간격 감시 시 Path (하양)
-    PolygonOverlay Area_polygon = new PolygonOverlay();         // 면적 감시 시 뒤 다각형 (하늘)
 
     private int droneType = Type.TYPE_UNKNOWN;
     private ControlTower controlTower;
@@ -222,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
                 final Button BtnFlightMode = (Button) findViewById(R.id.BtnFlightMode);
                 if (BtnFlightMode.getText().equals("일반\n모드")) {
-                    // TODO : 일반모드 클릭
+                    // nothing
                 } else if (BtnFlightMode.getText().equals("경로\n비행")) {
                     // TODO : 경로비행 클릭
                 } else if (BtnFlightMode.getText().equals("간격\n감시")) {
@@ -771,7 +770,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 polyline.setMap(null);
                 polygon.setMap(null);
                 polylinePath.setMap(null);
-                Area_polygon.setMap(null);
 
                 // Auto_Marker 지우기
                 if (Auto_Marker.size() != 0) {
@@ -862,7 +860,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         FlightMode_Basic.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO : Basic FlightMode event
                 BtnFlightMode.setText("일반\n모드");
 
                 // 그리기 버튼 제어
@@ -940,12 +937,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onClick(View view) {
                 if (PolygonLatLng.size() >= 3) {
                     BtnDraw.setVisibility(view.INVISIBLE);
-                    Area_polygon.setCoords(PolygonLatLng);
+                    polygon.setCoords(PolygonLatLng);
 
                     int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
 
-                    Area_polygon.setColor(colorLightBlue);
-                    Area_polygon.setMap(naverMap);
+                    polygon.setColor(colorLightBlue);
+                    polygon.setMap(naverMap);
                 } else {
                     alertUser("3군데 이상 클릭하시오.");
                     PolygonLatLng.clear();
