@@ -823,7 +823,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         TakeOffUp.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SetTakeOffAltitudeUp();
+                takeOffAltitude++;
                 ShowTakeOffAltitude();
             }
         });
@@ -832,7 +832,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         TakeOffDown.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SetTakeOffAltitudeDown();
+                takeOffAltitude--;
                 ShowTakeOffAltitude();
             }
         });
@@ -1243,16 +1243,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
             Auto_Marker.get(Auto_Marker_Count - 1).setMap(naverMap);
         }
-    }
-
-    // ##################################### 이룍 고도 ############################################
-
-    private void SetTakeOffAltitudeUp() {
-        takeOffAltitude++;
-    }
-
-    private void SetTakeOffAltitudeDown() {
-        takeOffAltitude--;
     }
 
     // ################################### Drone event ############################################
