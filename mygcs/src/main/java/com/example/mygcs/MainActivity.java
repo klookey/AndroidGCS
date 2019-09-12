@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+//                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
                 onFlightModeSelected(view);
             }
 
@@ -277,6 +277,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         int Satellite = droneGps.getSatellitesCount();
         TextView textView_gps = (TextView) findViewById(R.id.GPS_state);
         textView_gps.setText("위성 " + Satellite);
+
+        if(Satellite > 10) {
+            textView_gps.setBackgroundColor(getResources().getColor(R.color.colorPink_gps));
+        } else if(Satellite >= 10) {
+            textView_gps.setBackgroundColor(getResources().getColor(R.color.colorBlue_gps));
+        }
     }
 
     private void ShowTakeOffAltitude() {

@@ -38,7 +38,7 @@
                     android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
@@ -55,27 +55,20 @@
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:orientation="horizontal"></LinearLayout>
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="190dp"
                     android:layout_height="match_parent"
-                    android:background="#00FFEB3B"
+                    android:background="#FFEB3B"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/FlightMode"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="비행모드"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp" />
 
                     <Spinner
                         android:id="@+id/modeSelect"
-                        android:layout_width="190dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:layout_below="@+id/connectionTypeLabel"
@@ -88,7 +81,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="90dp"
+                    android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
@@ -121,13 +114,13 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="130dp"
+                    android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/yaw"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="center"
@@ -136,7 +129,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -144,6 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="#FF8282"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
