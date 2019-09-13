@@ -687,7 +687,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
-                            android:text="지적도 Off"
+                            android:text="지적도"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF" />
 

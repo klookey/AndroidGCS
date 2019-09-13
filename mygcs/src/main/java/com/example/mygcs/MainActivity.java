@@ -722,8 +722,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 LandRegistrationOn.setBackgroundResource(R.drawable.mybutton);
                 LandRegistrationOff.setBackgroundResource(R.drawable.mybutton_dark);
 
-                BtnLandRegistrationMap.setText("지적도 ON");
-
                 naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL, true);
 
                 LandRegistrationOn.setVisibility(View.INVISIBLE);
@@ -736,8 +734,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onClick(View view) {
                 LandRegistrationOn.setBackgroundResource(R.drawable.mybutton_dark);
                 LandRegistrationOff.setBackgroundResource(R.drawable.mybutton);
-
-                BtnLandRegistrationMap.setText("지적도 OFF");
 
                 naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL, false);
 
