@@ -1395,7 +1395,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             case AttributeEvent.MISSION_ITEM_REACHED:
-                alertUser(Reached_Count + "번 waypoint 도착 : " + Reached_Count + " / " + (Auto_Polyline.size()+1));
+                alertUser(Reached_Count + "번 waypoint 도착 : " + Reached_Count + " / " + Auto_Polyline.size());
                 Reached_Count++;
                 break;
 
