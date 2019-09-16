@@ -215,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         });
 
+        //새로운 branch에서 작업을 시작하였습니다.
+
         // 클릭 시
         naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
             @Override
