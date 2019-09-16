@@ -204,7 +204,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="일반\n모드" />
+                                android:text="@string/basic_mode" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -223,7 +223,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="일반\n모드"
+                                android:text="@string/basic_mode"
                                 android:visibility="invisible" />
                         </LinearLayout>
 
@@ -243,7 +243,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="경로\n비행"
+                                android:text="@string/path_mode"
                                 android:visibility="invisible" />
                         </LinearLayout>
 
@@ -263,7 +263,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="간격\n감시"
+                                android:text="@string/gap_mode"
                                 android:visibility="invisible" />
                         </LinearLayout>
 
@@ -283,7 +283,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="면적\n감시"
+                                android:text="@string/area_mode"
                                 android:visibility="invisible" />
                         </LinearLayout>
 
@@ -305,7 +305,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton_dark"
-                            android:text="위성지도"
+                            android:text="@string/map_mode_satellite"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
 
@@ -351,7 +351,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton_takeoff_altitude"
-                                android:text="이륙\n고도" />
+                                android:text="@string/take_off_altitude" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -408,7 +408,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton_dark"
-                            android:text="맵 이동"
+                            android:text="@string/map_move"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
 
@@ -431,7 +431,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton_dark"
-                            android:text="지형도"
+                            android:text="@string/terrian"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
 
@@ -454,7 +454,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton_dark"
-                            android:text="지적도 On"
+                            android:text="@string/registration_on"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
 
@@ -493,7 +493,7 @@
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/mybutton"
-                                android:text="임무 전송"
+                                android:text="@string/mission_transmission"
                                 android:textColor="#FFFFFF"
                                 android:visibility="invisible" />
                         </LinearLayout>
@@ -511,7 +511,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="1"
                             android:background="@drawable/mybutton"
-                            android:text="맵 잠금"
+                            android:text="@string/map_lock"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
 
