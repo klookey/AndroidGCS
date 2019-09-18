@@ -36,7 +36,8 @@
 
     <string name="show_take_off"> m\n이륙고도</string>
 
-    <string name="show_degree">deg</string>
+    <string name="show_degree">각도</string>
+    <string name="show_degree_deg">deg</string>
 
     <string name="show_voltage">전압 </string>
     <string name="show_voltage_V">V</string>

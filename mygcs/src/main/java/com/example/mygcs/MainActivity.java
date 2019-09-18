@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // [UI] yaw 보여주기
         TextView textView_yaw = (TextView) findViewById(R.id.yaw);
-        textView_yaw.setText((int) yaw + getString(R.string.show_degree));
+        textView_yaw.setText(getString(R.string.show_degree) + " " + (int) yaw + getString(R.string.show_degree_deg));
     }
 
     private void BatteryUpdate() {
@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Altitude altitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         int intAltitude = (int) Math.round(altitude.getAltitude());
 
-        textView.setText(getString(R.string.show_altitude)+ DoubleAltitude + getString(R.string.show_altitude_m));
+        textView.setText(getString(R.string.show_altitude) + " " + DoubleAltitude + getString(R.string.show_altitude_m));
         Log.d("Position7", "Altitude : " + DoubleAltitude);
     }
 
@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Speed speed = this.drone.getAttribute(AttributeType.SPEED);
         int doubleSpeed = (int) Math.round(speed.getGroundSpeed());
         // double doubleSpeed = Math.round(speed.getGroundSpeed()*10)/10.0; 소수점 첫째자리까지
-        textView.setText(getString(R.string.show_speed) + doubleSpeed + getString(R.string.show_speed_m));
+        textView.setText(getString(R.string.show_speed) + " " + doubleSpeed + getString(R.string.show_speed_m));
         Log.d("Position6", "Speed : " + this.drone.getAttribute(AttributeType.SPEED));
     }
 
