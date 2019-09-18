@@ -1,5 +1,110 @@
 <resources>
     <string name="app_name">MyGCS</string>
-    <string name="button_connect">Connect</string>
-    <string name="button_disconnect">Disconnect</string>
+
+    <string name="auto_mode_basic">일반\n모드</string>
+    <string name="auto_mode_path">경로\n비행</string>
+    <string name="auto_mode_gap">간격\n감시</string>
+    <string name="auto_mode_area">면적\n감시</string>
+
+    <string name="map_type_satellite">위성지도</string>
+    <string name="map_type_terrain">지형도</string>
+    <string name="map_type_basic">일반지도</string>
+
+    <string name="take_off_altitude">이륙\n고도</string>
+
+    <string name="btn_mission_transmition">임무 전송</string>
+    <string name="btn_mission_start">임무 시작</string>
+    <string name="btn_mission_stop">임무 중지</string>
+    <string name="btn_mission_restart">임무 재시작</string>
+
+    <string name="btn_arm">ARM</string>
+    <string name="btn_take_off">TAKE OFF</string>
+    <string name="btn_land">LAND</string>
+
+    <string name="map_move_unlock">맵 이동</string>
+    <string name="map_move_lock">맵 잠금</string>
+
+    <string name="cadastre">지적도</string>
+    <string name="cadastre_on">지적도 ON</string>
+    <string name="cadastre_off">지적도 OFF</string>
+
+    <string name="clear">CLEAR</string>
+
+    <string name="btn_draw">그리기</string>
+
+    <string name="show_satellite">위성 </string>
+
+    <string name="show_take_off"> m\n이륙고도</string>
+
+    <string name="show_degree">deg</string>
+
+    <string name="show_voltage">전압 </string>
+    <string name="show_voltage_V">V</string>
+
+    <string name="show_altitude">고도 </string>
+    <string name="show_altitude_m">m</string>
+
+    <string name="show_speed">속도 </string>
+    <string name="show_speed_m">m/s</string>
+
+    <string name="arrive_at_goal">목적지에 도착했어요</string>
+
+    <string name="alert_mode_select">비행 모드</string>
+    <string name="alert_mode_changed">로 변경했어요</string>
+
+    <string name="alert_fail_mode_changed">비행 모드를 변경하지 못했어요 : </string>
+
+    <string name="dialog_guide_title">가이드 모드</string>
+    <string name="guide_ask_question">클릭한 지점으로 갈게요. 이동할까요?</string>
+
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
+
+    <string name="alert_head_the_goal">목적지로 향할게요</string>
+    <string name="alert_cannot_move">이동 할 수 없어요</string>
+
+    <string name="alert_a_b_latlng">A,B좌표 필요</string>
+
+    <string name="alert_one_more_latlng">한 점 이상 클릭하세요</string>
+    <string name="alert_three_more_latlng">세 점 이상 클릭하세요</string>
+
+    <string name="alert_mission_upload">미션 업로드를 완료했어요</string>
+
+    <string name="alert_changing_mode_to_loiter">Loiter 모드로 변경 중...</string>
+    <string name="alert_fail_change_mode_to_loiter">Loiter 모드 변경에 실패했어요</string>
+
+    <string name="alert_changing_mode_to_auto">Auto 모드로 변경 중...</string>
+    <string name="alert_fail_change_mode_to_auto">Auto 모드 변경에 실패했어요</string>
+
+    <string name="alert_changng_mode_to_guide">가이드 모드로 변경 중...</string>
+    <string name="alert_fail_change_mode_to_guide">가이드 모드 변경에 실패했어요</string>
+
+    <string name="dialog_gap_monitoring_title">[간격 감시]</string>
+    <string name="dialog_gap_monitoring_subtitle_whole">1. 전체 길이를 입력하세요</string>
+    <string name="dialog_gap_monitoring_subtitle_gap">2. 간격 길이를 입력하세요</string>
+
+    <string name="insert">입력</string>
+    <string name="cancle">취소</string>
+
+    <string name="connected_drone">드론이 연결되었어요</string>
+    <string name="disconnected_drone">드론이 연결 해제되었어요</string>
+
+    <string name="alert_connected_drone_and_phone">드론-핸드폰 연결되었어요</string>
+    <string name="alert_disconnected_drone_and_phone">드론-핸드폰 연결 해제되었어요</string>
+
+    <string name="alert_turn_on_hotspot">핫스팟을 켜주세요</string>
+
+    <string name="alert_compute_waypoint_count">번 목적지 도착 :</string>
+    <string name="slash">/</string>
+
+    <string name="alert_cannot_land">착륙할 수 없어요</string>
+    <string name="alert_success_take_off">이륙에 성공했어요</string>
+    <string name="alert_cannot_take_off">이륙 할 수 없어요</string>
+
+    <string name="alert_need_to_connect_drone">드론과 연결해주세요</string>
+
+    <string name="dialog_arming">Arming...</string>
+    <string name="dialog_arming_context">시동을 걸면 프로펠러가 고속으로 회전합니다.</string>
+    <string name="alert_cannot_arming">아밍 할 수 없어요</string>
+
 </resources>
