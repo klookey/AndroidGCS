@@ -90,10 +90,12 @@
     <string name="connected_drone">드론이 연결되었어요</string>
     <string name="disconnected_drone">드론이 연결 해제되었어요</string>
 
-    <string name="alert_connected_drone_and_phone">드론-핸드폰 연결되었어요</string>
-    <string name="alert_disconnected_drone_and_phone">드론-핸드폰 연결 해제되었어요</string>
+    <string name="alert_connected_drone_and_phone">드론과 핸드폰을 연결했어요</string>
+    <string name="alert_disconnected_drone_and_phone">드론과 핸드폰 연결을 해제했어요</string>
 
     <string name="alert_turn_on_hotspot">핫스팟을 켜주세요</string>
+
+    <string name="alert_fail_to_connect">연결 실패 :</string>
 
     <string name="alert_compute_waypoint_count">번 목적지 도착 :</string>
     <string name="slash">/</string>

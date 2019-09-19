@@ -40,10 +40,11 @@
                 <LinearLayout
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/Voltage"
+                        android:id="@+id/textviewVoltage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -64,6 +65,7 @@
                 <LinearLayout
                     android:layout_width="190dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="#FFEB3B"
                     android:orientation="vertical">
 
@@ -73,7 +75,7 @@
                         android:orientation="horizontal"></LinearLayout>
 
                     <Spinner
-                        android:id="@+id/modeSelect"
+                        android:id="@+id/spinnerFlightMode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
@@ -89,10 +91,11 @@
                 <LinearLayout
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/Altitude"
+                        android:id="@+id/textviewAltitude"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -111,7 +114,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/Speed"
+                        android:id="@+id/textviewSpeed"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -124,10 +127,11 @@
                 <LinearLayout
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/yaw"
+                        android:id="@+id/textviewYaw"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -139,10 +143,11 @@
 
                 <LinearLayout
                     android:layout_width="100dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/GPS_state"
+                        android:id="@+id/textviewSatellite"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -167,7 +172,7 @@
                     android:orientation="horizontal"></LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler"
+                    android:id="@+id/recyclerviewAlerting"
                     android:layout_width="400dp"
                     android:layout_height="250dp"
                     android:background="@drawable/recycler_background"
@@ -199,7 +204,7 @@
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/BtnFlightMode"
+                                android:id="@+id/btnAuto"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -218,7 +223,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/FlightMode_Basic"
+                                android:id="@+id/btnAutoBasic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -238,7 +243,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/FlightMode_Path"
+                                android:id="@+id/btnAutoPath"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -258,7 +263,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/FlightMode_Gap"
+                                android:id="@+id/btnAutoGap"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -278,7 +283,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/FlightMode_Area"
+                                android:id="@+id/btnAutoArea"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -300,7 +305,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/MapType_Satellite"
+                            android:id="@+id/btnMapTypeSatellite"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -346,7 +351,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/BtnTakeOffAltitude"
+                                android:id="@+id/btnTakeOffAltitude"
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -365,7 +370,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/TakeOffUp"
+                                android:id="@+id/btnTakeOffUp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -386,7 +391,7 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <Button
-                                android:id="@+id/TakeOffDown"
+                                android:id="@+id/btnTakeOffDown"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -403,7 +408,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/MapMoveUnLock"
+                            android:id="@+id/btnMapMoveUnlock"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -426,7 +431,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/MapType_Terrain"
+                            android:id="@+id/btnMapTypeTerrain"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -449,7 +454,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/LandRegistrationOn"
+                            android:id="@+id/btnCadastreOn"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -488,7 +493,7 @@
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/BtnSendMission"
+                                android:id="@+id/btnMission"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -506,7 +511,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/MapMoveLock"
+                            android:id="@+id/btnMapMoveLock"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -529,7 +534,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/MapType_Basic"
+                            android:id="@+id/btnMapTypeBasic"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -552,7 +557,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/LandRegistrationOff"
+                            android:id="@+id/btnCadastreOff"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -592,7 +597,7 @@
                             </LinearLayout>
 
                             <Button
-                                android:id="@+id/BtnArm"
+                                android:id="@+id/btnArm"
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -614,7 +619,7 @@
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/BtnDraw"
+                                android:id="@+id/btnDraw"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 android:layout_weight="1"
@@ -636,7 +641,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/BtnMapMoveLock"
+                            android:id="@+id/btnMapMove"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -659,7 +664,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/BtnMapType"
+                            android:id="@+id/btnMapType"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -682,7 +687,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/BtnLandRegistrationMap"
+                            android:id="@+id/btnCadastre"
                             android:layout_width="77dp"
                             android:layout_height="45dp"
                             android:layout_weight="1"
@@ -700,7 +705,7 @@
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/BtnClear"
+                        android:id="@+id/btnClear"
                         android:layout_width="77dp"
                         android:layout_height="45dp"
                         android:background="@drawable/mybutton"
