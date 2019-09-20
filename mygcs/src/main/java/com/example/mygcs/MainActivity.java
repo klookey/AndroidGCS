@@ -103,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private Spinner mModeSelector;
 
-    private int mMarkerCount = 0;
-    private int mRecyclerCount = 0;
+    private final int RECYCLER_COUNT = 0;
     private int mTakeOffAltitude = 3;
-    private int mAutoMarkersCount = 0;
     private int mAutoDistance = 50;
-    private int mGapDistance = 5;
-    private int mGapTop = 0;
+    private double mGapDistance = 5.0;
+    private int mGapCount = 0;
     private int mGuidedCount = 0;
+
+    private boolean mGuidedArrived = false;
 
     protected double mRecentAltitude = 0;
 
@@ -326,8 +326,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Log.d(LogTags.TAG_DRONE_POSITION, "dronePosition : " + dronePosition);
 
         // 이동했던 위치 맵에서 지워주기
-        if (mMarkerCount - 1 >= 0) {
-            mDroneMarkers.get(mMarkerCount - 1).setMap(null);
+        if (mDroneMarkers.size() - 2 >= 0) {
+            mDroneMarkers.get(mDroneMarkers.size() - 2).setMap(null);
         }
 
         // 마커 리스트에 추가
@@ -340,20 +340,20 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         if ((int) yaw < 0) {
             yaw += 360;
         }
-        mDroneMarkers.get(mMarkerCount).setAngle((float) yaw);
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setAngle((float) yaw);
 
         // 마커 크기 지정
-        mDroneMarkers.get(mMarkerCount).setHeight(400);
-        mDroneMarkers.get(mMarkerCount).setWidth(80);
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setHeight(400);
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setWidth(80);
 
         // 마커 아이콘 지정
-        mDroneMarkers.get(mMarkerCount).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setIcon(OverlayImage.fromResource(R.drawable.marker_icon));
 
         // 마커 위치를 중심점으로 지정
-        mDroneMarkers.get(mMarkerCount).setAnchor(new PointF(0.5F, 0.9F));
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setAnchor(new PointF(0.5F, 0.9F));
 
         // 마커 띄우기
-        mDroneMarkers.get(mMarkerCount).setMap(mNaverMap);
+        mDroneMarkers.get(mDroneMarkers.size() - 1).setMap(mNaverMap);
 
         // 카메라 위치 설정
         Button btnMapMoveLock = (Button) findViewById(R.id.btnMapMove);
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
 
         // 지나간 길 Polyline
-        Collections.addAll(mDronePolylineCoords, mDroneMarkers.get(mMarkerCount).getPosition());
+        Collections.addAll(mDronePolylineCoords, mDroneMarkers.get(mDroneMarkers.size() - 1).getPosition());
         mDronePolyline.setCoords(mDronePolylineCoords);
 
         // 선 예쁘게 설정
@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         State vehicleState = this.mDrone.getAttribute(AttributeType.STATE);
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         if (vehicleMode == VehicleMode.COPTER_GUIDED) {
-            LatLng droneLatLng = new LatLng(mDroneMarkers.get(mMarkerCount).getPosition().latitude, mDroneMarkers.get(mMarkerCount).getPosition().longitude);
+            LatLng droneLatLng = new LatLng(mDroneMarkers.get(mDroneMarkers.size() - 1).getPosition().latitude, mDroneMarkers.get(mDroneMarkers.size() - 1).getPosition().longitude);
             LatLng goalLatLng = new LatLng(mMarkerGoal.getPosition().latitude, mMarkerGoal.getPosition().longitude);
 
             double distance = droneLatLng.distanceTo(goalLatLng);
@@ -401,8 +401,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // [UI] 잡히는 GPS 개수
         showSatelliteCount();
-
-        mMarkerCount++;
     }
 
     private void updateAltitude() {
@@ -769,8 +767,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 }
 
                 // 이전 마커 지우기
-                if (mMarkerCount - 1 >= 0) {
-                    mDroneMarkers.get(mMarkerCount - 1).setMap(null);
+                if (mDroneMarkers.size() - 2 >= 0) {
+                    mDroneMarkers.get(mDroneMarkers.size() - 2).setMap(null);
                 }
 
                 // 폴리라인 / 폴리곤 지우기
@@ -800,8 +798,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 mAutoPolygonCoords.clear();
 
                 // Top 변수 초기화
-                mAutoMarkersCount = 0;
-                mGapTop = 0;
+                mGapCount = 0;
 
                 mReachedCount = 1;
 
@@ -1129,15 +1126,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Marker marker = new Marker();
         marker.setPosition(latLng);
         mAutoMarkers.add(marker);
-        mAutoMarkersCount++;
 
-        mAutoMarkers.get(mAutoMarkersCount - 1).setHeight(100);
-        mAutoMarkers.get(mAutoMarkersCount - 1).setWidth(100);
+        mAutoMarkers.get(mAutoMarkers.size() - 1).setHeight(100);
+        mAutoMarkers.get(mAutoMarkers.size() - 1).setWidth(100);
 
-        mAutoMarkers.get(mAutoMarkersCount - 1).setAnchor(new PointF(0.5F, 0.9F));
-        mAutoMarkers.get(mAutoMarkersCount - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+        mAutoMarkers.get(mAutoMarkers.size() - 1).setAnchor(new PointF(0.5F, 0.9F));
+        mAutoMarkers.get(mAutoMarkers.size() - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
 
-        mAutoMarkers.get(mAutoMarkersCount - 1).setMap(mNaverMap);
+        mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
 
         makeWaypoint();
     }
@@ -1145,31 +1141,30 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ################################# 간격 감시 ################################################
 
     private void makeGapPolygon(LatLng latLng) {
-        if (mGapTop < 2) {
+        if (mGapCount < 2) {
             Marker marker = new Marker();
             marker.setPosition(latLng);
             mAutoPolygonCoords.add(latLng);
 
             // mAutoMarkers에 넣기 위해 marker 생성..
             mAutoMarkers.add(marker);
-            mAutoMarkers.get(mAutoMarkersCount).setMap(mNaverMap);
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
 
-            if (mGapTop == 0) {
+            if (mGapCount == 0) {
                 mAutoMarkers.get(0).setIcon(OverlayImage.fromResource(R.drawable.number1));
                 mAutoMarkers.get(0).setWidth(80);
                 mAutoMarkers.get(0).setHeight(80);
                 mAutoMarkers.get(0).setAnchor(new PointF(0.5F, 0.5F));
-            } else if (mGapTop == 1) {
+            } else if (mGapCount == 1) {
                 mAutoMarkers.get(1).setIcon(OverlayImage.fromResource(R.drawable.number2));
                 mAutoMarkers.get(1).setWidth(80);
                 mAutoMarkers.get(1).setHeight(80);
                 mAutoMarkers.get(1).setAnchor(new PointF(0.5F, 0.5F));
             }
 
-            mGapTop++;
-            mAutoMarkersCount++;
+            mGapCount++;
         }
-        if (mAutoMarkersCount == 2) {
+        if (mAutoMarkers.size() == 2) {
             double heading = MyUtil.computeHeading(mAutoMarkers.get(0).getPosition(), mAutoMarkers.get(1).getPosition());
 
             LatLng latLng1 = MyUtil.computeOffset(mAutoMarkers.get(1).getPosition(), mAutoDistance, heading + 90);
@@ -1205,16 +1200,16 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(0).getPosition().latitude, mAutoMarkers.get(0).getPosition().longitude));
         mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(1).getPosition().latitude, mAutoMarkers.get(1).getPosition().longitude));
 
-        for (int sum = mGapDistance; sum + mGapDistance <= mAutoDistance + mGapDistance; sum = sum + mGapDistance) {
-            LatLng latLng1 = MyUtil.computeOffset(mAutoMarkers.get(mAutoMarkersCount - 1).getPosition(), mGapDistance, heading + 90);
-            LatLng latLng2 = MyUtil.computeOffset(mAutoMarkers.get(mAutoMarkersCount - 2).getPosition(), mGapDistance, heading + 90);
+        for (double sum = mGapDistance; sum + mGapDistance <= mAutoDistance + mGapDistance; sum = sum + mGapDistance) {
+            LatLng latLng1 = MyUtil.computeOffset(mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition(), mGapDistance, heading + 90);
+            LatLng latLng2 = MyUtil.computeOffset(mAutoMarkers.get(mAutoMarkers.size() - 2).getPosition(), mGapDistance, heading + 90);
 
             mAutoMarkers.add(new Marker(latLng1));
             mAutoMarkers.add(new Marker(latLng2));
-            mAutoMarkersCount += 2;
+//            mAutoMarkers.size() - 1 += 2;
 
-            mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkersCount - 2).getPosition().latitude, mAutoMarkers.get(mAutoMarkersCount - 2).getPosition().longitude));
-            mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkersCount - 1).getPosition().latitude, mAutoMarkers.get(mAutoMarkersCount - 1).getPosition().longitude));
+            mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkers.size() - 2).getPosition().latitude, mAutoMarkers.get(mAutoMarkers.size() - 2).getPosition().longitude));
+            mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition().latitude, mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition().longitude));
         }
 
         mAutoPolylinePath.setColor(Color.WHITE);
@@ -1284,15 +1279,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Marker marker = new Marker();
             marker.setPosition(latLng);
             mAutoMarkers.add(marker);
-            mAutoMarkersCount++;
 
-            mAutoMarkers.get(mAutoMarkersCount - 1).setHeight(100);
-            mAutoMarkers.get(mAutoMarkersCount - 1).setWidth(100);
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setHeight(100);
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setWidth(100);
 
-            mAutoMarkers.get(mAutoMarkersCount - 1).setAnchor(new PointF(0.5F, 0.9F));
-            mAutoMarkers.get(mAutoMarkersCount - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setAnchor(new PointF(0.5F, 0.9F));
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
 
-            mAutoMarkers.get(mAutoMarkersCount - 1).setMap(mNaverMap);
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
         }
     }
 
@@ -1552,23 +1546,23 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         // recycler view 시간 지나면 제거
         if (mRecyclerList.size() > 0) {
             Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "---------------------------------------------------");
-            Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[Minute] recycler time : " + mRecyclerTime.get(mRecyclerCount).getMinute());
+            Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[Minute] recycler time : " + mRecyclerTime.get(RECYCLER_COUNT).getMinute());
             Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[Minute] Local time : " + localTime.getMinute());
-            if (mRecyclerTime.get(mRecyclerCount).getMinute() == localTime.getMinute()) {
-                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "recycler time : " + mRecyclerTime.get(mRecyclerCount).getSecond());
+            if (mRecyclerTime.get(RECYCLER_COUNT).getMinute() == localTime.getMinute()) {
+                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "recycler time : " + mRecyclerTime.get(RECYCLER_COUNT).getSecond());
                 Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "Local time : " + localTime.getSecond());
                 Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] recycler size() : " + mRecyclerList.size());
-                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] mRecyclerCount : " + mRecyclerCount);
-                if (localTime.getSecond() >= mRecyclerTime.get(mRecyclerCount).getSecond() + 3) {
+                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] RECYCLER_COUNT : " + RECYCLER_COUNT);
+                if (localTime.getSecond() >= mRecyclerTime.get(RECYCLER_COUNT).getSecond() + 3) {
                     removeRecyclerView();
                 }
             } else {
                 // 3초가 지났을 때 1분이 지나감
-                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "recycler time : " + mRecyclerTime.get(mRecyclerCount).getSecond());
+                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "recycler time : " + mRecyclerTime.get(RECYCLER_COUNT).getSecond());
                 Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "Local time : " + localTime.getSecond());
                 Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] recycler size() : " + mRecyclerList.size());
-                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] mRecyclerCount : " + mRecyclerCount);
-                if (localTime.getSecond() + 60 >= mRecyclerTime.get(mRecyclerCount).getSecond() + 3) {
+                Log.d(LogTags.TAG_RECYCLERVIEW_TIME, "[★] RECYCLER_COUNT : " + RECYCLER_COUNT);
+                if (localTime.getSecond() + 60 >= mRecyclerTime.get(RECYCLER_COUNT).getSecond() + 3) {
                     removeRecyclerView();
                 }
             }
@@ -1577,11 +1571,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void removeRecyclerView() {
-        mRecyclerList.remove(mRecyclerCount);
-        mRecyclerTime.remove(mRecyclerCount);
-        if (mRecyclerList.size() > mRecyclerCount) {
+        mRecyclerList.remove(RECYCLER_COUNT);
+        mRecyclerTime.remove(RECYCLER_COUNT);
+        if (mRecyclerList.size() > RECYCLER_COUNT) {
             LocalTime localTime = LocalTime.now();
-            mRecyclerTime.set(mRecyclerCount, localTime);
+            mRecyclerTime.set(RECYCLER_COUNT, localTime);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerviewAlerting);
@@ -1600,7 +1594,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void alertUser(String message) {
         // 5개 이상 삭제
         if (mRecyclerList.size() > 3) {
-            mRecyclerList.remove(mRecyclerCount);
+            mRecyclerList.remove(RECYCLER_COUNT);
         }
 
         LocalTime localTime = LocalTime.now();
