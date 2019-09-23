@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private int mAutoDistance = 50;
     private double mGapDistance = 5.0;
     private int mGapCount = 0;
-    private int mGuidedCount = 0;
 
     private boolean mGuidedArrived = false;
 
@@ -395,10 +394,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             Log.d(LogTags.TAG_DISTANCE_BETWEEN_DRONE_AND_GOAL, "distance : " + distance);
 
             if (distance < 1.0) {
-                if(mGuidedCount == 0) {
+                if(mGuidedArrived == false) {
                     alertUser(getString(R.string.arrive_at_goal));
                     mMarkerGoal.setMap(mNaverMap);
-                    mGuidedCount = 1;
+                    mGuidedArrived = true;
                 }
             }
         }
@@ -471,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     mMarkerGoal.setHeight(70);
                     mMarkerGoal.setMap(mNaverMap);
 
-                    mGuidedCount = 0;
+                    mGuidedArrived = false;
 
                     // Guided 모드로 변환
                     changeToGuideMode();
