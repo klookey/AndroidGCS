@@ -1,4 +1,4 @@
-package com.example.mygcs;
+package com.example.mygcs.Math;
 
 import com.naver.maps.geometry.LatLng;
 

@@ -1,4 +1,4 @@
-package com.example.mygcs;
+package com.example.mygcs.Log;
 
 public class LogTags {
     public static String TAG_RECYCLERVIEW_TIME = "TAG:RecyclerviewTime";

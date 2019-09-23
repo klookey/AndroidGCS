@@ -1,4 +1,4 @@
-package com.example.mygcs;
+package com.example.mygcs.RecyclerView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.mygcs.R;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ public class SimpleTextAdapter extends RecyclerView.Adapter<SimpleTextAdapter.Vi
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    SimpleTextAdapter(ArrayList<String> list) {
+    public SimpleTextAdapter(ArrayList<String> list) {
         mData = list;
     }
 
