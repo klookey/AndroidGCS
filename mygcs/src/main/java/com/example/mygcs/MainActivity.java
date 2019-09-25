@@ -20,16 +20,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.mygcs.Connect.ApManager;
-import com.example.mygcs.ControlFlightMode.FlightMode;
 import com.example.mygcs.Log.LogTags;
 import com.example.mygcs.Math.MyUtil;
 import com.example.mygcs.RecyclerView.SimpleTextAdapter;
+import com.example.mygcs.TakeOffAltitude.TakeOffAltitude;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     MapFragment mNaverMapFragment = null;
 
     private Drone mDrone;
-    FlightMode mFlightMode;
 
     NaverMap mNaverMap;
 
@@ -108,8 +108,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private Spinner mModeSelector;
 
+    private TakeOffAltitude mTakeOffAltitude = new TakeOffAltitude();
+
     private final int RECYCLER_COUNT = 0;
-    private int mTakeOffAltitude = 3;
     private int mAutoDistance = 50;
     private double mGapDistance = 5.0;
     private int mGapCount = 0;
@@ -136,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Context context = getApplicationContext();
         this.mControlTower = new ControlTower(context);
         this.mDrone = new Drone(context);
-
-        this.mFlightMode = new FlightMode(mDrone, mModeSelector);
 
         // 지도 띄우기
         FragmentManager fm = getSupportFragmentManager();
@@ -262,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected void onStart() {
         super.onStart();
         this.mControlTower.connect(this);
-        mFlightMode.updateVehicleModesForType(this.mDroneType);
+        updateVehicleModesForType(this.mDroneType);
     }
 
     @Override
@@ -297,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void showTakeOffAltitude() {
         final Button BtnTakeOffAltitude = (Button) findViewById(R.id.btnTakeOffAltitude);
-        BtnTakeOffAltitude.setText(mTakeOffAltitude + getString(R.string.show_take_off));
+        BtnTakeOffAltitude.setText(mTakeOffAltitude.getTakeOffAltitude() + getString(R.string.show_take_off));
     }
 
     private void updateYaw() {
@@ -476,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     mGuidedArrived = false;
 
                     // Guided 모드로 변환
-                    mFlightMode.changeToGuideMode();
+                    changeToGuideMode();
 
                     // 지정된 위치로 이동
                     goToTarget();
@@ -833,7 +832,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnTakeOffUp.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTakeOffAltitude++;
+//                mTakeOffAltitude++;
+                mTakeOffAltitude.setTakeOffAltitude(mTakeOffAltitude.getTakeOffAltitude()+1);
                 showTakeOffAltitude();
             }
         });
@@ -842,7 +842,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnTakeOffDown.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTakeOffAltitude--;
+//                mTakeOffAltitude--;
+                mTakeOffAltitude.setTakeOffAltitude(mTakeOffAltitude.getTakeOffAltitude()-1);
                 showTakeOffAltitude();
             }
         });
@@ -1004,14 +1005,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                         }
                     } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_start))) {
                         // Auto모드로 전환
-                        mFlightMode.changeToAutoMode();
+                        changeToAutoMode();
                         btnSendMission.setText(getString(R.string.btn_mission_stop));
                     } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_stop))) {
                         pauseMission();
-                        mFlightMode.changeToLoiterMode();
+                        changeToLoiterMode();
                         btnSendMission.setText(getString(R.string.btn_mission_restart));
                     } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_restart))) {
-                        mFlightMode.changeToAutoMode();
+                        changeToAutoMode();
                         btnSendMission.setText(getString(R.string.btn_mission_stop));
                     }
                 } else if(btnFlightMode.getText().equals(getString(R.string.auto_mode_path))) {
@@ -1023,13 +1024,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                         }
                     } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_start))) {
                         // Auto모드로 전환
-                        mFlightMode.changeToAutoMode();
+                        changeToAutoMode();
                         btnSendMission.setText(getString(R.string.btn_mission_stop));
                     } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_stop))) {
-                        mFlightMode.changeToLoiterMode();
+                        changeToLoiterMode();
                         btnSendMission.setText(getString(R.string.btn_mission_restart));
                     } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_restart))) {
-                        mFlightMode.changeToAutoMode();
+                        changeToAutoMode();
                         btnSendMission.setText(getString(R.string.btn_mission_stop));
                     }
                 }
@@ -1053,7 +1054,76 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     // ################################## 비행 모드 변경 ##########################################
 
+    public void changeToLoiterMode() {
+        VehicleApi.getApi(this.mDrone).setVehicleMode(VehicleMode.COPTER_LOITER, new SimpleCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser(getString(R.string.alert_changing_mode_to_loiter));
+            }
 
+            @Override
+            public void onError(int executionError) {
+                alertUser(getString(R.string.alert_fail_change_mode_to_loiter) + " " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser(getString(R.string.alert_fail_change_mode_to_loiter));
+            }
+        });
+    }
+
+    public void changeToAutoMode() {
+        VehicleApi.getApi(this.mDrone).setVehicleMode(VehicleMode.COPTER_AUTO, new SimpleCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser(getString(R.string.alert_changing_mode_to_auto));
+            }
+
+            @Override
+            public void onError(int executionError) {
+                alertUser(getString(R.string.alert_fail_change_mode_to_auto) + " " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser(getString(R.string.alert_fail_change_mode_to_auto));
+            }
+        });
+    }
+
+    public void changeToGuideMode() {
+        VehicleApi.getApi(this.mDrone).setVehicleMode(VehicleMode.COPTER_GUIDED, new SimpleCommandListener() {
+            @Override
+            public void onSuccess() {
+                alertUser(getString(R.string.alert_changng_mode_to_guide));
+            }
+
+            @Override
+            public void onError(int executionError) {
+                alertUser(getString(R.string.alert_fail_change_mode_to_guide) + " " + executionError);
+            }
+
+            @Override
+            public void onTimeout() {
+                alertUser(getString(R.string.alert_fail_change_mode_to_guide));
+            }
+        });
+    }
+
+    public void updateVehicleModesForType(int mDroneType) {
+        List<VehicleMode> vehicleModes = VehicleMode.getVehicleModePerDroneType(mDroneType);
+        ArrayAdapter<VehicleMode> vehicleModeArrayAdapter = new ArrayAdapter<VehicleMode>(this, android.R.layout.simple_spinner_item, vehicleModes);
+        vehicleModeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.mModeSelector.setAdapter(vehicleModeArrayAdapter);
+    }
+
+    public void updateVehicleMode() {
+        State vehicleState = this.mDrone.getAttribute(AttributeType.STATE);
+        VehicleMode vehicleMode = vehicleState.getVehicleMode();
+        ArrayAdapter arrayAdapter = (ArrayAdapter) this.mModeSelector.getAdapter();
+        this.mModeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
+    }
 
     // ###################################### 경로 비행 ###########################################
 
@@ -1287,12 +1357,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 Type newmDroneType = this.mDrone.getAttribute(AttributeType.TYPE);
                 if (newmDroneType.getDroneType() != this.mDroneType) {
                     this.mDroneType = newmDroneType.getDroneType();
-                    mFlightMode.updateVehicleModesForType(this.mDroneType);
+                    updateVehicleModesForType(this.mDroneType);
                 }
                 break;
 
             case AttributeEvent.STATE_VEHICLE_MODE:
-                mFlightMode.updateVehicleMode();
+                updateVehicleMode();
                 break;
 
             case AttributeEvent.GPS_POSITION:
@@ -1376,7 +1446,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             });
         } else if (vehicleState.isArmed()) {
             // Take off
-            ControlApi.getApi(this.mDrone).takeoff(mTakeOffAltitude, new AbstractCommandListener() {
+            ControlApi.getApi(this.mDrone).takeoff(mTakeOffAltitude.getTakeOffAltitude(), new AbstractCommandListener() {
                 @Override
                 public void onSuccess() {
                     alertUser(getString(R.string.alert_success_take_off));
