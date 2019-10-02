@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.mygcs.Connect.ApManager;
+import com.example.mygcs.DroneMission.DroneMission;
 import com.example.mygcs.Log.LogTags;
 import com.example.mygcs.Math.MyUtil;
 import com.example.mygcs.RecyclerView.SimpleTextAdapter;
@@ -52,12 +53,10 @@ import com.o3dr.android.client.interfaces.DroneListener;
 import com.o3dr.android.client.interfaces.LinkListener;
 import com.o3dr.android.client.interfaces.TowerListener;
 import com.o3dr.services.android.lib.coordinate.LatLong;
-import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.mission.Mission;
-import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Attitude;
 import com.o3dr.services.android.lib.drone.property.Battery;
@@ -90,12 +89,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     NaverMap mNaverMap;
 
     List<Marker> mDroneMarkers = new ArrayList<>();
-    List<LatLng> mDronePolylineCoords = new ArrayList<>(); // 폴리라인
-    ArrayList<String> mRecyclerList = new ArrayList<>();// 리사이클러뷰
-    List<LocalTime> mRecyclerTime = new ArrayList<>();          // 리사이클러뷰 시간
-    List<Marker> mAutoMarkers = new ArrayList<>();               // 간격감시 마커
-    List<LatLng> mAutoPolygonCoords = new ArrayList<>();             // 간격감시 폴리곤
-    List<LatLng> mAutoPolylineCoords = new ArrayList<>();             // 간격감시 폴리라인
+    List<LatLng> mDronePolylineCoords = new ArrayList<>();          // 폴리라인
+    ArrayList<String> mRecyclerList = new ArrayList<>();            // 리사이클러뷰
+    List<LocalTime> mRecyclerTime = new ArrayList<>();              // 리사이클러뷰 시간
+    List<Marker> mAutoMarkers = new ArrayList<>();                  // 간격감시 마커
+    List<LatLng> mAutoPolygonCoords = new ArrayList<>();            // 간격감시 폴리곤
+    List<LatLng> mAutoPolylineCoords = new ArrayList<>();           // 간격감시 폴리라인
 
     Marker mMarkerGoal = new Marker(); // Guided 모드 마커
 
@@ -832,7 +831,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnTakeOffUp.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mTakeOffAltitude++;
                 mTakeOffAltitude.setTakeOffAltitude(mTakeOffAltitude.getTakeOffAltitude()+1);
                 showTakeOffAltitude();
             }
@@ -842,7 +840,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnTakeOffDown.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mTakeOffAltitude--;
                 mTakeOffAltitude.setTakeOffAltitude(mTakeOffAltitude.getTakeOffAltitude()-1);
                 showTakeOffAltitude();
             }
@@ -980,15 +977,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void makeWaypoint() {
         final Mission mission = new Mission();
 
-        for (int i = 0; i < mAutoPolylineCoords.size(); i++) {
-            Waypoint waypoint = new Waypoint();
-            waypoint.setDelay(1);
-
-            LatLongAlt latLongAlt = new LatLongAlt(mAutoPolylineCoords.get(i).latitude, mAutoPolylineCoords.get(i).longitude, mRecentAltitude);
-            waypoint.setCoordinate(latLongAlt);
-
-            mission.addMissionItem(waypoint);
-        }
+        DroneMission.makeWaypoint(mAutoPolylineCoords, mRecentAltitude, mission);
 
         final Button btnSendMission = (Button) findViewById(R.id.btnMission);
         final Button btnFlightMode = (Button) findViewById(R.id.btnAuto);
@@ -1545,6 +1534,27 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
     }
 
+    // ######################################## 알림창 ############################################
+
+    public void alertUser(String message) {
+        // 5개 이상 삭제
+        if (mRecyclerList.size() > 3) {
+            mRecyclerList.remove(RECYCLER_COUNT);
+        }
+
+        LocalTime localTime = LocalTime.now();
+        mRecyclerList.add(String.format("  ★  " + message));
+        mRecyclerTime.add(localTime);
+
+        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
+        RecyclerView recyclerView = findViewById(R.id.recyclerviewAlerting);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // 리사이클러뷰에 SimpleAdapter 객체 지정.
+        SimpleTextAdapter adapter = new SimpleTextAdapter(mRecyclerList);
+        recyclerView.setAdapter(adapter);
+    }
+
     // ############################# 리사이클러뷰 RecyclerView ####################################
 
     private void makeRecyclerView() {
@@ -1596,24 +1606,4 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         recyclerView.startAnimation(animation);
     }
 
-    // ######################################## 알림창 ############################################
-
-    public void alertUser(String message) {
-        // 5개 이상 삭제
-        if (mRecyclerList.size() > 3) {
-            mRecyclerList.remove(RECYCLER_COUNT);
-        }
-
-        LocalTime localTime = LocalTime.now();
-        mRecyclerList.add(String.format("  ★  " + message));
-        mRecyclerTime.add(localTime);
-
-        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
-        RecyclerView recyclerView = findViewById(R.id.recyclerviewAlerting);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // 리사이클러뷰에 SimpleAdapter 객체 지정.
-        SimpleTextAdapter adapter = new SimpleTextAdapter(mRecyclerList);
-        recyclerView.setAdapter(adapter);
-    }
 }
