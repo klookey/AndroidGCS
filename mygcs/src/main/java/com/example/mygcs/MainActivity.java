@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
-    private FusedLocationSource mLocationSourc;
+    private FusedLocationSource mLocationSource;
 
     MapFragment mNaverMapFragment = null;
 
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         });
 
         // 내 위치
-        mLocationSourc = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+        mLocationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
         mNaverMapFragment.getMapAsync(this);
     }
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (mLocationSourc.onRequestPermissionsResult(
+        if (mLocationSource.onRequestPermissionsResult(
                 requestCode, permissions, grantResults)) {
             return;
         }
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         controlButtons();
 
         // 내 위치
-        naverMap.setLocationSource(mLocationSourc);
+        naverMap.setLocationSource(mLocationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
 
         // 롱 클릭 시 경고창
