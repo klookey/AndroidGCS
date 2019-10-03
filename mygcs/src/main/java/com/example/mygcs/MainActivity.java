@@ -187,7 +187,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 네이버 로고 위치 변경
         UiSettings uiSettings = naverMap.getUiSettings();
-        uiSettings.setLogoMargin(2080, 0, 0, 925);
+        uiSettings.setLogoMargin(1150, 0, 0, 15);
+        // 2080, 0, 0, 925
 
         // 나침반 제거
         uiSettings.setCompassEnabled(false);
@@ -360,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         mDroneMarkers.get(mDroneMarkers.size() - 1).setMap(mNaverMap);
 
         // 카메라 위치 설정
-        Button btnMapMoveLock = (Button) findViewById(R.id.btnMapMove);
+        Button btnMapMoveLock = (Button) findViewById(R.id.btnMapType);
         String text = (String) btnMapMoveLock.getText();
 
         if (text.equals(getString(R.string.map_move_lock))) {
@@ -521,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Button BtnClear = (Button) findViewById(R.id.btnClear);
         // Map 잠금 버튼
         final Button btnMapMoveLock = (Button) findViewById(R.id.btnMapMoveLock);
-        final Button btnMapMoveUnLock = (Button) findViewById(R.id.btnMapMoveUnlock);
+        final Button btnMapMoveUnlock = (Button) findViewById(R.id.btnMapMoveUnlock);
         // Map Type 버튼
         final Button btnMapTypeBasic = (Button) findViewById(R.id.btnMapTypeBasic);
         final Button btnMapTypeTerrain = (Button) findViewById(R.id.btnMapTypeTerrain);
@@ -569,10 +570,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
                 if (btnMapMoveLock.getVisibility() == view.INVISIBLE) {
                     btnMapMoveLock.setVisibility(View.VISIBLE);
-                    btnMapMoveUnLock.setVisibility(View.VISIBLE);
+                    btnMapMoveUnlock.setVisibility(View.VISIBLE);
                 } else if (btnMapMoveLock.getVisibility() == view.VISIBLE) {
                     btnMapMoveLock.setVisibility(View.INVISIBLE);
-                    btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                    btnMapMoveUnlock.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -582,8 +583,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // 열려있으면 닫기
-                if (btnMapMoveUnLock.getVisibility() == view.VISIBLE) {
-                    btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                if (btnMapMoveUnlock.getVisibility() == view.VISIBLE) {
+                    btnMapMoveUnlock.setVisibility(View.INVISIBLE);
                     btnMapMoveLock.setVisibility(View.INVISIBLE);
                 }
                 // 열려있으면 닫기
@@ -614,8 +615,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     btnMapTypeSatellite.setVisibility(View.INVISIBLE);
                 }
                 // 열려있으면 닫기
-                if (btnMapMoveUnLock.getVisibility() == view.VISIBLE) {
-                    btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                if (btnMapMoveUnlock.getVisibility() == view.VISIBLE) {
+                    btnMapMoveUnlock.setVisibility(View.INVISIBLE);
                     btnMapMoveLock.setVisibility(View.INVISIBLE);
                 }
 
@@ -634,31 +635,31 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnMapMoveLock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnMapMoveUnLock.setBackgroundResource(R.drawable.mybutton_dark);
-                btnMapMoveLock.setBackgroundResource(R.drawable.mybutton);
+                btnMapMoveUnlock.setBackgroundResource(R.drawable.button_design_brown);
+                btnMapMoveLock.setBackgroundResource(R.drawable.button_design_blue);
 
                 btnMapMove.setText(getString(R.string.map_move_lock));
 
                 uiSettings.setScrollGesturesEnabled(false);
 
                 btnMapMoveLock.setVisibility(View.INVISIBLE);
-                btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                btnMapMoveUnlock.setVisibility(View.INVISIBLE);
             }
         });
 
         // 맵 이동
-        btnMapMoveUnLock.setOnClickListener(new Button.OnClickListener() {
+        btnMapMoveUnlock.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnMapMoveUnLock.setBackgroundResource(R.drawable.mybutton);
-                btnMapMoveLock.setBackgroundResource(R.drawable.mybutton_dark);
+                btnMapMoveUnlock.setBackgroundResource(R.drawable.button_design_blue);
+                btnMapMoveLock.setBackgroundResource(R.drawable.button_design_brown);
 
                 btnMapMove.setText(getString(R.string.map_move_unlock));
 
                 uiSettings.setScrollGesturesEnabled(true);
 
                 btnMapMoveLock.setVisibility(View.INVISIBLE);
-                btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                btnMapMoveUnlock.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -669,9 +670,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // 색 지정
-                btnMapTypeSatellite.setBackgroundResource(R.drawable.mybutton);
-                btnMapTypeBasic.setBackgroundResource(R.drawable.mybutton_dark);
-                btnMapTypeTerrain.setBackgroundResource(R.drawable.mybutton_dark);
+                btnMapTypeSatellite.setBackgroundResource(R.drawable.button_design_blue);
+                btnMapTypeBasic.setBackgroundResource(R.drawable.button_design_brown);
+                btnMapTypeTerrain.setBackgroundResource(R.drawable.button_design_brown);
 
                 btnMapType.setText(getString(R.string.map_type_satellite));
 
@@ -689,9 +690,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // 색 지정
-                btnMapTypeSatellite.setBackgroundResource(R.drawable.mybutton_dark);
-                btnMapTypeBasic.setBackgroundResource(R.drawable.mybutton_dark);
-                btnMapTypeTerrain.setBackgroundResource(R.drawable.mybutton);
+                btnMapTypeSatellite.setBackgroundResource(R.drawable.button_design_brown);
+                btnMapTypeBasic.setBackgroundResource(R.drawable.button_design_brown);
+                btnMapTypeTerrain.setBackgroundResource(R.drawable.button_design_blue);
 
                 btnMapType.setText(getString(R.string.map_type_terrain));
 
@@ -707,9 +708,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnMapTypeBasic.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnMapTypeSatellite.setBackgroundResource(R.drawable.mybutton_dark);
-                btnMapTypeBasic.setBackgroundResource(R.drawable.mybutton);
-                btnMapTypeTerrain.setBackgroundResource(R.drawable.mybutton_dark);
+                btnMapTypeSatellite.setBackgroundResource(R.drawable.button_design_brown);
+                btnMapTypeBasic.setBackgroundResource(R.drawable.button_design_blue);
+                btnMapTypeTerrain.setBackgroundResource(R.drawable.button_design_brown);
 
                 btnMapType.setText(getString(R.string.map_type_basic));
 
@@ -726,8 +727,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnCadastreOn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnCadastreOn.setBackgroundResource(R.drawable.mybutton);
-                btnCadastreOff.setBackgroundResource(R.drawable.mybutton_dark);
+                btnCadastreOn.setBackgroundResource(R.drawable.button_design_blue);
+                btnCadastreOff.setBackgroundResource(R.drawable.button_design_brown);
 
                 mNaverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL, true);
 
@@ -739,8 +740,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnCadastreOff.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnCadastreOn.setBackgroundResource(R.drawable.mybutton_dark);
-                btnCadastreOff.setBackgroundResource(R.drawable.mybutton);
+                btnCadastreOn.setBackgroundResource(R.drawable.button_design_brown);
+                btnCadastreOff.setBackgroundResource(R.drawable.button_design_blue);
 
                 mNaverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_CADASTRAL, false);
 
@@ -754,8 +755,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 // 열려있으면 닫기
-                if (btnMapMoveUnLock.getVisibility() == view.VISIBLE) {
-                    btnMapMoveUnLock.setVisibility(View.INVISIBLE);
+                if (btnMapMoveUnlock.getVisibility() == view.VISIBLE) {
+                    btnMapMoveUnlock.setVisibility(View.INVISIBLE);
                     btnMapMoveLock.setVisibility(View.INVISIBLE);
                 }
                 // 열려있으면 닫기
@@ -807,7 +808,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 mReachedCount = 1;
 
                 // btnFlightMode 버튼 초기화
-                btnSendMission.setText(getString(R.string.btn_mission_transmition));
+                btnSendMission.setText(getString(R.string.mission_transmition));
             }
         });
 
@@ -986,41 +987,41 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View v) {
                 if(btnFlightMode.getText().equals(getString(R.string.auto_mode_gap))) {
-                    if (btnSendMission.getText().equals(getString(R.string.btn_mission_transmition))) {
+                    if (btnSendMission.getText().equals(getString(R.string.mission_transmition))) {
                         if (mAutoPolygonCoords.size() == 4) {
                             setMission(mission);
                         } else {
                             alertUser(getString(R.string.alert_a_b_latlng));
                         }
-                    } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_start))) {
+                    } else if (btnSendMission.getText().equals(getString(R.string.mission_start))) {
                         // Auto모드로 전환
                         changeToAutoMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_stop));
-                    } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_stop))) {
+                        btnSendMission.setText(getString(R.string.mission_stop));
+                    } else if (btnSendMission.getText().equals(getString(R.string.mission_stop))) {
                         pauseMission();
                         changeToLoiterMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_restart));
-                    } else if (btnSendMission.getText().equals(getString(R.string.btn_mission_restart))) {
+                        btnSendMission.setText(getString(R.string.mission_restart));
+                    } else if (btnSendMission.getText().equals(getString(R.string.mission_restart))) {
                         changeToAutoMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_stop));
+                        btnSendMission.setText(getString(R.string.mission_stop));
                     }
                 } else if(btnFlightMode.getText().equals(getString(R.string.auto_mode_path))) {
-                    if(btnSendMission.getText().equals(getString(R.string.btn_mission_transmition))) {
+                    if(btnSendMission.getText().equals(getString(R.string.mission_transmition))) {
                         if (mAutoPolylineCoords.size() > 0) {
                             setMission(mission);
                         } else {
                             alertUser(getString(R.string.alert_one_more_latlng));
                         }
-                    } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_start))) {
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_start))) {
                         // Auto모드로 전환
                         changeToAutoMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_stop));
-                    } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_stop))) {
+                        btnSendMission.setText(getString(R.string.mission_stop));
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_stop))) {
                         changeToLoiterMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_restart));
-                    } else if(btnSendMission.getText().equals(getString(R.string.btn_mission_restart))) {
+                        btnSendMission.setText(getString(R.string.mission_restart));
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_restart))) {
                         changeToAutoMode();
-                        btnSendMission.setText(getString(R.string.btn_mission_stop));
+                        btnSendMission.setText(getString(R.string.mission_stop));
                     }
                 }
             }
@@ -1038,7 +1039,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     private void sentMission() {
         alertUser(getString(R.string.alert_mission_upload));
         Button btnSendMission = (Button) findViewById(R.id.btnMission);
-        btnSendMission.setText(getString(R.string.btn_mission_start));
+        btnSendMission.setText(getString(R.string.mission_start));
     }
 
     // ################################## 비행 모드 변경 ##########################################
@@ -1147,12 +1148,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
 
             if (mGapCount == 0) {
-                mAutoMarkers.get(0).setIcon(OverlayImage.fromResource(R.drawable.number1));
+                mAutoMarkers.get(0).setIcon(OverlayImage.fromResource(R.drawable.image_number_1));
                 mAutoMarkers.get(0).setWidth(80);
                 mAutoMarkers.get(0).setHeight(80);
                 mAutoMarkers.get(0).setAnchor(new PointF(0.5F, 0.5F));
             } else if (mGapCount == 1) {
-                mAutoMarkers.get(1).setIcon(OverlayImage.fromResource(R.drawable.number2));
+                mAutoMarkers.get(1).setIcon(OverlayImage.fromResource(R.drawable.image_number_2));
                 mAutoMarkers.get(1).setWidth(80);
                 mAutoMarkers.get(1).setHeight(80);
                 mAutoMarkers.get(1).setAnchor(new PointF(0.5F, 0.5F));
@@ -1407,13 +1408,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         if (vehicleState.isFlying()) {
             // Land
-            ArmBtn.setText(getString(R.string.btn_land));
+            ArmBtn.setText(getString(R.string.land));
         } else if (vehicleState.isArmed()) {
             // Take off
-            ArmBtn.setText(getString(R.string.btn_take_off));
+            ArmBtn.setText(getString(R.string.take_off));
         } else if (vehicleState.isConnected()) {
             // Connected but not Armed
-            ArmBtn.setText(getString(R.string.btn_arm));
+            ArmBtn.setText(getString(R.string.arm));
         }
     }
 
@@ -1543,7 +1544,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
 
         LocalTime localTime = LocalTime.now();
-        mRecyclerList.add(String.format("  ★  " + message));
+        mRecyclerList.add(String.format("  ●  " + message));
         mRecyclerTime.add(localTime);
 
         // 리사이클러뷰에 LinearLayoutManager 객체 지정.

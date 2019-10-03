@@ -11,26 +11,28 @@
     <string name="map_type_basic">일반지도</string>
 
     <string name="take_off_altitude">이륙\n고도</string>
+    <string name="take_off_altitude_up">▲</string>
+    <string name="take_off_altitude_down">▼</string>
 
-    <string name="btn_mission_transmition">임무 전송</string>
-    <string name="btn_mission_start">임무 시작</string>
-    <string name="btn_mission_stop">임무 중지</string>
-    <string name="btn_mission_restart">임무 재시작</string>
+    <string name="mission_transmition">임무 전송</string>
+    <string name="mission_start">임무 시작</string>
+    <string name="mission_stop">임무 중지</string>
+    <string name="mission_restart">임무 재시작</string>
 
-    <string name="btn_arm">ARM</string>
-    <string name="btn_take_off">TAKE OFF</string>
-    <string name="btn_land">LAND</string>
+    <string name="arm">ARM</string>
+    <string name="take_off">TAKE OFF</string>
+    <string name="land">LAND</string>
 
     <string name="map_move_unlock">맵 이동</string>
     <string name="map_move_lock">맵 잠금</string>
 
     <string name="cadastre">지적도</string>
-    <string name="cadastre_on">지적도 ON</string>
-    <string name="cadastre_off">지적도 OFF</string>
+    <string name="cadastre_on">ON</string>
+    <string name="cadastre_off">OFF</string>
 
     <string name="clear">CLEAR</string>
 
-    <string name="btn_draw">그리기</string>
+    <string name="draw">그리기</string>
 
     <string name="show_satellite">위성 </string>
 
