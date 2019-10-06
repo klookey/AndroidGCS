@@ -248,7 +248,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/auto_mode_basic" />
+                            android:text="@string/auto_mode_basic"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -272,7 +273,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/auto_mode_path" />
+                            android:text="@string/auto_mode_path"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -296,7 +298,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/auto_mode_gap" />
+                            android:text="@string/auto_mode_gap"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -320,7 +323,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/auto_mode_area" />
+                            android:text="@string/auto_mode_area"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -353,7 +357,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_brown"
                             android:text="@string/map_type_satellite"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -416,9 +421,10 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/take_off_altitude_up"
                             android:paddingBottom="4dp"
-                            android:textSize="24sp" />
+                            android:text="@string/take_off_altitude_up"
+                            android:textSize="24sp"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -440,9 +446,10 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/take_off_altitude_down"
                             android:paddingBottom="4dp"
-                            android:textSize="24sp" />
+                            android:text="@string/take_off_altitude_down"
+                            android:textSize="24sp"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -469,7 +476,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_brown"
                             android:text="@string/map_move_unlock"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -492,7 +500,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_brown"
                             android:text="@string/map_type_terrain"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -515,7 +524,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_brown"
                             android:text="@string/cadastre_on"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -583,7 +593,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/map_move_lock"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -608,7 +619,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/map_type_basic"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -631,7 +643,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/cadastre_off"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -695,7 +708,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_light_blue"
-                            android:text="@string/draw" />
+                            android:text="@string/draw"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                 </LinearLayout>
