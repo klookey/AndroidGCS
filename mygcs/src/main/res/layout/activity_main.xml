@@ -686,7 +686,8 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/arm"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:onClick="onArmButtonTap"/>
                     </LinearLayout>
 
                     <LinearLayout
