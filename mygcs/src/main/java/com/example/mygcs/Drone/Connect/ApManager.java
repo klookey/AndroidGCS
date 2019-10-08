@@ -1,4 +1,4 @@
-package com.example.mygcs.Connect;
+package com.example.mygcs.Drone.Connect;
 
 import android.content.*;
 import android.net.wifi.*;

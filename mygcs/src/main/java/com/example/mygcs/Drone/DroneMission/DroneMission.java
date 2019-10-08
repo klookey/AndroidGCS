@@ -1,4 +1,4 @@
-package com.example.mygcs.DroneMission;
+package com.example.mygcs.Drone.DroneMission;
 
 import com.naver.maps.geometry.LatLng;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;

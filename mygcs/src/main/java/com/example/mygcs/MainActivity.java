@@ -26,12 +26,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.mygcs.Connect.ApManager;
-import com.example.mygcs.DroneMission.DroneMission;
+import com.example.mygcs.Drone.Connect.ApManager;
+import com.example.mygcs.Drone.DroneMission.DroneMission;
 import com.example.mygcs.Log.LogTags;
 import com.example.mygcs.Math.MyUtil;
 import com.example.mygcs.RecyclerView.SimpleTextAdapter;
-import com.example.mygcs.TakeOffAltitude.TakeOffAltitude;
+import com.example.mygcs.Drone.TakeOffAltitude.TakeOffAltitude;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;

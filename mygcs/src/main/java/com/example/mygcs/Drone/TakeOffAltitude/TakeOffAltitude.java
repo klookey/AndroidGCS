@@ -1,4 +1,4 @@
-package com.example.mygcs.TakeOffAltitude;
+package com.example.mygcs.Drone.TakeOffAltitude;
 
 public class TakeOffAltitude {
     private int takeOffAltitude;
