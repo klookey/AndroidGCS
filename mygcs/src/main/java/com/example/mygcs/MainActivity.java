@@ -32,6 +32,7 @@ import com.example.mygcs.Log.LogTags;
 import com.example.mygcs.Math.MyUtil;
 import com.example.mygcs.RecyclerView.SimpleTextAdapter;
 import com.example.mygcs.Drone.TakeOffAltitude.TakeOffAltitude;
+import com.google.maps.android.SphericalUtil;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -1319,15 +1320,30 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void makeAreaPath(int firstIndex, int secondIndex) {
+        int first = firstIndex;
+        int second = secondIndex;
+        List<Double> Distance = new ArrayList<Double>();
         double heading = MyUtil.computeHeading(mAutoPolygonCoords.get(firstIndex), mAutoPolygonCoords.get(secondIndex));
-
         Log.d(LogTags.TAG_HEADING, "heading : " + heading);
 
         mAutoPolylineCoords.add(mAutoPolygonCoords.get(firstIndex));
         mAutoPolylineCoords.add(mAutoPolygonCoords.get(secondIndex));
 
-        LatLng latLng1 = MyUtil.computeOffset(mAutoPolygonCoords.get(firstIndex), mAutoDistance, heading + 90);
-        LatLng latLng2 = MyUtil.computeOffset(mAutoPolygonCoords.get(secondIndex), mAutoDistance, heading + 90);
+
+
+        // ###### 10/20         아래 함수를 computeLargeLength() 함수랑 합쳐서 리스트에 길이 값을 다 넣고 후에 max 값을 구하는 쪽으로 변경.
+        for(int i = 0;i<mAutoMarkers.size();i++) {
+            Log.d(LogTags.TAG_POLYGON_DISTANCE, "index = " + i);
+            if (i == mAutoMarkers.size()-1) {
+                Distance.add(i, MyUtil.computeDistanceBetween(mAutoPolygonCoords.get(0), mAutoPolygonCoords.get(i)));
+            } else {
+                Distance.add(i, MyUtil.computeDistanceBetween(mAutoPolygonCoords.get(i), mAutoPolygonCoords.get(i+1)));
+            }
+            Log.d(LogTags.TAG_POLYGON_DISTANCE, "polygon_distance [" + i + "], [" + (i+1) + "] = " + Distance.get(i));
+        }
+
+//        LatLng latLng1 = MyUtil.computeOffset(mAutoPolygonCoords.get(firstIndex), mAutoDistance, heading + 90);
+//        LatLng latLng2 = MyUtil.computeOffset(mAutoPolygonCoords.get(secondIndex), mAutoDistance, heading + 90);
     }
 
     // ################################### Drone event ############################################

@@ -13,4 +13,5 @@ public class LogTags {
     public static String TAG_DISTANCE_BETWEEN_DRONE_AND_GOAL = "TAG:DistanceBetweenDroneAndGoal";
     public static String TAG_HEADING = "TAG:Heading";
     public static String TAG_COMPUTE_LARGE_LENGTH = "TAG:ComputeLargeLength";
+    public static String TAG_POLYGON_DISTANCE = "TAG:PolygonDistance";
 }
