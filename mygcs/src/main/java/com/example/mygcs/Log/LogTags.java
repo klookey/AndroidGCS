@@ -14,4 +14,5 @@ public class LogTags {
     public static String TAG_HEADING = "TAG:Heading";
     public static String TAG_COMPUTE_LARGE_LENGTH = "TAG:ComputeLargeLength";
     public static String TAG_POLYGON_DISTANCE = "TAG:PolygonDistance";
+    public static String TAG_AREA_POLYGON = "TAG:AreaPolygon";
 }

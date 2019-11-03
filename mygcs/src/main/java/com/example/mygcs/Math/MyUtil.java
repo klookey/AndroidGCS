@@ -85,7 +85,7 @@ public class MyUtil {
         return computeAngleBetween(from, to) * 6371009.0D;
     }
 
-    static double computeAngleBetween(LatLng from, LatLng to) {
+    public static double computeAngleBetween(LatLng from, LatLng to) {
         return distanceRadians(Math.toRadians(from.latitude), Math.toRadians(from.longitude), Math.toRadians(to.latitude), Math.toRadians(to.longitude));
     }
 }

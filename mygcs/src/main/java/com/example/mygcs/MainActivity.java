@@ -69,6 +69,12 @@ import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.link.LinkConnectionStatus;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
 import com.o3dr.services.android.lib.model.SimpleCommandListener;
+import com.o3dr.services.android.lib.util.MathUtils;
+
+import org.droidplanner.services.android.impl.core.helpers.geoTools.LineLatLong;
+import org.droidplanner.services.android.impl.core.polygon.Polygon;
+import org.droidplanner.services.android.impl.core.survey.grid.CircumscribedGrid;
+import org.droidplanner.services.android.impl.core.survey.grid.Trimmer;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -120,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     protected double mRecentAltitude = 0;
 
     private int mReachedCount = 1;
+
+    double sprayAngle = 0.0;
+    private Polygon poly;
 
     private final Handler mHandler = new Handler();
 
@@ -946,16 +955,25 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         btnDraw.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 하늘색 Polygon 배경 색 색칠
                 if (mAutoPolygonCoords.size() >= 3) {
                     btnDraw.setVisibility(view.INVISIBLE);
-                    mAutoPolygon.setCoords(mAutoPolygonCoords);
+//                    mAutoPolygon.setCoords(mAutoPolygonCoords);
+//
+//                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+//
+//                    mAutoPolygon.setColor(colorLightBlue);
+//                    mAutoPolygon.setMap(mNaverMap);
 
-                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+                    makePoly();
 
-                    mAutoPolygon.setColor(colorLightBlue);
-                    mAutoPolygon.setMap(mNaverMap);
+                    // ###################################################
 
-                    computeLargeLength();
+//                    try {
+//                        makeGrid();
+//                    } catch (Exception e) {
+//                        Log.d("myCheck", "예외처리 : " + e.getMessage());
+//                    }
 
                 } else {
                     alertUser(getString(R.string.alert_three_more_latlng));
@@ -1288,62 +1306,52 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         }
     }
 
-    private void computeLargeLength() {
-        // 가장 긴 변 계산
-        double max = 0.0;
-        double computeValue = 0.0;
-        int firstIndex = 0;
-        int secondIndex = 0;
-        for(int i=0; i<mAutoPolygonCoords.size(); i++) {
-            if(i == mAutoPolygonCoords.size() - 1) {
-                computeValue = mAutoPolygonCoords.get(i).distanceTo(mAutoPolygonCoords.get(0));
-                Log.d(LogTags.TAG_COMPUTE_LARGE_LENGTH, "computeValue : [" + i + " , 0 ] : " + computeValue);
-                if(max < computeValue) {
-                    max = computeValue;
-                    firstIndex = i;
-                    secondIndex = 0;
-                }
-            } else {
-                computeValue = mAutoPolygonCoords.get(i).distanceTo(mAutoPolygonCoords.get(i+1));
-                Log.d(LogTags.TAG_COMPUTE_LARGE_LENGTH, "computeValue : [" + i + " , " + (i+1) + "] : " + computeValue);
-                if(max < computeValue) {
-                    max = computeValue;
-                    firstIndex = i;
-                    secondIndex = i+1;
-                }
-            }
-            Log.d(LogTags.TAG_COMPUTE_LARGE_LENGTH, "max : " + max);
-            Log.d(LogTags.TAG_COMPUTE_LARGE_LENGTH, "firstIndex : " + firstIndex + " / secondIndex : " + secondIndex);
+    private void makePoly() {
+        poly = new Polygon();
+        List<LatLong> latLongList = new ArrayList<>();
+        for(LatLng latLng : mAutoPolygonCoords) {
+            latLongList.add(LatLngToLatLong(latLng));
         }
+        poly.addPoints(latLongList);
 
-        makeAreaPath(firstIndex, secondIndex);
+        drawPolygon();
     }
 
-    private void makeAreaPath(int firstIndex, int secondIndex) {
-        int first = firstIndex;
-        int second = secondIndex;
-        List<Double> Distance = new ArrayList<Double>();
-        double heading = MyUtil.computeHeading(mAutoPolygonCoords.get(firstIndex), mAutoPolygonCoords.get(secondIndex));
-        Log.d(LogTags.TAG_HEADING, "heading : " + heading);
+    private void drawPolygon() {
+        if (mAutoPolygonCoords.size() > 2) {
+            this.mAutoPolygon.setCoords(mAutoPolygonCoords);
 
-        mAutoPolylineCoords.add(mAutoPolygonCoords.get(firstIndex));
-        mAutoPolylineCoords.add(mAutoPolygonCoords.get(secondIndex));
+            int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
+            mAutoPolygon.setColor(colorLightBlue);
 
+            mAutoPolygon.setMap(mNaverMap);
+            this.sprayAngle = makeSprayAngle(this.poly);
+        } else if(mAutoPolygonCoords.size() > 0) {
+            alertUser(getString(R.string.alert_a_b_latlng));
+        }
+    }
 
-
-        // ###### 10/20         아래 함수를 computeLargeLength() 함수랑 합쳐서 리스트에 길이 값을 다 넣고 후에 max 값을 구하는 쪽으로 변경.
-        for(int i = 0;i<mAutoMarkers.size();i++) {
-            Log.d(LogTags.TAG_POLYGON_DISTANCE, "index = " + i);
-            if (i == mAutoMarkers.size()-1) {
-                Distance.add(i, MyUtil.computeDistanceBetween(mAutoPolygonCoords.get(0), mAutoPolygonCoords.get(i)));
-            } else {
-                Distance.add(i, MyUtil.computeDistanceBetween(mAutoPolygonCoords.get(i), mAutoPolygonCoords.get(i+1)));
+    private double makeSprayAngle(Polygon poly) {
+        double angle = 0;
+        double maxDistance = 0;
+        List<LineLatLong> lineLatLongList = poly.getLines();
+        for (LineLatLong lineLatLong : lineLatLongList) {
+            double lineDistance = MathUtils.getDistance2D(lineLatLong.getStart(), lineLatLong.getEnd());
+            if(maxDistance < lineDistance) {
+                maxDistance = lineDistance;
+                angle = lineLatLong.getHeading();
             }
-            Log.d(LogTags.TAG_POLYGON_DISTANCE, "polygon_distance [" + i + "], [" + (i+1) + "] = " + Distance.get(i));
         }
 
-//        LatLng latLng1 = MyUtil.computeOffset(mAutoPolygonCoords.get(firstIndex), mAutoDistance, heading + 90);
-//        LatLng latLng2 = MyUtil.computeOffset(mAutoPolygonCoords.get(secondIndex), mAutoDistance, heading + 90);
+        //       180
+        //   90   ㅇ   270
+        //        0
+        Log.d(LogTags.TAG_AREA_POLYGON,getString(R.string.show_degree) + " : " + angle);       // TODO : strings.xml로 변환
+        return angle;
+    }
+
+    private LatLong LatLngToLatLong(LatLng point) {
+        return new LatLong(point.latitude, point.longitude);
     }
 
     // ################################### Drone event ############################################
@@ -1352,6 +1360,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     public void onDroneEvent(String event, Bundle extras) {
         switch (event) {
             case AttributeEvent.STATE_CONNECTED:
+
                 alertUser(getString(R.string.connected_drone));
                 break;
 
