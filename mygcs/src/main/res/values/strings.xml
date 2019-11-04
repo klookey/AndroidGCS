@@ -112,4 +112,7 @@
     <string name="dialog_arming_context">시동을 걸면 프로펠러가 고속으로 회전합니다.</string>
     <string name="alert_cannot_arming">아밍 할 수 없어요</string>
 
+    <string name="exception">예외처리 : </string>
+    <string name="area_monitoring_fail">경로 그리기 실패</string>
+
 </resources>

@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     double sprayAngle = 0.0;
     private Polygon poly;
+    private List<LatLng> sprayPointList = new ArrayList<>();
+    List<Marker> sprayMarkerList = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
 
@@ -811,6 +813,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 mAutoMarkers.clear();
                 mAutoPolylineCoords.clear();
                 mAutoPolygonCoords.clear();
+                sprayPointList.clear();
+
+                if (sprayMarkerList.size() > 0 ) {
+                    for (Marker marker : sprayMarkerList) {
+                        marker.setMap(null);
+                    }
+                    sprayMarkerList.clear();
+                }
 
                 // Top 변수 초기화
                 mGapCount = 0;
@@ -968,12 +978,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     makePoly();
 
                     // ###################################################
-
-//                    try {
-//                        makeGrid();
-//                    } catch (Exception e) {
-//                        Log.d("myCheck", "예외처리 : " + e.getMessage());
-//                    }
 
                 } else {
                     alertUser(getString(R.string.alert_three_more_latlng));
@@ -1167,15 +1171,15 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
 
             if (mGapCount == 0) {
-                mAutoMarkers.get(0).setIcon(OverlayImage.fromResource(R.drawable.image_number_1));
+                mAutoMarkers.get(0).setIcon(OverlayImage.fromResource(R.drawable.number_1));
                 mAutoMarkers.get(0).setWidth(80);
                 mAutoMarkers.get(0).setHeight(80);
-                mAutoMarkers.get(0).setAnchor(new PointF(0.5F, 0.5F));
+                mAutoMarkers.get(0).setAnchor(new PointF(0.5F, 0.9F));
             } else if (mGapCount == 1) {
-                mAutoMarkers.get(1).setIcon(OverlayImage.fromResource(R.drawable.image_number_2));
+                mAutoMarkers.get(1).setIcon(OverlayImage.fromResource(R.drawable.number_2));
                 mAutoMarkers.get(1).setWidth(80);
                 mAutoMarkers.get(1).setHeight(80);
-                mAutoMarkers.get(1).setAnchor(new PointF(0.5F, 0.5F));
+                mAutoMarkers.get(1).setAnchor(new PointF(0.5F, 0.9F));
             }
 
             mGapCount++;
@@ -1300,7 +1304,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mAutoMarkers.get(mAutoMarkers.size() - 1).setWidth(100);
 
             mAutoMarkers.get(mAutoMarkers.size() - 1).setAnchor(new PointF(0.5F, 0.9F));
-            mAutoMarkers.get(mAutoMarkers.size() - 1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+            mAutoMarkers.get(mAutoMarkers.size() - 1).setIcon(OverlayImage.fromResource(R.drawable.marker));
 
             mAutoMarkers.get(mAutoMarkers.size() - 1).setMap(mNaverMap);
         }
@@ -1326,9 +1330,78 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
             mAutoPolygon.setMap(mNaverMap);
             this.sprayAngle = makeSprayAngle(this.poly);
+
+            try {
+                makeGrid();
+            } catch (Exception e) {
+                Log.d(LogTags.TAG_AREA_POLYGON, getString(R.string.exception) + " " + e.toString() );
+                alertUser(getString(R.string.area_monitoring_fail));
+            }
         } else if(mAutoPolygonCoords.size() > 0) {
             alertUser(getString(R.string.alert_a_b_latlng));
+
         }
+    }
+
+    public void makeGrid() throws Exception {
+
+        List<LatLong> polygonPoints = new ArrayList<>();        // LatLong 형 polygonPoints 리스트 생성
+        for(LatLng latLng : mAutoPolygonCoords) {               // polygonPointList에 있는 latLng형 값들을 LatLong으로 변경해서 polygonPoints에 대입
+            polygonPoints.add(LatLngToLatLong(latLng));
+        }
+
+        double spraySpacing = 5.0;
+
+        List<LineLatLong> circumscribedGrid = new CircumscribedGrid(polygonPoints, this.sprayAngle, spraySpacing).getGrid();
+        List<LineLatLong> trimedGrid = new Trimmer(circumscribedGrid, this.poly.getLines()).getTrimmedGrid();
+
+        for (int i = 0; i < trimedGrid.size(); i++) {
+            LineLatLong line = trimedGrid.get(i);
+            if(line.getStart().getLatitude() > line.getEnd().getLatitude()) {
+                LineLatLong line1 = new LineLatLong(line.getEnd(),line.getStart());
+                trimedGrid.set(i, line1);
+            }
+        }
+
+        for (int i = 0; i < trimedGrid.size(); i++) {
+            LineLatLong line = trimedGrid.get(i);
+            if (i % 2 != 0) {
+                line = new LineLatLong(line.getEnd(), line.getStart());
+                trimedGrid.set(i,line);
+            }
+        }
+
+        sprayPointList.clear();
+        for(LineLatLong lineLatLong : trimedGrid) {
+            sprayPointList.add(new LatLng(lineLatLong.getStart().getLatitude(), lineLatLong.getStart().getLongitude()));
+            sprayPointList.add(new LatLng(lineLatLong.getEnd().getLatitude(), lineLatLong.getEnd().getLongitude()));
+        }
+
+        drawPointLine(sprayPointList);
+//        makeMission();
+    }
+
+    private void drawPointLine(List<LatLng> listPointLine) {
+
+        for(int i=0; i<listPointLine.size(); i++) {
+            Marker marker = new Marker();
+            marker.setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+            marker.setHeight(20);
+            marker.setWidth(20);
+            marker.setPosition(listPointLine.get(i));
+            marker.setSubCaptionText(String.valueOf(i+1));
+            marker.setMap(mNaverMap);
+            sprayMarkerList.add(marker);
+        }
+
+        // TODO : 이 마커들을 마커 리스트 하나 더 만들어서 간격감시때에도 마커 표시되도록 변경하고 clear 눌렀을 때 지워지도록 변경
+
+        this.mAutoPolylinePath.setCoords(listPointLine);
+        mAutoPolylinePath.setColor(Color.WHITE);
+        this.mAutoPolylinePath.setMap(mNaverMap);
+//        this.mAutoPolygon.setMap(null);
+//        this.mAutoPolygon.setCoords(listPointLine);
+//        this.mAutoPolygon.setMap(mNaverMap);
     }
 
     private double makeSprayAngle(Polygon poly) {
