@@ -1216,9 +1216,13 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     private void makeGapPath() {
         double heading = MyUtil.computeHeading(mAutoMarkers.get(0).getPosition(), mAutoMarkers.get(1).getPosition());
+        int index = 1;
 
         mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(0).getPosition().latitude, mAutoMarkers.get(0).getPosition().longitude));
         mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(1).getPosition().latitude, mAutoMarkers.get(1).getPosition().longitude));
+
+        mAutoMarkers.get(mAutoMarkers.size()-2).setSubCaptionText(String.valueOf(index++));
+        mAutoMarkers.get(mAutoMarkers.size()-1).setSubCaptionText(String.valueOf(index++));
 
         for (double sum = mGapDistance; sum + mGapDistance <= mAutoDistance + mGapDistance; sum = sum + mGapDistance) {
             LatLng latLng1 = MyUtil.computeOffset(mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition(), mGapDistance, heading + 90);
@@ -1228,9 +1232,35 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mAutoMarkers.add(new Marker(latLng2));
 //            mAutoMarkers.size() - 1 += 2;
 
+            mAutoMarkers.get(mAutoMarkers.size()-2).setSubCaptionText(String.valueOf(index++));
+            mAutoMarkers.get(mAutoMarkers.size()-1).setSubCaptionText(String.valueOf(index++));
+
+            mAutoMarkers.get(mAutoMarkers.size()-2).setHeight(20);
+            mAutoMarkers.get(mAutoMarkers.size()-2).setWidth(20);
+
+            mAutoMarkers.get(mAutoMarkers.size()-1).setHeight(20);
+            mAutoMarkers.get(mAutoMarkers.size()-1).setWidth(20);
+
+            mAutoMarkers.get(mAutoMarkers.size()-2).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+            mAutoMarkers.get(mAutoMarkers.size()-1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+
+            mAutoMarkers.get(mAutoMarkers.size()-2).setMap(mNaverMap);
+            mAutoMarkers.get(mAutoMarkers.size()-1).setMap(mNaverMap);
+
             mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkers.size() - 2).getPosition().latitude, mAutoMarkers.get(mAutoMarkers.size() - 2).getPosition().longitude));
             mAutoPolylineCoords.add(new LatLng(mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition().latitude, mAutoMarkers.get(mAutoMarkers.size() - 1).getPosition().longitude));
         }
+
+//        for(int i=0; i<listPointLine.size(); i++) {
+//            Marker marker = new Marker();
+//            marker.setIcon(OverlayImage.fromResource(R.drawable.area_marker));
+//            marker.setHeight(20);
+//            marker.setWidth(20);
+//            marker.setPosition(listPointLine.get(i));
+//            marker.setSubCaptionText(String.valueOf(i+1));
+//            marker.setMap(mNaverMap);
+//            sprayMarkerList.add(marker);
+//        }
 
         mAutoPolylinePath.setColor(Color.WHITE);
         mAutoPolylinePath.setCoords(mAutoPolylineCoords);
