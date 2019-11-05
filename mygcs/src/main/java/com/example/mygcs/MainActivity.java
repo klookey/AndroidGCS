@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
     double sprayAngle = 0.0;
     private Polygon poly;
-    private List<LatLng> sprayPointList = new ArrayList<>();
     List<Marker> sprayMarkerList = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
@@ -813,7 +812,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 mAutoMarkers.clear();
                 mAutoPolylineCoords.clear();
                 mAutoPolygonCoords.clear();
-                sprayPointList.clear();
 
                 if (sprayMarkerList.size() > 0 ) {
                     for (Marker marker : sprayMarkerList) {
@@ -1002,6 +1000,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Mission mission = new Mission();
 
         DroneMission.makeWaypoint(mAutoPolylineCoords, mRecentAltitude, mission);
+//        DroneMission.makeWaypoint(sprayPointList, mRecentAltitude, mission);
 
         final Button btnSendMission = (Button) findViewById(R.id.btnMission);
         final Button btnFlightMode = (Button) findViewById(R.id.btnAuto);
@@ -1037,6 +1036,23 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                         }
                     } else if(btnSendMission.getText().equals(getString(R.string.mission_start))) {
                         // Auto모드로 전환
+                        changeToAutoMode();
+                        btnSendMission.setText(getString(R.string.mission_stop));
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_stop))) {
+                        changeToLoiterMode();
+                        btnSendMission.setText(getString(R.string.mission_restart));
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_restart))) {
+                        changeToAutoMode();
+                        btnSendMission.setText(getString(R.string.mission_stop));
+                    }
+                } else if(btnFlightMode.getText().equals(getString(R.string.auto_mode_area))) {
+                    if(btnSendMission.getText().equals(getString(R.string.mission_transmition))) {
+                        if (mAutoPolylineCoords.size() > 2) {
+                            setMission(mission);
+                        } else {
+                            alertUser(getString(R.string.alert_three_more_latlng));
+                        }
+                    } else if(btnSendMission.getText().equals(getString(R.string.mission_start))) {
                         changeToAutoMode();
                         btnSendMission.setText(getString(R.string.mission_stop));
                     } else if(btnSendMission.getText().equals(getString(R.string.mission_stop))) {
@@ -1404,14 +1420,14 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             }
         }
 
-        sprayPointList.clear();
+//        mAutoPolylineCoords.clear();
         for(LineLatLong lineLatLong : trimedGrid) {
-            sprayPointList.add(new LatLng(lineLatLong.getStart().getLatitude(), lineLatLong.getStart().getLongitude()));
-            sprayPointList.add(new LatLng(lineLatLong.getEnd().getLatitude(), lineLatLong.getEnd().getLongitude()));
+            mAutoPolylineCoords.add(new LatLng(lineLatLong.getStart().getLatitude(), lineLatLong.getStart().getLongitude()));
+            mAutoPolylineCoords.add(new LatLng(lineLatLong.getEnd().getLatitude(), lineLatLong.getEnd().getLongitude()));
         }
 
-        drawPointLine(sprayPointList);
-//        makeMission();
+        drawPointLine(mAutoPolylineCoords);
+        makeWaypoint();
     }
 
     private void drawPointLine(List<LatLng> listPointLine) {
@@ -1432,9 +1448,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         this.mAutoPolylinePath.setCoords(listPointLine);
         mAutoPolylinePath.setColor(Color.WHITE);
         this.mAutoPolylinePath.setMap(mNaverMap);
-//        this.mAutoPolygon.setMap(null);
-//        this.mAutoPolygon.setCoords(listPointLine);
-//        this.mAutoPolygon.setMap(mNaverMap);
     }
 
     private double makeSprayAngle(Polygon poly) {
