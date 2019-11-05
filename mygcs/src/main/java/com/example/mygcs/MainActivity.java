@@ -1244,6 +1244,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             mAutoMarkers.get(mAutoMarkers.size()-2).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
             mAutoMarkers.get(mAutoMarkers.size()-1).setIcon(OverlayImage.fromResource(R.drawable.area_marker));
 
+            mAutoMarkers.get(mAutoMarkers.size()-2).setAnchor(new PointF(0.5F, 0.9F));
+            mAutoMarkers.get(mAutoMarkers.size()-1).setAnchor(new PointF(0.5F, 0.9F));
+
             mAutoMarkers.get(mAutoMarkers.size()-2).setMap(mNaverMap);
             mAutoMarkers.get(mAutoMarkers.size()-1).setMap(mNaverMap);
 
