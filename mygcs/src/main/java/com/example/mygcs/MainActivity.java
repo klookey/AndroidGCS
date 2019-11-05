@@ -478,9 +478,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                     // 도착지 마커 생성
                     mMarkerGoal.setMap(null);
                     mMarkerGoal.setPosition(new LatLng(coord.latitude, coord.longitude));
-                    mMarkerGoal.setIcon(OverlayImage.fromResource(R.drawable.final_flag));
-                    mMarkerGoal.setWidth(70);
-                    mMarkerGoal.setHeight(70);
+                    mMarkerGoal.setIcon(OverlayImage.fromResource(R.drawable.marker));
+                    mMarkerGoal.setWidth(100);
+                    mMarkerGoal.setHeight(100);
+                    mMarkerGoal.setCaptionText("Here");
                     mMarkerGoal.setMap(mNaverMap);
 
                     mGuidedArrived = false;
