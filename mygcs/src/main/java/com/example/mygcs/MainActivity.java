@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         showTakeOffAltitude();
 
         // 초기 상태를 맵 잠금으로 설정
-        uiSettings.setScrollGesturesEnabled(false);
+//        uiSettings.setScrollGesturesEnabled(false);
 
         // UI상 버튼 제어
         controlButtons();
@@ -375,8 +375,12 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         String text = (String) btnMapMoveLock.getText();
 
         if (text.equals(getString(R.string.map_move_lock))) {
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(), dronePosition.getLongitude()));
-            mNaverMap.moveCamera(cameraUpdate);
+            try {
+                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(dronePosition.getLatitude(), dronePosition.getLongitude()));
+                mNaverMap.moveCamera(cameraUpdate);
+            } catch (Exception e) {
+
+            }
         }
 
         // 지나간 길 Polyline
