@@ -1305,7 +1305,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 //            sprayMarkerList.add(marker);
 //        }
 
-        mAutoPolylinePath.setColor(Color.WHITE);
+        mAutoPolylinePath.setColor(Color.RED);
         mAutoPolylinePath.setCoords(mAutoPolylineCoords);
         mAutoPolylinePath.setMap(mNaverMap);
 
@@ -1423,7 +1423,9 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             } catch (Exception e) {
                 Log.d(LogTags.TAG_AREA_POLYGON, getString(R.string.exception) + " " + e.toString() );
                 alertUser(getString(R.string.area_monitoring_fail));
-                alertUser(getString(R.string.area_monitoring_fail_toomany));
+                if(e.toString().equals(LogTags.ERROR_TOO_MANY_LINES)) {
+                    alertUser(getString(R.string.area_monitoring_fail_toomany));
+                }
             }
         } else if(mAutoPolygonCoords.size() > 0) {
             alertUser(getString(R.string.alert_a_b_latlng));

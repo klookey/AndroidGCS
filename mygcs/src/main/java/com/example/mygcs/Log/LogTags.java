@@ -15,4 +15,5 @@ public class LogTags {
     public static String TAG_COMPUTE_LARGE_LENGTH = "TAG:ComputeLargeLength";
     public static String TAG_POLYGON_DISTANCE = "TAG:PolygonDistance";
     public static String TAG_AREA_POLYGON = "TAG:AreaPolygon";
+    public static String ERROR_TOO_MANY_LINES = "org.droidplanner.services.android.impl.core.survey.grid.CircumscribedGrid$GridWithTooManyLines";
 }
