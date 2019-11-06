@@ -114,6 +114,7 @@
 
     <string name="exception">예외처리 : </string>
     <string name="area_monitoring_fail">경로 그리기 실패</string>
+    <string name="area_monitoring_fail_toomany">범위가 너무 넓어요</string>
 
     <string name="alert_total_distance_50m">기본 전체 거리 50m로 설정했어요</string>
     <string name="alert_mGapDistance_5m">기본 간격 5m로 설정했어요</string>

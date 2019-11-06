@@ -1419,6 +1419,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             } catch (Exception e) {
                 Log.d(LogTags.TAG_AREA_POLYGON, getString(R.string.exception) + " " + e.toString() );
                 alertUser(getString(R.string.area_monitoring_fail));
+                alertUser(getString(R.string.area_monitoring_fail_toomany));
             }
         } else if(mAutoPolygonCoords.size() > 0) {
             alertUser(getString(R.string.alert_a_b_latlng));
@@ -1477,10 +1478,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             sprayMarkerList.add(marker);
         }
 
-        // TODO : 이 마커들을 마커 리스트 하나 더 만들어서 간격감시때에도 마커 표시되도록 변경하고 clear 눌렀을 때 지워지도록 변경
-
         this.mAutoPolylinePath.setCoords(listPointLine);
-        mAutoPolylinePath.setColor(Color.WHITE);
+        mAutoPolylinePath.setColor(Color.RED);
         this.mAutoPolylinePath.setMap(mNaverMap);
     }
 
