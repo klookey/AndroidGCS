@@ -32,7 +32,6 @@ import com.example.mygcs.Log.LogTags;
 import com.example.mygcs.Math.MyUtil;
 import com.example.mygcs.RecyclerView.SimpleTextAdapter;
 import com.example.mygcs.Drone.TakeOffAltitude.TakeOffAltitude;
-import com.google.maps.android.SphericalUtil;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -141,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         deleteStatusBar();
         // 상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        setContentView(R.layout.activity_main);
 
         final Context context = getApplicationContext();
         this.mControlTower = new ControlTower(context);
@@ -890,6 +889,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onClick(View view) {
                 btnFlightMode.setText(getString(R.string.auto_mode_basic));
 
+                btnAutoBasic.setBackgroundResource(R.drawable.button_design_light_pink);
+                btnAutoPath.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoGap.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoArea.setBackgroundResource(R.drawable.button_design_brown);
+
                 // 그리기 버튼 제어
                 controlBtnDraw();
 
@@ -908,6 +912,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             public void onClick(View view) {
                 btnFlightMode.setText(getString(R.string.auto_mode_path));
 
+                btnAutoBasic.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoPath.setBackgroundResource(R.drawable.button_design_light_pink);
+                btnAutoGap.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoArea.setBackgroundResource(R.drawable.button_design_brown);
+
                 btnSendMission.setVisibility(View.VISIBLE);
 
                 // 그리기 버튼 제어
@@ -925,6 +934,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 btnFlightMode.setText(getString(R.string.auto_mode_gap));
+
+                btnAutoBasic.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoPath.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoGap.setBackgroundResource(R.drawable.button_design_light_pink);
+                btnAutoArea.setBackgroundResource(R.drawable.button_design_brown);
 
                 btnSendMission.setVisibility(View.VISIBLE);
 
@@ -947,6 +961,11 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
             @Override
             public void onClick(View view) {
                 btnFlightMode.setText(getString(R.string.auto_mode_area));
+
+                btnAutoBasic.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoPath.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoGap.setBackgroundResource(R.drawable.button_design_brown);
+                btnAutoArea.setBackgroundResource(R.drawable.button_design_light_pink);
 
                 // 그리기 버튼 제어
                 controlBtnDraw();
@@ -1001,7 +1020,6 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         final Mission mission = new Mission();
 
         DroneMission.makeWaypoint(mAutoPolylineCoords, mRecentAltitude, mission);
-//        DroneMission.makeWaypoint(sprayPointList, mRecentAltitude, mission);
 
         final Button btnSendMission = (Button) findViewById(R.id.btnMission);
         final Button btnFlightMode = (Button) findViewById(R.id.btnAuto);
@@ -1294,17 +1312,24 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ################################## 간격 감시 시 Dialog #####################################
 
     private void dialogGapFirst() {
-        final EditText edittext1 = new EditText(this);
+        final EditText edittext = new EditText(this);
+        edittext.setHint(getString(R.string.dialog_default_50m));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.dialog_gap_monitoring_title));
         builder.setMessage(getString(R.string.dialog_gap_monitoring_subtitle_whole));
-        builder.setView(edittext1);
+        builder.setView(edittext);
         builder.setPositiveButton(getString(R.string.insert),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String editTextValue = edittext1.getText().toString();
-                        mAutoDistance = Integer.parseInt(editTextValue);
+                        try {
+                            String editTextValue = edittext.getText().toString();
+                            mAutoDistance = Integer.parseInt(editTextValue);
+                            alertUser(getString(R.string.alert_total_distance) + " " + mAutoDistance + getString(R.string.alert_distance_setting));
+                        } catch (Exception e) {
+                            mAutoDistance = 50;
+                            alertUser(getString(R.string.alert_total_distance_50m));
+                        }
                         dialogGapSecond();
                     }
                 });
@@ -1318,17 +1343,24 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     }
 
     private void dialogGapSecond() {
-        final EditText edittext2 = new EditText(this);
+        final EditText edittext = new EditText(this);
+        edittext.setHint(getString(R.string.dialog_default_5m));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.dialog_gap_monitoring_title));
         builder.setMessage(getString(R.string.dialog_gap_monitoring_subtitle_gap));
-        builder.setView(edittext2);
+        builder.setView(edittext);
         builder.setPositiveButton(getString(R.string.insert),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String editTextValue = edittext2.getText().toString();
-                        mGapDistance = Integer.parseInt(editTextValue);
+                        try {
+                            String editTextValue = edittext.getText().toString();
+                            mGapDistance = Integer.parseInt(editTextValue);
+                            alertUser(getString(R.string.alert_gap_distance) + " " + mGapDistance + getString(R.string.alert_distance_setting));
+                        } catch (Exception e) {
+                            mGapDistance = 5;
+                            alertUser(getString(R.string.alert_mGapDistance_5m));
+                        }
                     }
                 });
         builder.setNegativeButton(getString(R.string.cancle),

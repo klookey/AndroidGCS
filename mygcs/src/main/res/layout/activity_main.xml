@@ -224,7 +224,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_light_pink"
+                            android:textColor="#FFFFFF"
                             android:text="@string/auto_mode_basic" />
 
                     </LinearLayout>
@@ -247,7 +248,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_light_pink"
+                            android:textColor="#FFFFFF"
                             android:text="@string/auto_mode_basic"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -272,7 +274,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_brown"
+                            android:textColor="#FFFFFF"
                             android:text="@string/auto_mode_path"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -297,7 +300,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_brown"
+                            android:textColor="#FFFFFF"
                             android:text="@string/auto_mode_gap"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -322,7 +326,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_brown"
+                            android:textColor="#FFFFFF"
                             android:text="@string/auto_mode_area"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -398,7 +403,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_light_pink"
+                            android:textColor="#FFFFFF"
                             android:text="@string/take_off_altitude" />
                     </LinearLayout>
 
@@ -420,9 +426,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_light_pink"
                             android:paddingBottom="4dp"
                             android:text="@string/take_off_altitude_up"
+                            android:textColor="#FFFFFF"
                             android:textSize="24sp"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -445,9 +452,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_light_pink"
                             android:paddingBottom="4dp"
                             android:text="@string/take_off_altitude_down"
+                            android:textColor="#FFFFFF"
                             android:textSize="24sp"
                             android:visibility="invisible" />
                     </LinearLayout>
@@ -564,7 +572,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_blue"
+                            android:background="@drawable/button_design_light_violet"
                             android:text="@string/mission_transmition"
                             android:textColor="#FFFFFF"/>
                     </LinearLayout>
@@ -684,7 +692,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_blue"
+                            android:background="@drawable/button_design_light_violet"
                             android:text="@string/arm"
                             android:textColor="#FFFFFF"
                             android:onClick="onArmButtonTap"/>
@@ -708,8 +716,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_light_blue"
+                            android:background="@drawable/button_design_blue"
                             android:text="@string/draw"
+                            android:textColor="#FFFFFF"
                             android:visibility="invisible" />
                     </LinearLayout>
 

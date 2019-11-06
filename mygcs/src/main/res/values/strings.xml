@@ -66,7 +66,7 @@
     <string name="alert_head_the_goal">목적지로 향할게요</string>
     <string name="alert_cannot_move">이동 할 수 없어요</string>
 
-    <string name="alert_a_b_latlng">A,B좌표 필요</string>
+    <string name="alert_a_b_latlng">A,B좌표를 클릭하세요</string>
 
     <string name="alert_one_more_latlng">한 점 이상 클릭하세요</string>
     <string name="alert_three_more_latlng">세 점 이상 클릭하세요</string>
@@ -114,5 +114,16 @@
 
     <string name="exception">예외처리 : </string>
     <string name="area_monitoring_fail">경로 그리기 실패</string>
+
+    <string name="alert_total_distance_50m">기본 전체 거리 50m로 설정했어요</string>
+    <string name="alert_mGapDistance_5m">기본 간격 5m로 설정했어요</string>
+
+    <string name="alert_total_distance">전체 거리를</string>
+    <string name="alert_gap_distance">간격 거리를</string>
+
+    <string name="alert_distance_setting">m로 설정했어요</string>
+    <string name="dialog_default_50m">기본값은 50m입니다.</string>
+    <string name="dialog_default_5m">기본값은 5m입니다.</string>
+
 
 </resources>

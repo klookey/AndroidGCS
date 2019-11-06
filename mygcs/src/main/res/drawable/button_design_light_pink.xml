@@ -3,7 +3,7 @@
     <!-- 평상시 -->
     <item android:state_focused="false" android:state_pressed="false">
         <shape>
-            <solid android:color="#573A01" />
+            <solid android:color="#CF8383" />
             <corners android:radius="10dp" />
             <stroke android:width="2dp" android:color="#000000" />
         </shape>
