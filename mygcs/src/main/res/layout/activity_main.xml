@@ -482,7 +482,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_brown"
+                            android:background="@drawable/button_design_blue"
                             android:text="@string/map_move_unlock"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
@@ -599,7 +599,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
-                            android:background="@drawable/button_design_blue"
+                            android:background="@drawable/button_design_brown"
                             android:text="@string/map_move_lock"
                             android:textColor="#FFFFFF"
                             android:visibility="invisible" />
@@ -745,8 +745,8 @@
                             android:layout_height="0dp"
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
-                            android:text="@string/map_move_lock"
-                            android:textColor="#FFFFFF"/>
+                            android:text="@string/map_move_unlock"
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -769,7 +769,7 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/map_type_basic"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -792,7 +792,7 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/cadastre"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -815,7 +815,7 @@
                             android:layout_weight="0.9"
                             android:background="@drawable/button_design_blue"
                             android:text="@string/clear"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
 
                 </LinearLayout>

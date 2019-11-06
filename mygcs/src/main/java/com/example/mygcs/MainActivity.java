@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
 
         // 네이버 로고 위치 변경
         UiSettings uiSettings = naverMap.getUiSettings();
-        uiSettings.setLogoMargin(1150, 0, 0, 15);
+        uiSettings.setLogoMargin(800, 0, 0, 15);
         // 2080, 0, 0, 925
 
         // 나침반 제거
