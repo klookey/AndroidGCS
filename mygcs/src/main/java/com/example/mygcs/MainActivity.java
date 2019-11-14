@@ -80,6 +80,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements DroneListener, TowerListener, LinkListener, OnMapReadyCallback {
 
@@ -129,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     double sprayAngle = 0.0;
     private Polygon poly;
     List<Marker> sprayMarkerList = new ArrayList<>();
+
+//    TimerTask tt;
 
     private final Handler mHandler = new Handler();
 
@@ -990,6 +994,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 // 하늘색 Polygon 배경 색 색칠
                 if (mAutoPolygonCoords.size() >= 3) {
                     btnDraw.setVisibility(view.INVISIBLE);
+                    btnSendMission.setVisibility(view.VISIBLE);
 //                    mAutoPolygon.setCoords(mAutoPolygonCoords);
 //
 //                    int colorLightBlue = getResources().getColor(R.color.colorLightBlue);
@@ -1577,7 +1582,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
                 break;
 
             default:
-                makeRecyclerView();
+//                makeRecyclerView();
                 // Log.i("DRONE_EVENT", event); //Uncomment to see events from the drone
                 break;
         }
@@ -1742,6 +1747,17 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
     // ############################# 리사이클러뷰 RecyclerView ####################################
 
     private void makeRecyclerView() {
+//        tt = new TimerTask() {
+//
+//            @Override
+//            public void run() {
+//                removeRecyclerView();
+//            }
+//        };
+//
+//        Timer timer = new Timer();
+//        timer.schedule(tt,0,4000);
+
         LocalTime localTime = LocalTime.now();
 
         // recycler view 시간 지나면 제거
@@ -1786,8 +1802,10 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         recyclerView.setAdapter(adapter);
 
         // 리사이클러뷰에 애니메이션 추가.
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.item_animation_down_to_up);
-        recyclerView.startAnimation(animation);
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.item_animation_down_to_up);
+//        recyclerView.startAnimation(animation);
+
+
     }
 
 }
