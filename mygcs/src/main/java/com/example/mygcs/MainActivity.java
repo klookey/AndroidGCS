@@ -345,8 +345,8 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         Log.d(LogTags.TAG_DRONE_POSITION, "dronePosition : " + dronePosition);
 
         // 이동했던 위치 맵에서 지워주기
-        if (mDroneMarkers.size() - 2 >= 0) {
-            mDroneMarkers.get(mDroneMarkers.size() - 2).setMap(null);
+        if (mDroneMarkers.size() - 1 >= 0) {
+            mDroneMarkers.get(mDroneMarkers.size() - 1).setMap(null);
         }
 
         // 마커 리스트에 추가
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements DroneListener, To
         mDroneMarkers.get(mDroneMarkers.size() - 1).setMap(mNaverMap);
 
         // 카메라 위치 설정
-        Button btnMapMoveLock = (Button) findViewById(R.id.btnMapType);
+        Button btnMapMoveLock = (Button) findViewById(R.id.btnMapMove);
         String text = (String) btnMapMoveLock.getText();
 
         if (text.equals(getString(R.string.map_move_lock))) {
